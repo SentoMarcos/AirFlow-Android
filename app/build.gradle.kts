@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.smariba_upv.airflow"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.smariba_upv.airflow"
@@ -40,4 +40,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("androidx.biometric:biometric:1.2.0")
+    implementation("androidx.biometric:biometric-ktx:1.4.0-alpha02")
 }
