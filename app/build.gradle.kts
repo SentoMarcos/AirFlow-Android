@@ -32,14 +32,33 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    // Dependencias de prueba
     testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    testImplementation(libs.ext.junit)
+    testImplementation(libs.rules)
+    testImplementation(libs.androidx.espresso.intents)
+    testImplementation(libs.androidx.espresso.intents)
+    testImplementation(libs.androidx.espresso.core)
+
+    // Pruebas instrumentadas
+    androidTestImplementation("androidx.test.ext:junit:1.1.5") // Asegúrate de tener la última versión
+    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1") // Incluye espresso-intents si usas Intents
+
+
+    // Pruebas instrumentadas
+    androidTestImplementation("androidx.test.ext:junit:1.1.5") // Asegúrate de tener la última versión
+    androidTestImplementation ("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1") // Incluye espresso-intents si usas Intents
+
+    // Biometría
     implementation("androidx.biometric:biometric:1.2.0")
     implementation("androidx.biometric:biometric-ktx:1.4.0-alpha02")
 }

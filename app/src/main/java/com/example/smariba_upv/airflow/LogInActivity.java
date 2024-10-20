@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -30,12 +31,14 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
      * @param biometricButton Botón para iniciar la autenticación biométrica
      * @param email Correo de prueba
      * @param password Contraseña de prueba
+     * @param errorText Texto de error
      * */
 
     EditText EmailEditText;
     EditText passwordEditText;
     Button loginButton;
     ImageButton biometricButton;
+    TextView errorText;
 
     String email = "admin@g.com";
     String password  = "admin";
@@ -56,6 +59,7 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         passwordEditText = findViewById(R.id.PasswordInput);
         loginButton = findViewById(R.id.logIn_btn);
         biometricButton = findViewById(R.id.biometric_btn);
+        errorText = findViewById(R.id.errorText);
     }
 
     /**
@@ -72,8 +76,20 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         if(emailInput.equals(email) && passwordInput.equals(password)){
             Intent intent = new Intent(LogInActivity.this, MainActivity.class);
             startActivity(intent);
+            finish();
         }else{
-            Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+            if(emailInput.isEmpty() || passwordInput.isEmpty()){
+                errorText.setText("Rellena todos los campos");
+                return;
+            }else if (!emailInput.equals(email)){
+                errorText.setText("Correo incorrecto");
+                return;
+            }else if (!passwordInput.equals(password)){
+                errorText.setText("Contraseña incorrecta");
+                return;
+            }else {
+                errorText.setText("Error desconocido");
+            }
         }
     }
 
@@ -107,7 +123,7 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
     // ==> onAuthenticationFailed() : void
     @Override
     public void onAuthenticationFailed() {
-        Toast.makeText(this, "Fallo en la autenticación biométrica", Toast.LENGTH_SHORT).show();
+        errorText.setText("Fallo en la autenticación");
     }
 
     /**
@@ -119,6 +135,6 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
     // Entero:errorCode Caracter:errString ==> onAuthenticationError() : void
     @Override
     public void onAuthenticationError(int errorCode, CharSequence errString) {
-        Toast.makeText(this, "Error de autenticación: " + errString, Toast.LENGTH_SHORT).show();
+        errorText.setText("Error de autenticación");
     }
 }

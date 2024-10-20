@@ -19,7 +19,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="388dp" />
+        app:layout_constraintGuide_begin="422dp" />
 
     <Button
         android:id="@+id/logIn_btn"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:onClick="logIn"
         android:text="Log In"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toTopOf="@+id/errorText"
         app:layout_constraintEnd_toEndOf="@+id/PasswordInput"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/PasswordInput"
@@ -77,4 +77,15 @@
         app:layout_constraintVertical_bias="0.498"
         app:srcCompat="@drawable/baseline_fingerprint_64"
         tools:srcCompat="@drawable/baseline_fingerprint_64" />
+
+    <TextView
+        android:id="@+id/errorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#F60000"
+        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintEnd_toEndOf="@+id/logIn_btn"
+        app:layout_constraintStart_toStartOf="@+id/logIn_btn"
+        app:layout_constraintTop_toBottomOf="@+id/logIn_btn"
+        app:layout_constraintVertical_bias="0.5" />
 </androidx.constraintlayout.widget.ConstraintLayout>
