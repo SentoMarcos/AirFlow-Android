@@ -1,32 +1,42 @@
 package com.example.smariba_upv.airflow.POJO;
 
 public class User {
-    private String name;
-    private String email;
-    private String contrasenya;
-    private String phone;
-    private String address;
+    private String nombre;      // Coincide con "nombre" en el JSON
+    private String apellidos;   // Coincide con "apellidos" en el JSON
+    private String email;       // Coincide con "email" en el JSON
+    private String telefono;    // Coincide con "telefono" en el JSON
+    private String contrasenya; // Coincide con "contrasenya" en el JSON
 
-    public User(String name, String email, String contrasenya, String phone, String address) {
-        this.name = name;
+    // Constructor
+    public User(String nombre, String apellidos, String email, String telefono, String contrasenya) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
         this.email = email;
+        this.telefono = telefono;
         this.contrasenya = contrasenya;
-        this.phone = phone;
-        this.address = address;
     }
 
-    //Constructor para el login
+    //constructor login
     public User(String email, String contrasenya) {
         this.email = email;
         this.contrasenya = contrasenya;
     }
 
-    public String getName() {
-        return name;
+    // Getters y setters
+    public String getNombre() {
+        return nombre;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
     }
 
     public String getEmail() {
@@ -37,28 +47,19 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getContrasenya() {
         return contrasenya;
     }
 
-    public void setPassword(String contrasenya) {
+    public void setContrasenya(String contrasenya) {
         this.contrasenya = contrasenya;
     }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
 }

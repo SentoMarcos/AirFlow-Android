@@ -2,6 +2,7 @@ package com.example.smariba_upv.airflow.API;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.smariba_upv.airflow.MainActivity;
@@ -22,7 +23,7 @@ public class EnviarPeticionesUser {
     }
 
     public EnviarPeticionesUser() {
-        
+
     }
 
 
@@ -33,7 +34,15 @@ public class EnviarPeticionesUser {
                 if (response.isSuccessful()) {
                     // El usuario ha sido logueado correctamente
                     User user = response.body();
-                    Log.d(TAG, "Usuario logueado: " + user.getName());
+                    Log.d(TAG, "Usuario logueado: " + user.getNombre());
+
+                    // Almacenar los datos en SharedPreferences
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("email", user.getEmail()); // Almacena el email
+                    editor.putString("nombre", user.getNombre()); // Almacena el nombre
+                    editor.putBoolean("isLoggedIn", true); // Marca que el usuario está logueado
+                    editor.apply(); // Guarda los cambios
 
                     // Iniciar la nueva actividad
                     Intent intent = new Intent(context, MainActivity.class);
