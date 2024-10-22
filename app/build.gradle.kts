@@ -36,29 +36,24 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-
-    // Dependencias de prueba
-    testImplementation(libs.junit)
-    testImplementation(libs.ext.junit)
+    implementation(libs.androidx.core)
+    testImplementation(libs.junit.junit)
     testImplementation(libs.rules)
-    testImplementation(libs.androidx.espresso.intents)
-    testImplementation(libs.androidx.espresso.intents)
-    testImplementation(libs.androidx.espresso.core)
+    testImplementation(libs.junit.jupiter)
+    androidTestImplementation(libs.junit.junit)
 
-    // Pruebas instrumentadas
-    androidTestImplementation("androidx.test.ext:junit:1.1.5") // Asegúrate de tener la última versión
-    androidTestImplementation("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1") // Incluye espresso-intents si usas Intents
-
-
-    // Pruebas instrumentadas
-    androidTestImplementation("androidx.test.ext:junit:1.1.5") // Asegúrate de tener la última versión
-    androidTestImplementation ("androidx.test:runner:1.4.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1") // Incluye espresso-intents si usas Intents
-
-    // Biometría
+    //biometria
     implementation("androidx.biometric:biometric:1.2.0")
     implementation("androidx.biometric:biometric-ktx:1.4.0-alpha02")
+
+    //mysql
+    implementation ("mysql:mysql-connector-java:8.0.32")
+
+    //retrofit
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    //implementacion para los test mockito
+    testImplementation("org.mockito:mockito-core:4.2.0")
+
 }

@@ -3,7 +3,7 @@
  * @file BiometricUtil.java
  * @brief Clase que gestiona la autenticación biométrica
  * */
-package com.example.smariba_upv.airflow;
+package com.example.smariba_upv.airflow.LOGIC;
 
 import android.content.Context;
 import android.widget.Toast;
@@ -62,9 +62,12 @@ public class BiometricUtil {
                 listener.onAuthenticationFailed();
             }
         });
+
         /**
+         * @func authenticate
          * @brief Configurar la información de la autenticación
-         * */
+         **/
+
         BiometricManager biometricManager = BiometricManager.from(context);
         switch (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK | BiometricManager.Authenticators.DEVICE_CREDENTIAL)) {
             case BiometricManager.BIOMETRIC_SUCCESS:

@@ -12,11 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
+
+import com.example.smariba_upv.airflow.LOGIC.BiometricUtil;
+import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
+
 /**
  * @class LogInActivity
  * @brief Clase que gestiona el inicio de sesión de la aplicación
@@ -66,31 +69,13 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
      * @func logIn
      * @brief Método que se ejecuta al pulsar el botón de iniciar sesión
      * @param view Vista de la actividad
-     * @details Comprueba si el correo y la contraseña introducidos son correctos
+     * @details Inicia sesión con el correo y la contraseña introducidos
      * */
     //View:view ==> logIn() : void
     public void logIn(View view){
         String emailInput = EmailEditText.getText().toString();
         String passwordInput = passwordEditText.getText().toString();
-
-        if(emailInput.equals(email) && passwordInput.equals(password)){
-            Intent intent = new Intent(LogInActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        }else{
-            if(emailInput.isEmpty() || passwordInput.isEmpty()){
-                errorText.setText("Rellena todos los campos");
-                return;
-            }else if (!emailInput.equals(email)){
-                errorText.setText("Correo incorrecto");
-                return;
-            }else if (!passwordInput.equals(password)){
-                errorText.setText("Contraseña incorrecta");
-                return;
-            }else {
-                errorText.setText("Error desconocido");
-            }
-        }
+        PeticionesUserUtil.login(emailInput, passwordInput, this);
     }
 
     /**
