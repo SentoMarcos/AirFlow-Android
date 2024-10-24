@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.smariba_upv.airflow.MainActivity;
 import com.example.smariba_upv.airflow.POJO.User;
+import com.example.smariba_upv.airflow.PerfilActivity;
 
 import java.io.IOException;
 
@@ -41,11 +42,13 @@ public class EnviarPeticionesUser {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("email", user.getEmail()); // Almacena el email
                     editor.putString("nombre", user.getNombre()); // Almacena el nombre
+                    editor.putString("apellidos", user.getApellidos()); // Almacena los apellidos
+                    editor.putString("Telefono", user.getTelefono()); // Almacena el token
                     editor.putBoolean("isLoggedIn", true); // Marca que el usuario está logueado
                     editor.apply(); // Guarda los cambios
 
                     // Iniciar la nueva actividad
-                    Intent intent = new Intent(context, MainActivity.class);
+                    Intent intent = new Intent(context, PerfilActivity.class);
                     context.startActivity(intent);
                 } else {
                     Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());

@@ -23,7 +23,7 @@ public class PaginaDeCarga extends AppCompatActivity {
 
         if (isLoggedIn) {
             // El usuario ya está logueado, ir directamente a MainActivity
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, PerfilActivity.class);
             startActivity(intent);
             finish(); // Cierra la actividad actual
         } else {

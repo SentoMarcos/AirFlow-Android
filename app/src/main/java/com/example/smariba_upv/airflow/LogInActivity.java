@@ -96,7 +96,7 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
     // BiometricPrompt.AuthenticationResult:result ==> onAuthenticationSucceeded() : void
     @Override
     public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
-        Intent intent = new Intent(LogInActivity.this, MainActivity.class);
+        Intent intent = new Intent(LogInActivity.this, PerfilActivity.class);
         startActivity(intent);
         finish();
     }

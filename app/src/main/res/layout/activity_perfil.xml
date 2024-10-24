@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PerfilActivity">
+
+    <TextView
+        android:id="@+id/TUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre:"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/Tapellidos"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/Tapellidos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Apellidos"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/Temail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TUser"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/Temail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Correo"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/TTelefono"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Tapellidos"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/TTelefono"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Telefono"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Temail"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/textVTelefono"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:text="1111111111"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/TTelefono"
+        app:layout_constraintStart_toStartOf="@+id/TTelefono"
+        app:layout_constraintTop_toBottomOf="@+id/TTelefono"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <TextView
+        android:id="@+id/textVApellidos"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:text="Marcos Ibarra"
+        app:layout_constraintBottom_toTopOf="@+id/Temail"
+        app:layout_constraintEnd_toEndOf="@+id/Tapellidos"
+        app:layout_constraintStart_toStartOf="@+id/Tapellidos"
+        app:layout_constraintTop_toBottomOf="@+id/Tapellidos"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <TextView
+        android:id="@+id/textVCorreo"
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:text="correo@aaa.com"
+        app:layout_constraintBottom_toTopOf="@+id/TTelefono"
+        app:layout_constraintEnd_toEndOf="@+id/Temail"
+        app:layout_constraintStart_toStartOf="@+id/Temail"
+        app:layout_constraintTop_toBottomOf="@+id/Temail"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <TextView
+        android:id="@+id/textVNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:text="Sento"
+        app:layout_constraintBottom_toTopOf="@+id/Tapellidos"
+        app:layout_constraintEnd_toEndOf="@+id/TUser"
+        app:layout_constraintStart_toStartOf="@+id/TUser"
+        app:layout_constraintTop_toBottomOf="@+id/TUser"
+        app:layout_constraintVertical_bias="0.25" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
