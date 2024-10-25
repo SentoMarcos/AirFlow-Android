@@ -9,6 +9,7 @@ import java.util.regex.Matcher;
 
 public class PeticionesUserUtil {
 
+    private static final String TAG = "PeticionesUserUtil";
     /**
      * @function login
      * @param email
@@ -21,5 +22,11 @@ public class PeticionesUserUtil {
 
         EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(context);
         enviarPeticionesUser.login(email, password);
+    }
+
+    public static void editUsuario(int id, String nombre, String apellidos, String email, String telefono, String contrasenya, Context context) {
+        EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(context);
+        enviarPeticionesUser.editUsuario(id, nombre, apellidos, email, telefono);
+        Log.d(TAG, "editUsuario: ");
     }
 }

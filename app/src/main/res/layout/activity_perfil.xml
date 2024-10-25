@@ -103,4 +103,14 @@
         app:layout_constraintTop_toBottomOf="@+id/TUser"
         app:layout_constraintVertical_bias="0.25" />
 
+    <Button
+        android:id="@+id/btnEditarUser"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Editar Datos"
+        app:layout_constraintBottom_toTopOf="@+id/TUser"
+        app:layout_constraintEnd_toEndOf="@+id/textVTelefono"
+        app:layout_constraintStart_toStartOf="@+id/TUser"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

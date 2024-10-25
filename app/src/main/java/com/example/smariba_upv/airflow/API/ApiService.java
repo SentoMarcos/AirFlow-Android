@@ -14,8 +14,11 @@ import com.example.smariba_upv.airflow.POJO.User;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 
 /********************************************
  * @interface ApiService
@@ -30,5 +33,11 @@ public interface ApiService {
      * **/
     @POST("/usuarios/login")  // Si usas un prefijo en el servidor
     Call<User> login(@Body User user);
+
+    @PUT("/usuarios/editUsuario")
+    Call<User> editUsuario(@Body User user);
+
+
+
 
 }
