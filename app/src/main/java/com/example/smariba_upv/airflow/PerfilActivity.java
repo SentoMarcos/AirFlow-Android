@@ -1,8 +1,10 @@
 package com.example.smariba_upv.airflow;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -14,6 +16,7 @@ public class PerfilActivity extends AppCompatActivity {
     public TextView txtApellidos;
     public TextView txtCorreo;
     public TextView txtTelefono;
+    public Button btnEditarPerfil;
 
 
     @Override
@@ -26,8 +29,14 @@ public class PerfilActivity extends AppCompatActivity {
         txtApellidos = findViewById(R.id.textVApellidos);
         txtCorreo = findViewById(R.id.textVCorreo);
         txtTelefono = findViewById(R.id.textVTelefono);
+        btnEditarPerfil = findViewById(R.id.btnEditarUser);
 
         cargarDatosUsuario();
+        btnEditarPerfil.setOnClickListener(v -> {
+            // Abrir la actividad de editar perfil
+            Intent intent = new Intent(PerfilActivity.this, EditarPerfilActivity.class);
+            startActivity(intent);
+        });
     }
 
     // Recoger datos del usuario de la cache guardada al hacer el login

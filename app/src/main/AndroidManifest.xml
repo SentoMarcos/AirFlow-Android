@@ -24,6 +24,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AirFlow">
         <activity
+            android:name=".EditarPerfilActivity"
+            android:exported="false" />
+        <activity
             android:name=".PerfilActivity"
             android:exported="false" />
         <activity

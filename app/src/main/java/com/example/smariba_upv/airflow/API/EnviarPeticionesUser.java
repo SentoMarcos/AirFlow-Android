@@ -37,19 +37,24 @@ public class EnviarPeticionesUser {
                     User user = response.body();
                     Log.d(TAG, "Usuario logueado: " + user.getNombre());
 
-                    // Almacenar los datos en SharedPreferences
-                    SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putString("email", user.getEmail()); // Almacena el email
-                    editor.putString("nombre", user.getNombre()); // Almacena el nombre
-                    editor.putString("apellidos", user.getApellidos()); // Almacena los apellidos
-                    editor.putString("Telefono", user.getTelefono()); // Almacena el token
-                    editor.putBoolean("isLoggedIn", true); // Marca que el usuario está logueado
-                    editor.apply(); // Guarda los cambios
+                    if (context != null) {
+                        // Almacenar los datos en SharedPreferences
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putInt("id", user.getId()); // Almacena el id
+                        editor.putString("email", user.getEmail()); // Almacena el email
+                        editor.putString("nombre", user.getNombre()); // Almacena el nombre
+                        editor.putString("apellidos", user.getApellidos()); // Almacena los apellidos
+                        editor.putString("Telefono", user.getTelefono()); // Almacena el token
+                        editor.putBoolean("isLoggedIn", true); // Marca que el usuario está logueado
+                        editor.apply(); // Guarda los cambios
 
-                    // Iniciar la nueva actividad
-                    Intent intent = new Intent(context, PerfilActivity.class);
-                    context.startActivity(intent);
+                        // Iniciar la nueva actividad
+                        Intent intent = new Intent(context, PerfilActivity.class);
+                        context.startActivity(intent);
+                    } else {
+                        Log.e(TAG, "Context is null");
+                    }
                 } else {
                     Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());
                     try {
@@ -66,4 +71,55 @@ public class EnviarPeticionesUser {
             }
         });
     }
+
+
+    // Método para editar usuario sin contraseña
+// Método para editar usuario sin contraseña
+    public void editUsuario(int id, String nombre, String apellidos, String email, String telefono) {
+        if (id > 0 && nombre != null && email != null && telefono != null) {
+            RetrofitClient.getApiService().editUsuario(new User(id, nombre, apellidos, email, telefono)).enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "Usuario actualizado correctamente");
+                    } else {
+                        Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Log.e(TAG, "onFailure:", t);
+                }
+            });
+        } else {
+            Log.e(TAG, "Faltan parámetros obligatorios");
+        }
+    }
+/*
+    // Método para editar la contraseña
+    public void editContrasenya(int id, String contrasenya) {
+        if (id > 0 && contrasenya != null) {
+            RetrofitClient.getApiService().editContrasenya(id, contrasenya).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "Contraseña actualizada correctamente");
+                    } else {
+                        Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.e(TAG, "onFailure:", t);
+                }
+            });
+        } else {
+            Log.e(TAG, "Faltan parámetros obligatorios");
+        }
+    }
+    */
+
+
 }
