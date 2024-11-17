@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.AirFlow" parent="Base.Theme.AirFlow" />
+    <style name="CustomDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/popup_background</item>
+        <item name="android:windowMinWidthMajor">80%</item>
+        <item name="android:windowMinWidthMinor">80%</item>
+    </style>
+
+
 </resources>

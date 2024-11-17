@@ -1,99 +1,163 @@
-/**
- * @autor Sento
- * @file LogInActivity.java
- * @brief Clase que gestiona el inicio de sesión de la aplicación
- * */
 package com.example.smariba_upv.airflow;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
+import androidx.core.app.ActivityCompat;
 
 import com.example.smariba_upv.airflow.LOGIC.BiometricUtil;
 import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
+import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
+import com.example.smariba_upv.airflow.Services.NotificationService;
 
-/**
- * @class LogInActivity
- * @brief Clase que gestiona el inicio de sesión de la aplicación
- * */
 public class LogInActivity extends AppCompatActivity implements BiometricUtil.BiometricAuthListener {
 
-    /**
-     * @brief Declaración de variables
-     * @param EmailEditText Campo de texto para introducir el correo
-     * @param passwordEditText Campo de texto para introducir la contraseña
-     * @param loginButton Botón para iniciar sesión
-     * @param biometricButton Botón para iniciar la autenticación biométrica
-     * @param email Correo de prueba
-     * @param password Contraseña de prueba
-     * @param errorText Texto de error
-     * */
-
+    private static final String TAG = "LogInActivity";
     EditText EmailEditText;
     EditText passwordEditText;
     Button loginButton;
     ImageButton biometricButton;
-    TextView errorText;
+    TextView errorText, forgotPasswordText;
+    CheckBox Condiciones, rememberMeCheckBox;
 
-    String email = "admin@g.com";
-    String password  = "admin";
-
-    /**
-     * @func onCreate
-     * @brief Método que se ejecuta al crear la actividad
-     * @param savedInstanceState Instancia de la actividad
-     * */
-    //Bundle:savedInstanceState ==> onCreate() : void
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_log_in);
 
+        // Inicializar elementos
         EmailEditText = findViewById(R.id.correoInput);
         passwordEditText = findViewById(R.id.PasswordInput);
         loginButton = findViewById(R.id.logIn_btn);
         biometricButton = findViewById(R.id.biometric_btn);
         errorText = findViewById(R.id.errorText);
+        forgotPasswordText = findViewById(R.id.forgotPasswordText);
+        Condiciones = findViewById(R.id.ChekCondi);
+        rememberMeCheckBox = findViewById(R.id.rememberMeCheckBox);
+
+        // Solicitar permisos Bluetooth
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.BLUETOOTH_SCAN}, 1);
+        } else {
+            startArduinoGetterService();
+        }
+
+        // Iniciar servicios
+        startService(new Intent(this, NotificationService.class));
+        startService(new Intent(this, ArduinoGetterService.class));
+
+        // Configuración de eventos
+        Condiciones.setOnClickListener(v -> showConditionsPopup());
+        forgotPasswordText.setOnClickListener(v -> showForgotPasswordPopup());
     }
 
-    /**
-     * @func logIn
-     * @brief Método que se ejecuta al pulsar el botón de iniciar sesión
-     * @param view Vista de la actividad
-     * @details Inicia sesión con el correo y la contraseña introducidos
-     * */
-    //View:view ==> logIn() : void
-    public void logIn(View view){
+    private void showConditionsPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Condiciones de Uso");
+
+// Obtener el texto con formato HTML desde los recursos
+        String termsHtml = getString(R.string.terms_and_conditions);
+
+// Convertir HTML a texto para Android
+        CharSequence formattedText;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            formattedText = Html.fromHtml(termsHtml, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            formattedText = Html.fromHtml(termsHtml);
+        }
+
+// Configurar el mensaje del popup
+        builder.setMessage(formattedText);
+
+// Añadir botón de aceptación
+        builder.setPositiveButton("Aceptar", (dialog, which) -> {
+            dialog.dismiss();
+        });
+
+// Mostrar el popup
+        builder.create().show();
+
+    }
+
+    private void showForgotPasswordPopup() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogStyle);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.popup_forgot_password, null);
+        builder.setView(dialogView);
+
+        EditText emailInput = dialogView.findViewById(R.id.forgotPasswordEmailInput);
+        Button sendButton = dialogView.findViewById(R.id.forgotPasswordSendButton);
+
+        AlertDialog dialog = builder.create();
+        sendButton.setOnClickListener(v -> {
+            String email = emailInput.getText().toString();
+            if (email.isEmpty()) {
+                emailInput.setError("Por favor, ingresa tu correo electrónico.");
+            } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                emailInput.setError("Correo electrónico no válido.");
+            } else {
+                // Lógica para enviar correo de recuperación
+                dialog.dismiss();
+                errorText.setText("Correo de recuperación enviado.");
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void startArduinoGetterService() {
+        Intent intentArduino = new Intent(this, ArduinoGetterService.class);
+        startService(intentArduino);
+    }
+
+    public void logIn(View view) {
         String emailInput = EmailEditText.getText().toString();
         String passwordInput = passwordEditText.getText().toString();
-        PeticionesUserUtil.login(emailInput, passwordInput, this);
+
+        if (emailInput.isEmpty() || passwordInput.isEmpty()) {
+            errorText.setText("Por favor, completa todos los campos.");
+            return;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(emailInput).matches()) {
+            errorText.setText("Correo electrónico no válido.");
+            return;
+        }
+
+        if (!Condiciones.isChecked()) {
+            errorText.setText("Por favor, acepta las condiciones.");
+            return;
+        }
+
+        boolean loginSuccessful = PeticionesUserUtil.login(emailInput, passwordInput, this);
+
+        if (!loginSuccessful) {
+            errorText.setText("Usuario o contraseña incorrectos.");
+        } else {
+            errorText.setText("");
+        }
     }
 
-    /**
-     * @func biometricLogIn
-     * @brief Método que se ejecuta al pulsar el botón de autenticación biométrica
-     * @param view Vista de la actividad
-     * @details Inicia la autenticación biométrica
-     * */
-    //View:view ==> biometricLogIn() : void
-    public void biometricLogIn(View view){
+    public void biometricLogIn(View view) {
         BiometricUtil.authenticate(this, this);
     }
 
-    /**
-     * @func onAuthenticationSucceeded
-     * @brief Método que se ejecuta al autenticar con éxito
-     * */
-    // BiometricPrompt.AuthenticationResult:result ==> onAuthenticationSucceeded() : void
     @Override
     public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
         Intent intent = new Intent(LogInActivity.this, PerfilActivity.class);
@@ -101,25 +165,15 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         finish();
     }
 
-    /**
-     * @func onAuthenticationFailed
-     * @brief Método que se ejecuta al fallar la autenticación
-     * */
-    // ==> onAuthenticationFailed() : void
     @Override
     public void onAuthenticationFailed() {
         errorText.setText("Fallo en la autenticación");
+        Log.d(TAG, "Fallo en la autenticación");
     }
 
-    /**
-     * @func onAuthenticationError
-     * @brief Método que se ejecuta al producirse un error en la autenticación
-     * @param errorCode Código de error
-     * @param errString Mensaje de error
-     * */
-    // Entero:errorCode Caracter:errString ==> onAuthenticationError() : void
     @Override
     public void onAuthenticationError(int errorCode, CharSequence errString) {
         errorText.setText("Error de autenticación");
+        Log.d(TAG, "Error de autenticación: " + errString);
     }
 }

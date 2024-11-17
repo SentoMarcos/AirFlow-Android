@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -17,12 +20,15 @@
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/networksecurityconfig"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.AirFlow">
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
         <activity
             android:name=".EditarPerfilActivity"
             android:exported="false" />
@@ -44,6 +50,11 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <service android:name=".Services.NotificationService" />
+        <service
+            android:name=".Services.ArduinoGetterService"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>

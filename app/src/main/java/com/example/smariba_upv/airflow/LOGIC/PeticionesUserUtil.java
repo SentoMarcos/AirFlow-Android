@@ -18,10 +18,11 @@ public class PeticionesUserUtil {
      * @return void
      **/
 
-    public static void login(String email, String password, Context context) {
+    public static boolean login(String email, String password, Context context) {
 
         EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(context);
-        enviarPeticionesUser.login(email, password);
+        boolean res= enviarPeticionesUser.login(email, password);
+        return res;
     }
 
     public static void editUsuario(int id, String nombre, String apellidos, String email, String telefono, String contrasenya, Context context) {
