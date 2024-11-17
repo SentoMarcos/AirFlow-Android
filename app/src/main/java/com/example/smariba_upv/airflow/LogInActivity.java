@@ -6,7 +6,9 @@
 package com.example.smariba_upv.airflow;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,9 +18,12 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
+import androidx.core.app.ActivityCompat;
 
 import com.example.smariba_upv.airflow.LOGIC.BiometricUtil;
 import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
+import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
+import com.example.smariba_upv.airflow.Services.NotificationService;
 
 /**
  * @class LogInActivity
@@ -26,6 +31,7 @@ import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
  * */
 public class LogInActivity extends AppCompatActivity implements BiometricUtil.BiometricAuthListener {
 
+    private static final String TAG = "LogInActivity"; ;
     /**
      * @brief Declaración de variables
      * @param EmailEditText Campo de texto para introducir el correo
@@ -63,6 +69,36 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         loginButton = findViewById(R.id.logIn_btn);
         biometricButton = findViewById(R.id.biometric_btn);
         errorText = findViewById(R.id.errorText);
+
+        // Solicitar permisos para el Bluetooth
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.BLUETOOTH_SCAN}, 1);
+        } else {
+            startArduinoGetterService();
+        }
+
+        Intent intentNotis = new Intent(this, NotificationService.class);
+        startService(intentNotis);
+        // arduino service
+        Intent intentArduino = new Intent(this, ArduinoGetterService.class);
+        startService(intentArduino);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startArduinoGetterService();
+            } else {
+                Log.e(TAG, "BLUETOOTH_SCAN permission denied");
+            }
+        }
+    }
+
+    private void startArduinoGetterService() {
+        Intent intentArduino = new Intent(this, ArduinoGetterService.class);
+        startService(intentArduino);
     }
 
     /**

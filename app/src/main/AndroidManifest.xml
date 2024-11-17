@@ -8,6 +8,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+
 
     <uses-feature
         android:name="android.hardware.bluetooth_le"
@@ -44,6 +48,10 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+        <service android:name=".Services.NotificationService" />
+        <service
+            android:name=".Services.ArduinoGetterService"
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
