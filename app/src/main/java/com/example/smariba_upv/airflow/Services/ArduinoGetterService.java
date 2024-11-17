@@ -1,217 +1,164 @@
 package com.example.smariba_upv.airflow.Services;
 
 import android.Manifest;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
-import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
-import android.bluetooth.le.ScanSettings;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
 
-import com.example.smariba_upv.airflow.MainActivity;
+import com.example.smariba_upv.airflow.API.RetrofitClient;
 import com.example.smariba_upv.airflow.LOGIC.Utilidades;
+import com.example.smariba_upv.airflow.POJO.Medicion;
 import com.example.smariba_upv.airflow.POJO.TramaIBeacon;
-import com.example.smariba_upv.airflow.R;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ArduinoGetterService extends Service {
+    private static final String ETIQUETA_LOG = "ArduinoGetterService"; // Etiqueta de log
+    private static final String BEACON_UUID = "EPSG-GTI-PROY-3D"; // UUID que estamos buscando
 
-    private static final String TAG = "ArduinoGetterService";
-    private static final String CHANNEL_ID = "ALERTS_CHANNEL";
-    private static final int NOTIFICATION_ID = 1;
-
-    private BluetoothLeScanner bluetoothLeScanner;
+    private BluetoothLeScanner bluetoothLeScanner;  // Escáner Bluetooth LE
     private ScanCallback scanCallback;
-    private static final int LIMITE_VALOR = 100; // Define el límite según tus necesidades
-    private static final String TARGET_UUID = "EPSG-GTI-PROY-3D"; // Sustituye con la dirección MAC del dispositivo objetivo.
 
     @Override
     public void onCreate() {
         super.onCreate();
-        createNotificationChannel();
-        startForegroundService();
-        initializeBluetooth();
-    }
+        Log.d(ETIQUETA_LOG, "Servicio iniciado");
 
-    private void createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Alertas de Gas";
-            String description = "Notificaciones para alertas de gas";
-            int importance = NotificationManager.IMPORTANCE_HIGH;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
-            channel.setDescription(description);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
-        }
-    }
-
-    private void startForegroundService() {
-        // Crear una notificación que se mostrará mientras el servicio esté en ejecución.
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Escaneando dispositivos BLE")
-                .setContentText("El servicio de escaneo está en ejecución.")
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // Usa tu ícono
-                .setContentIntent(pendingIntent)
-                .setOngoing(true); // Notificación continua
-
-        startForeground(NOTIFICATION_ID, notificationBuilder.build());
-    }
-
-    private void initializeBluetooth() {
+        // Inicializar Bluetooth
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
-            Log.e(TAG, "El dispositivo no soporta Bluetooth");
-            stopSelf();
+        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled()) {
+            Log.d(ETIQUETA_LOG, "Bluetooth no disponible o no habilitado");
+            stopSelf();  // Detener servicio si no hay Bluetooth disponible
             return;
         }
 
+        // Obtener el escáner de Bluetooth LE
         bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
 
-        if (bluetoothLeScanner == null) {
-            Log.e(TAG, "No se pudo obtener el escáner BLE");
-            stopSelf();
-            return;
-        }
-
+        // Verificar permisos y comenzar escaneo
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG, "Falta el permiso BLUETOOTH_SCAN");
-            stopSelf();
+            Log.d(ETIQUETA_LOG, "No tengo permisos para escanear.");
             return;
         }
 
-        startScanning();
-    }
-
-    private void startScanning() {
-        // Crear filtro para buscar el dispositivo específico
-        List<ScanFilter> filters = new ArrayList<>();
-        ScanFilter filter = new ScanFilter.Builder()
-                .setDeviceAddress(TARGET_UUID) // Filtrar por dirección MAC
-                .build();
-        filters.add(filter);
-
-        // Configuración de escaneo
-        ScanSettings settings = new ScanSettings.Builder()
-                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
-                .build();
-
+        // Configurar callback del escaneo
         scanCallback = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
                 super.onScanResult(callbackType, result);
-                processScanResult(result);
+                String name = null;
+                if (ActivityCompat.checkSelfPermission(ArduinoGetterService.this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                    name = result.getDevice().getName();
+                }
+                Log.d(ETIQUETA_LOG, "Dispositivo detectado: " + name);
+
+                // Llamar método para verificar si es el dispositivo con el UUID esperado
+                verificarBeacon(result);
             }
 
             @Override
             public void onBatchScanResults(List<ScanResult> results) {
                 super.onBatchScanResults(results);
-                for (ScanResult result : results) {
-                    processScanResult(result);
-                }
+                // Procesar lotes de resultados si es necesario
             }
 
             @Override
             public void onScanFailed(int errorCode) {
-                Log.e(TAG, "El escaneo falló con el código de error: " + errorCode);
+                super.onScanFailed(errorCode);
+                Log.d(ETIQUETA_LOG, "Error en el escaneo, código de error: " + errorCode);
             }
         };
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            Log.e(TAG, "Falta el permiso BLUETOOTH_SCAN");
-            stopSelf();
-            return;
-        }
-
-        bluetoothLeScanner.startScan(filters, settings, scanCallback);
-        Log.d(TAG, "Escaneo BLE iniciado");
+        // Iniciar escaneo
+        bluetoothLeScanner.startScan(scanCallback);
     }
 
-    private void processScanResult(ScanResult result) {
-        BluetoothDevice device = result.getDevice();
-        byte[] scanRecord = result.getScanRecord() != null ? result.getScanRecord().getBytes() : null;
+    /**
+     * Verifica si el UUID del beacon detectado coincide con el UUID esperado.
+     * @param result Resultado del escaneo
+     */
+    private void verificarBeacon(ScanResult result) {
+        BluetoothDevice bluetoothDevice = result.getDevice();
+        byte[] scanRecord = result.getScanRecord().getBytes();
 
-        if (scanRecord != null) {
-            // Crear una instancia de TramaIBeacon usando los datos escaneados
-            TramaIBeacon iBeacon = new TramaIBeacon(scanRecord);
+        // Extraer UUID del beacon (de acuerdo con tu implementación en `TramaIBeacon`)
+        TramaIBeacon beacon = new TramaIBeacon(scanRecord);
+        String uuid = Utilidades.bytesToString(beacon.getUUID());
 
-            // Extraer el UUID de la trama
-            byte[] uuidBytes = iBeacon.getUUID();
-
-            // Convertir los bytes a un UUID
-            UUID uuid = UUID.nameUUIDFromBytes(uuidBytes);
-
-            // Verificar si el UUID coincide con el UUID que buscamos
-            if (uuid.equals(TARGET_UUID)) {
-                Log.d(TAG, "Beacon con UUID coincidente detectado:");
-                Log.d(TAG, "UUID: " + Utilidades.bytesToString(iBeacon.getUUID()));
-                Log.d(TAG, "Major: " + Utilidades.bytesToInt(iBeacon.getMajor()));
-                Log.d(TAG, "Minor: " + Utilidades.bytesToInt(iBeacon.getMinor()));
-
-                // Supongamos que el valor medido está en el campo Major
-                int valorMedido = Utilidades.bytesToInt(iBeacon.getMajor());
-
-                // Verifica si el valor medido supera el límite y lanza una notificación
-                if (valorMedido > LIMITE_VALOR) {
-                    lanzarNotificacion("Alerta de Gas", "El valor medido ha superado el límite: " + valorMedido);
-                }
-            }
+        // Comparar con el UUID que estamos buscando
+        if (uuid.equals(BEACON_UUID)) {
+            Log.d(ETIQUETA_LOG, "Beacon encontrado con UUID: " + uuid);
+            // Si encontramos el beacon correcto, realiza la acción que necesites
+            // Por ejemplo, puedes realizar una inserción en la base de datos o cualquier otra operación
+            procesarMedicion(result);
         }
     }
 
+    /**
+     * Método para procesar la medición una vez encontrado el beacon.
+     * @param result El resultado del escaneo
+     */
+    private void procesarMedicion(ScanResult result) {
+        // Aquí puedes insertar la medición en la base de datos o hacer cualquier otra operación.
+        int major = Utilidades.bytesToInt(new TramaIBeacon(result.getScanRecord().getBytes()).getMajor());
+        Log.d(ETIQUETA_LOG, "Valor de Major: " + major);
 
-    private void lanzarNotificacion(String titulo, String mensaje) {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_launcher_foreground) // Cambia por tu propio ícono
-                .setContentTitle(titulo)
-                .setContentText(mensaje)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true);
-
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.notify(1, builder.build());
+        // Realiza la operación, por ejemplo, enviar a un servidor
+        insertarMedicion(major);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (bluetoothLeScanner != null && scanCallback != null) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
-                bluetoothLeScanner.stopScan(scanCallback);
-                Log.d(TAG, "Escaneo BLE detenido");
-            }
-        }
+    /**
+     * Inserta la medición en el servidor utilizando Retrofit.
+     */
+    private void insertarMedicion(int major) {
+        RetrofitClient.getApiService().insertarMedicion(new Medicion("Living Room", "CO2", major))
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            Log.d(ETIQUETA_LOG, "Medición insertada correctamente");
+                        } else {
+                            Log.d(ETIQUETA_LOG, "Error en la respuesta: " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Log.e(ETIQUETA_LOG, "Error al conectar con el servidor", t);
+                    }
+                });
     }
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null; // No soportamos comunicación con otros componentes.
+        return null;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(ETIQUETA_LOG, "Servicio destruido");
+
+        // Detener el escaneo cuando el servicio se destruye
+        if (bluetoothLeScanner != null) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED) {
+                bluetoothLeScanner.stopScan(scanCallback);
+            }
+        }
     }
 }

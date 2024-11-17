@@ -36,7 +36,8 @@ public interface ApiService {
 
     @PUT("/usuarios/editUsuario")
     Call<User> editUsuario(@Body User user);
-
+    @POST("/insertar")
+    Call<Void> insertarMedicion(@Body Medicion medicion);
 
 
 
