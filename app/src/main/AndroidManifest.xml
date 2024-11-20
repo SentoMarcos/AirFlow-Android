@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools" >
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
@@ -25,19 +25,22 @@
         android:networkSecurityConfig="@xml/networksecurityconfig"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AirFlow">
+        android:theme="@style/Theme.AirFlow" >
+        <activity
+            android:name=".PRESENTACION.LandActivity"
+            android:exported="false" />
         <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
-            android:name=".EditarPerfilActivity"
+            android:name=".PRESENTACION.EditarPerfilActivity"
             android:exported="false" />
         <activity
-            android:name=".PerfilActivity"
+            android:name=".PRESENTACION.PerfilActivity"
             android:exported="false" />
         <activity
-            android:name=".PaginaDeCarga"
-            android:exported="true">
+            android:name=".PRESENTACION.PaginaDeCarga"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +48,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".LogInActivity"
+            android:name=".PRESENTACION.LogInActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

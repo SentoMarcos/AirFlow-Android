@@ -3,6 +3,7 @@ package com.example.smariba_upv.airflow.Services;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
@@ -24,7 +25,7 @@ public class NotificationService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         String title = intent.getStringExtra("title");
         String message = intent.getStringExtra("message");
-        sendNotification(title, message);
+        //sendNotification(this, title, message);
 
         // Si el servicio no necesita seguir corriendo, detenerlo después de la notificación
         stopSelf();
@@ -52,14 +53,14 @@ public class NotificationService extends Service {
         }
     }
 
-    private void sendNotification(String title, String message) {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+    public static void sendNotification(Context context, String title, String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (manager != null) {
             manager.notify(1, builder.build());
         }
