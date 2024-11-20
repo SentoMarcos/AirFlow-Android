@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import com.example.smariba_upv.airflow.MainActivity;
 import com.example.smariba_upv.airflow.POJO.User;
-import com.example.smariba_upv.airflow.PerfilActivity;
+import com.example.smariba_upv.airflow.PRESENTACION.PerfilActivity;
 
 import java.io.IOException;
 
