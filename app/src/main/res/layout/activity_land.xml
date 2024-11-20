@@ -23,11 +23,18 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="#FFFFFF"
+        android:foregroundTint="#FFFFFF"
+        app:backgroundTint="#FFFFFF"
+        app:itemBackground="@drawable/nav_item_background"
         app:itemIconTint="@color/nav_item_color"
+        app:itemRippleColor="@android:color/white"
         app:itemTextColor="@color/nav_item_color"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:itemActiveIndicatorStyle="@style/CustomBottomNavigationView"
         app:menu="@menu/land_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
