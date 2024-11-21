@@ -9,6 +9,7 @@ package com.example.smariba_upv.airflow.LOGIC;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
+import java.util.Date;
 import java.util.UUID;
 
 /********************************************
@@ -171,5 +172,10 @@ public class Utilidades {
         }
         return sb.toString();
     }
+    
+    public String getFechaActual(){
+        return new Date().toString();
+    }
+
 
 } // class
