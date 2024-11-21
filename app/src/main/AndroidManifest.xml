@@ -53,8 +53,6 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
-
-        <service android:name=".Services.NotificationService" />
         <service
             android:name=".Services.ArduinoGetterService"
             android:foregroundServiceType="location" />

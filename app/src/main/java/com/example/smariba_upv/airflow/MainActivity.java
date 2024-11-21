@@ -61,18 +61,19 @@ public class MainActivity extends AppCompatActivity {
      * @brief Método que inicia el escaneo de dispositivos BTLE.
      * @details Instala el callback de escaneo y solicita permisos si es necesario.
      *******************************************/
-    private void buscarTodosLosDispositivosBTLE() {
+   /* private void buscarTodosLosDispositivosBTLE() {
         Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): empieza ");
 
         Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): instalamos scan callback ");
 
         this.callbackDelEscaneo = new ScanCallback() {
             @Override
-            public void onScanResult(int callbackType, ScanResult resultado) {
+            public  onScanResult(int callbackType, ScanResult resultado) {
                 super.onScanResult(callbackType, resultado);
                 Log.d(ETIQUETA_LOG, " buscarTodosLosDispositivosBTL(): onScanResult() ");
 
                 mostrarInformacionDispositivoBTLE(resultado);
+                return null;
             }
 
             @Override
@@ -103,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         this.elEscanner.startScan(this.callbackDelEscaneo);
 
     } // ()
-
+*/
     /**************************************************
      * @fn void mostrarInformacionDispositivoBTLE(ScanResult resultado)
      * @brief Método que muestra por consola la información de un dispositivo BTLE detectado.
@@ -168,7 +169,7 @@ public class MainActivity extends AppCompatActivity {
      * @brief Método que inicia el escaneo de un dispositivo BTLE específico.
      * @param[in] dispositivoBuscado UUID del dispositivo BTLE que se busca.
      ***********************************************************/
-    private void buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
+   /* private void buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
         //Log.d(ETIQUETA_LOG, " buscarEsteDispositivoBTLE(): empieza ");
 
         //Log.d(ETIQUETA_LOG, "  buscarEsteDispositivoBTLE(): instalamos scan callback ");
@@ -190,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
                     //                                          int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for ActivityCompat#requestPermissions for more details.
-                    return;
+                    return null;
                 }
 
                 byte[] bytes = resultado.getScanRecord().getBytes();
@@ -205,6 +206,7 @@ public class MainActivity extends AppCompatActivity {
                 else {
                     //Losg.d(ETIQUETA_LOG, "  buscarEsteDispositivoBTLE(): onScanResult(): no es el dispositivo buscado ");
                 }
+                return null;
             }
 
             @Override
@@ -238,7 +240,7 @@ public class MainActivity extends AppCompatActivity {
         }
         this.elEscanner.startScan(this.callbackDelEscaneo);
     } // ()
-
+*/
     /******************************************************************
      * @fn void detenerBusquedaDispositivosBTLE()
      * @brief Método que detiene el escaneo de dispositivos BTLE.
@@ -270,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void botonBuscarDispositivosBTLEPulsado(View v) {
         Log.d(ETIQUETA_LOG, " boton buscar dispositivos BTLE Pulsado");
-        this.buscarTodosLosDispositivosBTLE();
+        //this.buscarTodosLosDispositivosBTLE();
     } // ()
 
     /******************************************************************
@@ -283,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(ETIQUETA_LOG, " boton nuestro dispositivo BTLE Pulsado");
         //this.buscarEsteDispositivoBTLE( Utilidades.stringToUUID( "EPSG-GTI-PROY-3A" ) );
 
-        this.buscarEsteDispositivoBTLE( "EPSG-GTI-PROY-3D" );
+       // this.buscarEsteDispositivoBTLE( "EPSG-GTI-PROY-3D" );
         // this.buscarEsteDispositivoBTLE("fistro");
 
     } // ()

@@ -1,7 +1,6 @@
 package com.example.smariba_upv.airflow.PRESENTACION;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -17,13 +16,10 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
-import androidx.core.app.ActivityCompat;
 
 import com.example.smariba_upv.airflow.LOGIC.BiometricUtil;
 import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
 import com.example.smariba_upv.airflow.R;
-import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
-import com.example.smariba_upv.airflow.Services.NotificationService;
 
 public class LogInActivity extends AppCompatActivity implements BiometricUtil.BiometricAuthListener {
 
@@ -50,17 +46,6 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         forgotPasswordText = findViewById(R.id.forgotPasswordText);
         Condiciones = findViewById(R.id.ChekCondi);
         rememberMeCheckBox = findViewById(R.id.rememberMeCheckBox);
-
-        // Solicitar permisos Bluetooth
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.BLUETOOTH_SCAN}, 1);
-        } else {
-            startArduinoGetterService();
-        }
-
-        // Iniciar servicios
-        startService(new Intent(this, NotificationService.class));
-        startService(new Intent(this, ArduinoGetterService.class));
 
         // Configuración de eventos
         Condiciones.setOnClickListener(v -> showConditionsPopup());
@@ -119,11 +104,6 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         });
 
         dialog.show();
-    }
-
-    private void startArduinoGetterService() {
-        Intent intentArduino = new Intent(this, ArduinoGetterService.class);
-        startService(intentArduino);
     }
 
     public void logIn(View view) {

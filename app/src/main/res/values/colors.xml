@@ -3,4 +3,18 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="Azul_v3">#FF52CCD7</color>
+    <color name="Blanco">#FFFFFF</color>
+    <color name="GrisClaro">#F7F7F5</color>
+    <color name="GrisOscuro">#444444</color>
+    <color name="Negro">#191718</color>
+    <color name="RosaExcelente">#FF84E0</color>
+    <color name="VerdeBueno">#52D783</color>
+    <color name="AmarilloMedio">#FFFD84</color>
+    <color name="NaranjaMalo">#FF9284</color>
+    <color name="RojoPeligroso">#FF4545</color>
+    <color name="MoradoCuadrático">#9F52D7</color>
+    <color name="VerdeCuadrático">#8AD752</color>
+    <color name="RojoCuadrático">#D75D52</color>
+    <color name="AzulCuadrático">#52CCD7</color>
+    <color name="VerdeAnálogo">#52D7A0</color>
 </resources>
