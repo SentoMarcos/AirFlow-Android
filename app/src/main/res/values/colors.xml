@@ -17,4 +17,5 @@
     <color name="RojoCuadrático">#D75D52</color>
     <color name="AzulCuadrático">#52CCD7</color>
     <color name="VerdeAnálogo">#52D7A0</color>
+    <color name="gris_texto">#A0A0A0</color>
 </resources>
