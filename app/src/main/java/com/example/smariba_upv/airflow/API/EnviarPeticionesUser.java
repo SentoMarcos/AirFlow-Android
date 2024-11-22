@@ -5,11 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.smariba_upv.airflow.POJO.SensorObject;
+import com.example.smariba_upv.airflow.POJO.SensorRequest;
 import com.example.smariba_upv.airflow.POJO.User;
-import com.example.smariba_upv.airflow.PRESENTACION.PerfilActivity;
+import com.example.smariba_upv.airflow.PRESENTACION.LandActivity;
 
 import java.io.IOException;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,7 +49,7 @@ public class EnviarPeticionesUser {
                         editor.putBoolean("isLoggedIn", true);
                         editor.apply();
 
-                        Intent intent = new Intent(context, PerfilActivity.class);
+                        Intent intent = new Intent(context, LandActivity.class);
                         context.startActivity(intent);
                     } else {
                         Log.e(TAG, "Context is null");
@@ -92,5 +95,55 @@ public class EnviarPeticionesUser {
         } else {
             Log.e(TAG, "Faltan parámetros obligatorios");
         }
+    }
+
+    // Metodo para registrar sensor
+    public void registrarSensor(int id_usuario, SensorObject sensorObject) {
+        SensorRequest sensorRequest = new SensorRequest(
+                id_usuario,
+                sensorObject.getId(),
+                sensorObject.getEstado(),
+                sensorObject.getNum_referencia(),
+                sensorObject.getUuid(),
+                sensorObject.getNombre(),
+                String.valueOf(sensorObject.isConexion()),
+                sensorObject.getBateria()
+        );
+
+        RetrofitClient.getApiService().registrarSensor(sensorRequest).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "Sensor registrado correctamente");
+                } else {
+                    Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "onFailure:", t);
+            }
+        });
+    }
+
+    // Método para actualizar sensor
+    public void actualizarSensor(int id_sensor, String estado, String conexion, int bateria) {
+        SensorRequest sensorRequest = new SensorRequest(id_sensor, estado, conexion, bateria);
+        RetrofitClient.getApiService().actualizarSensor(sensorRequest).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "Sensor actualizado correctamente");
+                } else {
+                    Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e(TAG, "onFailure:", t);
+            }
+        });
     }
 }

@@ -29,7 +29,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
 import com.example.smariba_upv.airflow.LOGIC.NotificationSensorUserUtil;
+import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
 import com.example.smariba_upv.airflow.LOGIC.Utilidades;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.POJO.TramaIBeacon;
@@ -51,6 +53,7 @@ public class ArduinoGetterService extends Service {
     private static final int TIEMPO_DESCONEXION = 30000; // 30 segundos
     private Handler handler;
     private Runnable temporizador;
+    private EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser();
     private boolean dispositivoActualmenteConectado = false; // Estado actual de conexión.
 
     private boolean dispositivoDetectado = false;
@@ -307,7 +310,7 @@ public class ArduinoGetterService extends Service {
     }
 
     private void handleSensorObject(SensorObject sensor) {
-        NotificationSensorUserUtil.TakeAllDataOfSensor(this, sensor.getUuid(), sensor.getName(), sensor.getTypegas(), sensor.getMeasure(), sensor.getDate(), sensor.getBattery());
+        NotificationSensorUserUtil.TakeAllDataOfSensor(this, sensor.getUuid(), sensor.getNombre(), sensor.getTypegas(), sensor.getMeasure(), sensor.getDate(), sensor.getBateria());
         limitcheck(sensor);
     }
     private String getLocation() {
@@ -360,28 +363,36 @@ public class ArduinoGetterService extends Service {
         // Obtener la ubicación del dispositivo móvil
         String location = getLocation();  // Llamada al método para obtener la ubicación
 
-        remoteViews.setTextViewText(R.id.notification_text, "Sensor: " + sensor.getName() + "\nHora: " + sensor.getDate() + "\nTipo de gas: " + sensor.getTypegas() + "\nMedida: " + sensor.getMeasure() + "\nUbicación: " + location);
+        remoteViews.setTextViewText(R.id.notification_text, "Sensor: " + sensor.getNombre() + "\nHora: " + sensor.getDate() + "\nTipo de gas: " + sensor.getTypegas() + "\nMedida: " + sensor.getMeasure() + "\nUbicación: " + location);
         remoteViews.setImageViewResource(R.id.notification_icon, android.R.drawable.ic_dialog_alert);
 
         int color;
         if (value > 200) {
             color = ContextCompat.getColor(this, R.color.RojoPeligroso);
             remoteViews.setTextViewText(R.id.notification_title, "Error en la medición");
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "error en la medicion","Conectado",sensor.getBateria());
         } else if (value > 100) {
             color = ContextCompat.getColor(this, R.color.RojoPeligroso);
             remoteViews.setTextViewText(R.id.notification_title, "Exceso de gas detectado");
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Exceso de gas detectado","Conectado",sensor.getBateria());
+
+
         } else if (value > 75) {
             color = ContextCompat.getColor(this, R.color.NaranjaMalo);
             remoteViews.setTextViewText(R.id.notification_title, "Alerta de gas");
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Alerta de gas","Conectado",sensor.getBateria());
         } else if (value > 50) {
             color = ContextCompat.getColor(this, R.color.AmarilloMedio);
             remoteViews.setTextViewText(R.id.notification_title, "Advertencia de gas");
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Advertencia de gas","Conectado",sensor.getBateria());
         } else if (value > 25) {
             color = ContextCompat.getColor(this, R.color.VerdeBueno);
             remoteViews.setTextViewText(R.id.notification_title, "Nivel de gas aceptable");
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Nivel de gas aceptable","Conectado",sensor.getBateria());
         } else {
             color = ContextCompat.getColor(this, R.color.RosaExcelente);
             remoteViews.setTextViewText(R.id.notification_title, "Nivel de gas excelente");
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Nivel de gas excelente","Conectado",sensor.getBateria());
         }
 
         remoteViews.setInt(R.id.custom_notification_layout, "setBackgroundColor", color);
