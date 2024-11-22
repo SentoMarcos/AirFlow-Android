@@ -128,13 +128,13 @@ public class SensorFragment extends Fragment {
     public void registerSensor(View view) {
         // Recoger la id del usuario de sharedPreferences
         int id_usuario = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE).getInt("id", 0);
-
+        String nombre_usuario = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE).getString("nombre", "DefaultName");
         // Crear el objeto SensorObject con los datos actuales del sensor
         SensorObject sensorObject = new SensorObject(
                 "Activo",
                 "EPSG-GTI-PROY-3D",
                 "EPSG-GTI-PROY-3D",
-                "SensorName1",
+                nombre_usuario,
                 true,
                 100
         );

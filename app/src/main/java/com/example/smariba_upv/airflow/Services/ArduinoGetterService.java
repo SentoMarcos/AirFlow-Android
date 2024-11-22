@@ -13,6 +13,7 @@ import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -234,7 +235,6 @@ public class ArduinoGetterService extends Service {
         this.elEscanner.startScan(this.callbackDelEscaneo);
         return null;
     }
-
     private void enviarNotificacionDesconexion() {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Desconexión de dispositivo")
@@ -248,6 +248,12 @@ public class ArduinoGetterService extends Service {
         }
         Log.d(ETIQUETA_LOG, "Notificación de desconexión enviada.");
         dispositivoActualmenteConectado = false; // Cambiar el estado
+
+        // Obtener la id del sensor de shared preferences
+        SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int idSensor = sharedPreferences.getInt("id_sensor", -1);
+        // Actualizar el estado en el servidor
+        enviarPeticionesUser.actualizarSensor(idSensor, "Desconexión de dispositivo", false, 0);
     }
 
     private void inicializarBlueTooth() {
@@ -350,6 +356,14 @@ public class ArduinoGetterService extends Service {
         int value = sensor.getMeasure();
         long currentTime = System.currentTimeMillis();
 
+        //si la id del sensor es distinta a la id de shared preferences se cambiará el valor de la id de shared preferences
+        SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int idSensor = sharedPreferences.getInt("id_sensor", -1);
+
+
+        Log.d(ETIQUETA_LOG, "SensorObject: " + idSensor);
+        sensor.setId(idSensor);
+
         // Check if enough time has passed since the last notification
         if (currentTime - lastNotificationTime < NOTIFICATION_INTERVAL) {
             Log.d(ETIQUETA_LOG, "Skipping notification to avoid spamming.");
@@ -370,29 +384,29 @@ public class ArduinoGetterService extends Service {
         if (value > 200) {
             color = ContextCompat.getColor(this, R.color.RojoPeligroso);
             remoteViews.setTextViewText(R.id.notification_title, "Error en la medición");
-            enviarPeticionesUser.actualizarSensor(sensor.getId(), "error en la medicion","Conectado",sensor.getBateria());
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "error en la medicion",true,sensor.getBateria());
         } else if (value > 100) {
             color = ContextCompat.getColor(this, R.color.RojoPeligroso);
             remoteViews.setTextViewText(R.id.notification_title, "Exceso de gas detectado");
-            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Exceso de gas detectado","Conectado",sensor.getBateria());
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Exceso de gas detectado",true,sensor.getBateria());
 
 
         } else if (value > 75) {
             color = ContextCompat.getColor(this, R.color.NaranjaMalo);
             remoteViews.setTextViewText(R.id.notification_title, "Alerta de gas");
-            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Alerta de gas","Conectado",sensor.getBateria());
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Alerta de gas",true,sensor.getBateria());
         } else if (value > 50) {
             color = ContextCompat.getColor(this, R.color.AmarilloMedio);
             remoteViews.setTextViewText(R.id.notification_title, "Advertencia de gas");
-            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Advertencia de gas","Conectado",sensor.getBateria());
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Advertencia de gas",true,sensor.getBateria());
         } else if (value > 25) {
             color = ContextCompat.getColor(this, R.color.VerdeBueno);
             remoteViews.setTextViewText(R.id.notification_title, "Nivel de gas aceptable");
-            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Nivel de gas aceptable","Conectado",sensor.getBateria());
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Nivel de gas aceptable",true,sensor.getBateria());
         } else {
             color = ContextCompat.getColor(this, R.color.RosaExcelente);
             remoteViews.setTextViewText(R.id.notification_title, "Nivel de gas excelente");
-            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Nivel de gas excelente","Conectado",sensor.getBateria());
+            enviarPeticionesUser.actualizarSensor(sensor.getId(), "Nivel de gas excelente",true,sensor.getBateria());
         }
 
         remoteViews.setInt(R.id.custom_notification_layout, "setBackgroundColor", color);

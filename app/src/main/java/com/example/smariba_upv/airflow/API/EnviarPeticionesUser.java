@@ -3,14 +3,18 @@ package com.example.smariba_upv.airflow.API;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
 import android.util.Log;
 
+import com.example.smariba_upv.airflow.API.MODELS.SensorResponse;
+import com.example.smariba_upv.airflow.API.MODELS.UsuarioSensor;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
-import com.example.smariba_upv.airflow.POJO.SensorRequest;
+import com.example.smariba_upv.airflow.API.MODELS.SensorRequest;
 import com.example.smariba_upv.airflow.POJO.User;
 import com.example.smariba_upv.airflow.PRESENTACION.LandActivity;
 
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -97,7 +101,6 @@ public class EnviarPeticionesUser {
         }
     }
 
-    // Metodo para registrar sensor
     public void registrarSensor(int id_usuario, SensorObject sensorObject) {
         SensorRequest sensorRequest = new SensorRequest(
                 id_usuario,
@@ -106,29 +109,36 @@ public class EnviarPeticionesUser {
                 sensorObject.getNum_referencia(),
                 sensorObject.getUuid(),
                 sensorObject.getNombre(),
-                String.valueOf(sensorObject.isConexion()),
+                sensorObject.isConexion(),
                 sensorObject.getBateria()
         );
 
-        RetrofitClient.getApiService().registrarSensor(sensorRequest).enqueue(new Callback<ResponseBody>() {
+        RetrofitClient.getApiService().registrarSensor(sensorRequest).enqueue(new Callback<SensorResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "Sensor registrado correctamente");
+            public void onResponse(Call<SensorResponse> call, Response<SensorResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int sensorId = response.body().getSensorId();
+                    //guardar id_sensor en shared preferences
+                    SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt("id_sensor", sensorId);
+                    editor.apply();
+                    Log.d(TAG, "Sensor registrado correctamente con ID: " + sensorId);
                 } else {
                     Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SensorResponse> call, Throwable t) {
                 Log.e(TAG, "onFailure:", t);
             }
         });
     }
 
+
     // Método para actualizar sensor
-    public void actualizarSensor(int id_sensor, String estado, String conexion, int bateria) {
+    public void actualizarSensor(int id_sensor, String estado, boolean conexion, int bateria) {
         SensorRequest sensorRequest = new SensorRequest(id_sensor, estado, conexion, bateria);
         RetrofitClient.getApiService().actualizarSensor(sensorRequest).enqueue(new Callback<ResponseBody>() {
             @Override
@@ -146,4 +156,30 @@ public class EnviarPeticionesUser {
             }
         });
     }
+
+    public void obtenerMisSensores(int id_usuario, Context context) {
+        RetrofitClient.getApiService().getMisSensores(id_usuario).enqueue(new Callback<List<UsuarioSensor>>() {
+            @Override
+            public void onResponse(Call<List<UsuarioSensor>> call, Response<List<UsuarioSensor>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<UsuarioSensor> usuarioSensores = response.body();
+
+                    // Procesar los sensores recibidos
+                    for (UsuarioSensor usuarioSensor : usuarioSensores) {
+                        Sensor sensor = usuarioSensor.getSensor();
+                        Log.d("SensorInfo", "ID: " + sensor.getId() + ", Nombre: " + sensor.getName());
+                    }
+
+                } else {
+                    Log.e("Error", "Error en la petición. Código: " + response.code() + " - " + response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UsuarioSensor>> call, Throwable t) {
+                Log.e("Error", "Fallo en la solicitud:", t);
+            }
+        });
+    }
+
 }
