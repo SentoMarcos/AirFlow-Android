@@ -9,9 +9,11 @@ package com.example.smariba_upv.airflow.API;
 
 import com.example.smariba_upv.airflow.POJO.Medicion;
 
+import com.example.smariba_upv.airflow.POJO.SensorRequest;
 import com.example.smariba_upv.airflow.POJO.User;
 
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -39,6 +41,13 @@ public interface ApiService {
     @POST("/insertar")
     Call<Void> insertarMedicion(@Body Medicion medicion);
 
+    @POST("/usuarios/registrar-sensor")
+    Call<ResponseBody> registrarSensor(@Body SensorRequest sensorRequest);
 
-
+    //actualizar sensor
+    @PUT("/usuarios/actualizar-sensor")
+    Call<ResponseBody> actualizarSensor(@Body SensorRequest sensorRequest);
 }
+
+
+
