@@ -5,19 +5,19 @@
     android:viewportHeight="90">
   <path
       android:pathData="M37.548,61.539h26.461v26.461h-26.461z"
-      android:fillColor="@color/RojoPeligroso"/>
+      android:fillColor="url(#pattern0_1597_2297)"/>
   <path
       android:pathData="M4.58,43.32h36.005v36.005h-36.005z"
-      android:fillColor="@color/NaranjaMalo"/>
+      android:fillColor="url(#pattern1_1597_2297)"/>
   <path
       android:pathData="M27.137,31.174h39.475v39.475h-39.475z"
-      android:fillColor="@color/AmarilloMedio"/>
+      android:fillColor="url(#pattern2_1597_2297)"/>
   <path
       android:pathData="M0,0h54v54h-54z"
-      android:fillColor="@color/RosaExcelente"/>
+      android:fillColor="url(#pattern3_1597_2297)"/>
   <path
       android:pathData="M46,27h43v43h-43z"
-      android:fillColor="@color/VerdeBueno"/>
+      android:fillColor="url(#pattern4_1597_2297)"/>
   <path
       android:pathData="M59,15m-5,0a5,5 0,1 1,10 0a5,5 0,1 1,-10 0"
       android:fillColor="#52CCD7"/>
