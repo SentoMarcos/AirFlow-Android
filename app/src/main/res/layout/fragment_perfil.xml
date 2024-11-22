@@ -1,14 +1,447 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PRESENTACION.PerfilFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="48dp"
+                    android:backgroundTint="@color/AzulCuadrático"
+                    android:orientation="horizontal"
+                    app:layoutDescription="@xml/fragment_perfil_xml_constraintlayout_scene"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <ImageView
+                        android:id="@+id/perfil_foto_usuarioyo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/perfil_foto_perfil_usuario" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="@color/AzulCuadrático"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/perfil_nombre_usuario6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="11dp"
+                            android:layout_marginTop="3dp"
+                            android:fontFamily="@font/poppins"
+                            android:text="Nadia"
+                            android:textColor="@color/Blanco"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/perfil_datos_usuario6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:fontFamily="@font/poppins"
+                            android:paddingLeft="11dp"
+                            android:text="45 días aportando datos"
+                            android:textColor="@color/Blanco"
+                            android:textSize="15sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/perfil_puntuacion_usuario5"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="28dp"
+                        android:backgroundTint="@color/Azul_v3"
+                        android:paddingTop="20dp"
+                        android:text="102"
+                        android:textColor="@color/Blanco" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="03"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario3"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario3" />
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_segundotercercuardolugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario4"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario4"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario3" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_segundotercercuardolugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario3"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario3"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario4" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="04"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario2" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="02"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_datos_usuario4"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario4" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Gretter"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario2"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario2" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="410 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario2"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario4" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Amelia"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario3"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario3" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="342 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario3"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario3" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="340 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario2" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Carlos"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario4" />
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/textView6"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Juan"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="512 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario1" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_primerlugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="01"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="512 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Juan"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="48dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Datos personales"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Leaderboard"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilBtEditarPerfil" />
+
+                <Button
+                    android:id="@+id/perfilBtEditarPerfil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="24sp"
+                    android:backgroundTint="@color/AzulCuadrático"
+                    android:fontFamily="@font/ibm_plex_mono"
+                    android:text="Editar perfil"
+                    android:textColor="@color/GrisOscuro"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintStart_toStartOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilNumeroTelefonico" />
+
+                <TextView
+                    android:id="@+id/perfilNumeroTelefonico"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="+34 123 45 67 89"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/perfilCorreo"
+                    app:layout_constraintStart_toStartOf="@+id/perfilCorreo"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilCorreo" />
+
+                <TextView
+                    android:id="@+id/perfilNombreCompleto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Nadia Lorenzo Castellanos"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/Bienvenida"
+                    app:layout_constraintStart_toStartOf="@+id/Bienvenida"
+                    app:layout_constraintTop_toBottomOf="@+id/Bienvenida" />
+
+                <TextView
+                    android:id="@+id/perfilCorreo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="nadiapriv@gmail.com"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintStart_toStartOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilNombreCompleto" />
+
+                <TextView
+                    android:id="@+id/Bienvenida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Buenos días Nadia"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    tools:layout_editor_absoluteX="122dp"
+                    tools:layout_editor_absoluteY="223dp" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/textView6"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_primerlugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="01"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/perfil_usuario2"
+                    app:layout_constraintStart_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/perfil_usuario3"
+                    app:layout_constraintStart_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_foto_usuario2" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_usuario4"
+                    app:layout_constraintStart_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_foto_usuario3" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuarioyo_grande"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="110dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_foto_perfil_usuario_grande"
+                    app:layout_constraintStart_toStartOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_segundotercercuardolugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario2"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario2"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario2" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

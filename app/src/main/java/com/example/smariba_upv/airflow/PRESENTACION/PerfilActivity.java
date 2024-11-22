@@ -20,7 +20,6 @@ public class PerfilActivity extends AppCompatActivity {
     public TextView txtTelefono;
     public Button btnEditarPerfil;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
