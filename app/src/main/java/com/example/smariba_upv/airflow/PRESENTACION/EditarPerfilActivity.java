@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,7 +31,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
         NombreEditText = findViewById(R.id.TxtIUser);
         ApellidosEditText = findViewById(R.id.TxtIApellidos);
-        EmailEditText = findViewById(R.id.TxtIEmail);
+        EmailEditText = findViewById(R.id.TxtICorreo);
         TelefonoEditText = findViewById(R.id.TxtITelefono);
 
         GuardarCambiosButton = findViewById(R.id.btn_Guardar);
@@ -47,6 +48,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
         });
     }
 
+    // En el método guardarCambios() de EditarPerfilActivity
     public void guardarCambios() {
         // recoger los datos de los campos de texto
         String nombre = NombreEditText.getText().toString();
@@ -64,6 +66,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
         editor.putString("email", email);
         editor.putString("telefono", telefono);
         editor.apply();
+        Toast.makeText(this, "Datos guardados con éxito", Toast.LENGTH_SHORT).show();
 
         // Log the values to debug
         Log.d("EditarPerfilActivity", "ID: " + id);
@@ -75,8 +78,11 @@ public class EditarPerfilActivity extends AppCompatActivity {
         // enviar datos a la base de datos
         PeticionesUserUtil peticionesUserUtil = new PeticionesUserUtil();
         peticionesUserUtil.editUsuario(id, nombre, apellidos, email, telefono, contrasenya, this);
-    }
 
+        // cerrar la actividad y devolver el resultado
+        setResult(RESULT_OK);
+        finish();
+    }
     private void cargarDatosUsuario() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         String nombre = sharedPreferences.getString("nombre", "Nombre no disponible");

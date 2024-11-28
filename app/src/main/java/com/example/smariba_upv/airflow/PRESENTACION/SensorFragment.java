@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.R;
 
@@ -28,6 +30,7 @@ public class SensorFragment extends Fragment {
     private ProgressBar batteryIndicator;
     private SensorObject sensor;
     private CardView cardView;
+    private Button btnRegisterSensor;
 
     private BroadcastReceiver sensorUpdateReceiver = new BroadcastReceiver() {
         @Override
@@ -42,11 +45,11 @@ public class SensorFragment extends Fragment {
 
             // Actualizar el objeto sensor
             sensor.setUuid(uuid);
-            sensor.setName(name);
+            sensor.setNombre(name);
             sensor.setTypegas(typegas);
             sensor.setMeasure(measure);
             sensor.setDate(date);
-            sensor.setBattery(battery);
+            sensor.setBateria(battery);
 
             // Actualizar la interfaz de usuario
             updateUI();
@@ -66,12 +69,16 @@ public class SensorFragment extends Fragment {
         tvBattery = view.findViewById(R.id.tv_battery);
         batteryIndicator = view.findViewById(R.id.battery_indicator);
         cardView = view.findViewById(R.id.card_view);
+        btnRegisterSensor = view.findViewById(R.id.add_sensor);
 
         // Inicializar el objeto sensor
         sensor = new SensorObject("", "Air Quality Sensor", "CO2", 75, "2024-11-20", 85);
 
         // Configurar los datos iniciales en el diseño
         updateUI();
+
+        // Configurar el botón de registro de sensor
+        btnRegisterSensor.setOnClickListener(this::registerSensor);
 
         return view;
     }
@@ -92,12 +99,12 @@ public class SensorFragment extends Fragment {
 
     private void updateUI() {
         changeBackgroundColor(sensor.getMeasure());
-        tvSensorName.setText(sensor.getName());
+        tvSensorName.setText(sensor.getNombre());
         tvTypeGas.setText("Gas Type: " + sensor.getTypegas());
         tvMeasure.setText("Measurement: " + sensor.getMeasure() + " ppm");
         tvDate.setText("Date: " + sensor.getDate());
-        tvBattery.setText("Battery: " + sensor.getBattery() + "%");
-        batteryIndicator.setProgress(sensor.getBattery());
+        tvBattery.setText("Battery: " + sensor.getBateria() + "%");
+        batteryIndicator.setProgress(sensor.getBateria());
     }
 
     private void changeBackgroundColor(int value) {
@@ -116,6 +123,25 @@ public class SensorFragment extends Fragment {
         } else {
             cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.RosaExcelente));
         }
+    }
+
+    public void registerSensor(View view) {
+        // Recoger la id del usuario de sharedPreferences
+        int id_usuario = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE).getInt("id", 0);
+        String nombre_usuario = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE).getString("nombre", "DefaultName");
+        // Crear el objeto SensorObject con los datos actuales del sensor
+        SensorObject sensorObject = new SensorObject(
+                "Activo",
+                "EPSG-GTI-PROY-3D",
+                "EPSG-GTI-PROY-3D",
+                nombre_usuario,
+                true,
+                100
+        );
+
+        // Llamar al método registrarSensor de EnviarPeticionesUser
+        EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(getContext());
+        enviarPeticionesUser.registrarSensor(id_usuario, sensorObject);
     }
 
 }

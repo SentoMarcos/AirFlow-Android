@@ -27,11 +27,11 @@ public class NotificationSensorUserUtil {
             sensor = new SensorObject(uuid, name, typegas, measure, date, battery);
             sensorMap.put(uuid, sensor);
         } else {
-            sensor.setName(name);
-            sensor.setTypegas(typegas);
+            sensor.setNombre(name);
             sensor.setMeasure(measure);
+            sensor.setTypegas(typegas);
             sensor.setDate(date);
-            sensor.setBattery(battery);
+            sensor.setBateria(battery);
         }
 
         // Enviar broadcast con los datos actualizados
