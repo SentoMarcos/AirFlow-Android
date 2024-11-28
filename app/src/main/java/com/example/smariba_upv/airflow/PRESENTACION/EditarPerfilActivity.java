@@ -30,7 +30,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
 
         NombreEditText = findViewById(R.id.TxtIUser);
         ApellidosEditText = findViewById(R.id.TxtIApellidos);
-        EmailEditText = findViewById(R.id.TxtIEmail);
+        EmailEditText = findViewById(R.id.TxtICorreo);
         TelefonoEditText = findViewById(R.id.TxtITelefono);
 
         GuardarCambiosButton = findViewById(R.id.btn_Guardar);

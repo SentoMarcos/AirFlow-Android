@@ -1,14 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PRESENTACION.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/landing_imagen_calidad"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="140dp"
+            android:src="@drawable/landing_excelente"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/landing_calidad_aire"
+            android:layout_width="247sp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:fontFamily="@font/poppins"
+            android:text="La calidad del aire es Excelente"
+            android:textAlignment="center"
+            android:textColor="@color/Negro"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@+id/landing_imagen_calidad"
+            app:layout_constraintStart_toStartOf="@+id/landing_imagen_calidad"
+            app:layout_constraintTop_toBottomOf="@+id/landing_imagen_calidad" />
+
+        <TextView
+            android:id="@+id/landing_calidad_aire_numerico"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/poppins"
+            android:text="5ppm"
+            android:textColor="@color/Gris"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="@+id/landing_calidad_aire"
+            app:layout_constraintStart_toStartOf="@+id/landing_calidad_aire"
+            app:layout_constraintTop_toBottomOf="@+id/landing_calidad_aire" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
