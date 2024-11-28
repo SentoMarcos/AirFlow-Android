@@ -1,6 +1,7 @@
 package com.example.smariba_upv.airflow.PRESENTACION;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -13,13 +14,21 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.biometric.BiometricPrompt;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
 import com.example.smariba_upv.airflow.LOGIC.BiometricUtil;
 import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
+import android.Manifest;
 import com.example.smariba_upv.airflow.R;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LogInActivity extends AppCompatActivity implements BiometricUtil.BiometricAuthListener {
 
@@ -30,12 +39,16 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
     ImageButton biometricButton;
     TextView errorText, forgotPasswordText;
     CheckBox Condiciones, rememberMeCheckBox;
+    private static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_log_in);
+
+        // Verificar y solicitar permisos de ubicación, notificación y acceso a dispositivos cercanos
+        checkAndRequestPermissions();
 
         // Inicializar elementos
         EmailEditText = findViewById(R.id.correoInput);
@@ -50,6 +63,49 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         // Configuración de eventos
         Condiciones.setOnClickListener(v -> showConditionsPopup());
         forgotPasswordText.setOnClickListener(v -> showForgotPasswordPopup());
+    }
+
+    private void checkAndRequestPermissions() {
+        String[] permissions = {
+                Manifest.permission.ACCESS_FINE_LOCATION,   // Permiso de ubicación precisa
+                Manifest.permission.ACCESS_COARSE_LOCATION, // Permiso de ubicación general
+                Manifest.permission.BLUETOOTH_CONNECT,      // Permiso de acceso a dispositivos Bluetooth cercanos
+                Manifest.permission.POST_NOTIFICATIONS      // Permiso para mostrar notificaciones (Android 13+)
+        };
+
+        // Lista para permisos que faltan
+        List<String> permissionsToRequest = new ArrayList<>();
+
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                permissionsToRequest.add(permission);
+            }
+        }
+
+        // Si hay permisos que solicitar, hacer la solicitud
+        if (!permissionsToRequest.isEmpty()) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    permissionsToRequest.toArray(new String[0]),
+                    REQUEST_BLUETOOTH_PERMISSIONS
+            );
+        }
+    }
+
+    // Manejar el resultado de la solicitud de permisos
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_BLUETOOTH_PERMISSIONS) {
+            for (int i = 0; i < permissions.length; i++) {
+                if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(TAG, "Permiso concedido: " + permissions[i]);
+                } else {
+                    Log.d(TAG, "Permiso denegado: " + permissions[i]);
+                }
+            }
+        }
     }
 
     private void showConditionsPopup() {
@@ -77,6 +133,9 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
 
 // Mostrar el popup
         builder.create().show();
+
+
+
 
     }
 
@@ -131,6 +190,10 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
             errorText.setText("Usuario o contraseña incorrectos.");
         } else {
             errorText.setText("");
+            EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(this);
+            //recoger el id del usuario de shared preferences
+            int id = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getInt("id", 0);
+            enviarPeticionesUser.obtenerMisSensores(id, this);
         }
     }
 
