@@ -23,6 +23,7 @@ public class EditarPerfilActivity extends AppCompatActivity {
     Button GuardarCambiosButton;
     Button VolverButton;
 
+    //Bundle:saveInstanceState => void
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

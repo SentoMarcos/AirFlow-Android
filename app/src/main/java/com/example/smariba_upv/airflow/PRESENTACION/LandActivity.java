@@ -23,6 +23,7 @@ public class LandActivity extends AppCompatActivity {
     private static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
     private BottomNavigationView bottomNavigationView;
 
+    //Bundle:savedInstanceState => onCreate():void
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +47,7 @@ public class LandActivity extends AppCompatActivity {
             connectSensors();
         }
     }
-
+    //requestCode:int, permissions:String[], grantResults:int[] => onRequestPermissionsResult():void
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -60,16 +61,9 @@ public class LandActivity extends AppCompatActivity {
     }
 
     private void connectSensors() {
-        List<SensorObject> sensors = Arrays.asList(
-                new SensorObject("EPSG-GTI-PROY-3D", "SensorName1", "Unknown", 0, new Date().toString(), 100),
-                new SensorObject("EPSG-GTI-PROY-3D", "SensorName2", "Unknown", 0, new Date().toString(), 100)
-        );
 
-        for (SensorObject sensor : sensors) {
-            sensor.conectSensor(this);
-        }
     }
-
+    //item:MenuItem => onNavigationItemSelected()=>boolean
     private boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment selectedFragment = null;
 
@@ -87,7 +81,7 @@ public class LandActivity extends AppCompatActivity {
 
         return loadFragment(selectedFragment);
     }
-
+    //Fragment:fragment => loadFragment()=>boolean
     private boolean loadFragment(Fragment fragment) {
         if (fragment != null) {
             getSupportFragmentManager()

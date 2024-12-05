@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CustomQRScannerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Personaliza los colores -->
+        <item name="colorPrimary">#6200EE</item>
+        <item name="colorPrimaryDark">#3700B3</item>
+        <item name="colorAccent">#03DAC5</item>
+        <!-- Personaliza el fondo de la actividad -->
+        <item name="android:windowBackground">@android:color/black</item>
+    </style>
+</resources>

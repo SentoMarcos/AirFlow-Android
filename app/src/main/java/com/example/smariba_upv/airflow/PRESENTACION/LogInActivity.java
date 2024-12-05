@@ -41,6 +41,7 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
     CheckBox Condiciones, rememberMeCheckBox;
     private static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
 
+    //Bundle:savedInstanceState => onCreate():void
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +93,7 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         }
     }
 
-    // Manejar el resultado de la solicitud de permisos
+    // requestCode:int, permissions:String[], grantResults:int[] => onRequestPermissionsResult():void
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -164,7 +165,7 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
 
         dialog.show();
     }
-
+    //View view => logIn() => void
     public void logIn(View view) {
         String emailInput = EmailEditText.getText().toString();
         String passwordInput = passwordEditText.getText().toString();
@@ -191,16 +192,14 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         } else {
             errorText.setText("");
             EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(this);
-            //recoger el id del usuario de shared preferences
-            int id = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getInt("id", 0);
-            enviarPeticionesUser.obtenerMisSensores(id, this);
+            enviarPeticionesUser.obtenerMisSensores(this);
         }
     }
-
+    //View view => biometricLogIn() => void
     public void biometricLogIn(View view) {
         BiometricUtil.authenticate(this, this);
     }
-
+    //BiometricPrompt.AuthenticationResult result => onAuthenticationSucceeded() => void
     @Override
     public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
         Intent intent = new Intent(LogInActivity.this, LandActivity.class);
@@ -213,7 +212,7 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         errorText.setText("Fallo en la autenticación");
         Log.d(TAG, "Fallo en la autenticación");
     }
-
+    //int errorCode, CharSequence errString => onAuthenticationError() => void
     @Override
     public void onAuthenticationError(int errorCode, CharSequence errString) {
         errorText.setText("Error de autenticación");

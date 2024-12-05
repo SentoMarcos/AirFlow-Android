@@ -10,6 +10,7 @@ public class SensorRequest {
     private boolean conexion;
     private int bateria;
 
+    //N: id_usuario, id_sensor, estado, num_referencia, uuid, nombre, conexion, bateria => SensorRequest()
     public SensorRequest(int id_usuario, int id_sensor, String estado, String num_referencia, String uuid, String nombre, boolean conexion, int bateria) {
         this.id_usuario = id_usuario;
         this.id_sensor = id_sensor;
@@ -21,12 +22,13 @@ public class SensorRequest {
         this.bateria = bateria;
     }
 
-    public SensorRequest(int id_sensor, String estado, boolean conexion, int bateria) {
-        this.id_sensor = id_sensor;
+    public SensorRequest(int idSensor, String estado, boolean conexion, int bateria) {
+        this.id_sensor = idSensor;
         this.estado = estado;
         this.conexion = conexion;
         this.bateria = bateria;
     }
+
 
     // Getters y setters
 }

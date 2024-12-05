@@ -66,6 +66,7 @@ public class PerfilFragment extends Fragment {
         return view;
     }
 
+    // N:requestCode,N:resultCode,Intent:data => onActivityResult():void
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
