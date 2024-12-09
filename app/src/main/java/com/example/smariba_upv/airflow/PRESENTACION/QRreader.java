@@ -1,25 +1,26 @@
+/**
+ * @file QRreader.java
+ * @brief Clase que permite leer un código QR
+ * @details Clase que permite leer un código QR y registrar un sensor en la base de datos
+ */
+
 package com.example.smariba_upv.airflow.PRESENTACION;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.webkit.URLUtil;
+import android.widget.Button;
+import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-
+import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
 import com.example.smariba_upv.airflow.R;
 import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
@@ -28,25 +29,53 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.IOException;
 
+/**
+ * @class QRreader
+ * @brief Clase que permite leer un código QR
+ * @details Clase que permite leer un código QR y registrar un sensor en la base de datos
+ */
 public class QRreader extends AppCompatActivity {
-
+    /**
+     * @param cameraSource Fuente de la cámara
+     * @param cameraView Vista de la cámara
+     * @param MY_PERMISSIONS_REQUEST_CAMERA Permisos de la cámara
+     * @param token Token
+     * @param tokenanterior Token anterior
+     */
     private CameraSource cameraSource;
     private SurfaceView cameraView;
     private final int MY_PERMISSIONS_REQUEST_CAMERA = 1;
     private String token = "";
     private String tokenanterior = "";
 
+    /**
+     * @brief Método que se ejecuta al crear la actividad
+     * @details Método que se ejecuta al crear la actividad y permite leer un código QR
+     * @param savedInstanceState Instancia guardada
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrreader);
 
-        cameraView = (SurfaceView) findViewById(R.id.camera_view);
+        cameraView = findViewById(R.id.camera_view);
+        Button btnCancel = findViewById(R.id.btn_cancel);
+        btnCancel.setOnClickListener(v -> finish());
         initQR();
     }
 
+    /**
+     * @function initQR
+     * @brief Método que inicializa el lector de QR
+     * @details Método que inicializa el lector de QR y registra un sensor en la base de datos
+     */
     public void initQR() {
 
+        /**
+         * @param barcodeDetector Detector de códigos de barras
+         * @param cameraSource Fuente de la cámara
+         *
+         */
         // creo el detector qr
         BarcodeDetector barcodeDetector =
                 new BarcodeDetector.Builder(this)
@@ -86,23 +115,35 @@ public class QRreader extends AppCompatActivity {
                     }
                 }
             }
-
+            /**
+             * @function surfaceChanged
+             * @param holder Holder
+             * @param format Formato
+             * @param width Ancho
+             * @param height Alto
+             */
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             }
-
+            /**
+             * @function surfaceDestroyed
+             * @param holder Holder
+             */
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
                 cameraSource.stop();
             }
         });
 
-        // preparo el detector de QR
+        /**
+         * @function setProcessor
+         * @brief Método que procesa el código QR
+         * @details Método que procesa el código QR y registra un sensor en la base de datos
+         */
         barcodeDetector.setProcessor(new Detector.Processor<Barcode>() {
             @Override
             public void release() {
             }
-
 
             @Override
             public void receiveDetections(Detector.Detections<Barcode> detections) {
@@ -111,7 +152,7 @@ public class QRreader extends AppCompatActivity {
                 if (barcodes.size() > 0) {
 
                     // obtenemos el token
-                    token = barcodes.valueAt(0).displayValue.toString();
+                    token = barcodes.valueAt(0).displayValue;
 
                     // verificamos que el token anterior no se igual al actual
                     // esto es util para evitar multiples llamadas empleando el mismo token
@@ -121,18 +162,14 @@ public class QRreader extends AppCompatActivity {
                         tokenanterior = token;
                         Log.i("token", token);
 
-                        if (URLUtil.isValidUrl(token)) {
-                            // si es una URL valida abre el navegador
-                            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(token));
-                            startActivity(browserIntent);
-                        } else {
-                            // comparte en otras apps
-                            Intent shareIntent = new Intent();
-                            shareIntent.setAction(Intent.ACTION_SEND);
-                            shareIntent.putExtra(Intent.EXTRA_TEXT, token);
-                            shareIntent.setType("text/plain");
-                            startActivity(shareIntent);
-                        }
+                        // Mostrar el contenido del código QR en un Toast y cerrar la actividad
+                        runOnUiThread(() -> {
+                            Toast.makeText(QRreader.this, "QR Code: " + token, Toast.LENGTH_LONG).show();
+                            //registrar sensor
+                            PeticionesUserUtil.registrarSensor(token, QRreader.this);
+
+                            finish(); // Cerrar la actividad
+                        });
 
                         new Thread(new Runnable() {
                             public void run() {
@@ -143,18 +180,14 @@ public class QRreader extends AppCompatActivity {
                                         tokenanterior = "";
                                     }
                                 } catch (InterruptedException e) {
-                                    // TODO Auto-generated catch block
-                                    Log.e("Error", "Waiting didnt work!!");
+                                    Log.e("Error", "Waiting didn't work!!");
                                     e.printStackTrace();
                                 }
                             }
                         }).start();
-
                     }
                 }
             }
         });
-
     }
-
 }

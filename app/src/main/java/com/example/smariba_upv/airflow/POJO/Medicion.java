@@ -16,14 +16,22 @@ public class Medicion {
     double latitud, longitud,valor;
     Date fecha;
 
-    public Medicion(int id, int idSenor, String tipoGas, double latitud, double longitud, double valor, Date fecha) {
+    public Medicion(int id, int idSenor, String tipoGas, double latitud, double longitud, double valor) {
         this.id = id;
         this.idSenor = idSenor;
         this.tipoGas = tipoGas;
         this.latitud = latitud;
         this.longitud = longitud;
         this.valor = valor;
-        this.fecha = fecha;
+        this.fecha = new Date(); // Asignar la fecha actual
+    }
+    public Medicion( int idSenor, String tipoGas, double latitud, double longitud, double valor) {
+        this.idSenor = idSenor;
+        this.tipoGas = tipoGas;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.valor = valor;
+        this.fecha = new Date(); // Asignar la fecha actual
     }
 
     public int getId() {

@@ -291,7 +291,7 @@ public class ArduinoGetterService extends Service {
                         }  // Llamada al método para obtener la ubicación
                         int idSensor = sharedPreferences.getInt("id_sensor", -1);
                         SensorObject sensor = new SensorObject(idSensor, "Conectado", "1234", uuid, name, true, battery);
-                        Medicion medicion = new Medicion(0, sharedPreferences.getInt("id_sensor", -1), typegas, latitude, longitude, measure, new Date());
+                        Medicion medicion = new Medicion(0, sharedPreferences.getInt("id_sensor", -1), typegas, latitude, longitude, measure);
                         limitcheck(sensor,medicion);
                     }
                 }

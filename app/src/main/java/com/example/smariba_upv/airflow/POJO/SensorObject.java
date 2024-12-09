@@ -4,18 +4,37 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
+import com.google.gson.annotations.SerializedName;
 
 public class SensorObject {
     int id;
-    String estado;
-    String num_ref;
-    String UUID;
-    String nombre;
-    boolean conexion;
-    int Bateria;
+    @SerializedName("estado")
+    private String estado;
 
+    @SerializedName("num_referencia")
+    private String num_ref;
+
+    @SerializedName("uuid")
+    private String UUID;
+
+    @SerializedName("nombre")
+    private String nombre;
+
+    @SerializedName("conexion")
+    private boolean conexion;
+
+    @SerializedName("bateria")
+    private int Bateria;
     public SensorObject(int id, String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.id = id;
+        this.estado = estado;
+        this.num_ref = num_ref;
+        this.UUID = UUID;
+        this.nombre = nombre;
+        this.conexion = conexion;
+        Bateria = bateria;
+    }
+    public SensorObject( String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.estado = estado;
         this.num_ref = num_ref;
         this.UUID = UUID;
@@ -78,5 +97,17 @@ public class SensorObject {
 
     public void setBateria(int bateria) {
         Bateria = bateria;
+    }
+
+    @Override
+    public String toString() {
+        return "SensorObject{" +
+                "estado='" + estado + '\'' +
+                ", num_ref='" + num_ref + '\'' +
+                ", UUID='" + UUID + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", conexion=" + conexion +
+                ", bateria=" + Bateria +
+                '}';
     }
 }

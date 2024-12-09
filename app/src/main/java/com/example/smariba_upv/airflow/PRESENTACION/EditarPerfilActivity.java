@@ -1,4 +1,9 @@
 package com.example.smariba_upv.airflow.PRESENTACION;
+/**
+ * @file EditarPerfilActivity.java
+ * @brief Clase que permite editar el perfil del usuario
+ * @details Clase que permite editar el perfil del usuario y guardar los cambios realizados
+ */
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,9 +18,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
 import com.example.smariba_upv.airflow.R;
-
+/**
+ * @class EditarPerfilActivity
+ * @brief Clase que permite editar el perfil del usuario
+ * @details Clase que permite editar el perfil del usuario y guardar los cambios realizados
+ */
 public class EditarPerfilActivity extends AppCompatActivity {
-
+    /**
+     * @param NombreEditText Campo de texto para el nombre
+     * @param ApellidosEditText Campo de texto para los apellidos
+     * @param EmailEditText Campo de texto para el correo electrónico
+     * @param TelefonoEditText Campo de texto para el teléfono
+     * @param GuardarCambiosButton Botón para guardar los cambios
+     * @param VolverButton Botón para volver
+     */
     EditText NombreEditText;
     EditText ApellidosEditText;
     EditText EmailEditText;
@@ -23,6 +39,10 @@ public class EditarPerfilActivity extends AppCompatActivity {
     Button GuardarCambiosButton;
     Button VolverButton;
 
+    /**
+     * @function onCreate
+     * @param savedInstanceState
+     */
     //Bundle:saveInstanceState => void
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +68,11 @@ public class EditarPerfilActivity extends AppCompatActivity {
             finish();
         });
     }
-
+    /**
+     * @function guardarCambios
+     * @brief Método que permite guardar los cambios realizados en el perfil del usuario
+     * @details Método que permite guardar los cambios realizados en el perfil del usuario y enviar los datos a la base de datos
+     */
     // En el método guardarCambios() de EditarPerfilActivity
     public void guardarCambios() {
         // recoger los datos de los campos de texto
@@ -84,6 +108,11 @@ public class EditarPerfilActivity extends AppCompatActivity {
         setResult(RESULT_OK);
         finish();
     }
+    /**
+     * @function cargarDatosUsuario
+     * @brief Método que carga los datos del usuario
+     * @details Método que carga los datos del usuario desde SharedPreferences
+     */
     private void cargarDatosUsuario() {
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         String nombre = sharedPreferences.getString("nombre", "Nombre no disponible");

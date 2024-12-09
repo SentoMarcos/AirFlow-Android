@@ -7,6 +7,7 @@
 
 package com.example.smariba_upv.airflow.API;
 
+import com.example.smariba_upv.airflow.API.MODELS.SensorResponse;
 import com.example.smariba_upv.airflow.POJO.Medicion;
 
 import com.example.smariba_upv.airflow.API.MODELS.SensorRequest;
@@ -22,6 +23,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Query;
 
 /********************************************
  * @interface ApiService
@@ -48,9 +50,11 @@ public interface ApiService {
     @PUT("/usuarios/actualizar-sensor")
     Call<ResponseBody> actualizarSensor(@Body SensorRequest sensorRequest);
 
-    @GET("/sensores/getSensoresUser")
-    Call<List<SensorObject>> getSensoresUser();
+    // ApiService.java
+    @GET("/usuarios/mis-sensores")
+    Call<List<SensorResponse>> getMisSensores(@Query("id_usuario") int id_usuario);
 }
+
 
 
 

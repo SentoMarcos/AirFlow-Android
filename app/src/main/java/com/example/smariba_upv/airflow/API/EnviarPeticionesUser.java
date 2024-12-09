@@ -13,12 +13,14 @@ import com.example.smariba_upv.airflow.PRESENTACION.LandActivity;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 public class EnviarPeticionesUser {
     /**
@@ -134,7 +136,10 @@ public class EnviarPeticionesUser {
      *  N:id_usuario, Objeto:sensorObject => registrarSensor()
      * **/
     public void registrarSensor(int id_usuario, SensorObject sensorObject) {
-        SensorRequest sensorRequest = new SensorRequest(id_usuario, sensorObject.getId(), sensorObject.getEstado(), sensorObject.getNum_ref(), sensorObject.getUUID(), sensorObject.getNombre(), sensorObject.isConexion(), sensorObject.getBateria());
+        String uuidTrimmed = sensorObject.getUUID().trim();
+        SensorRequest sensorRequest = new SensorRequest(id_usuario, sensorObject.getEstado(), sensorObject.getNum_ref(), uuidTrimmed, sensorObject.getNombre(), sensorObject.isConexion(), sensorObject.getBateria());
+        //ver datos del sensor
+        Log.d(TAG, "Sensor: " + sensorObject.getId() + " - " + sensorObject.getEstado() + " - " + sensorObject.getNum_ref() + " - " + uuidTrimmed + " - " + sensorObject.getNombre() + " - " + sensorObject.isConexion() + " - " + sensorObject.getBateria());
         RetrofitClient.getApiService().registrarSensor(sensorRequest).enqueue(new Callback<SensorRequest>() {
             @Override
             public void onResponse(Call<SensorRequest> call, Response<SensorRequest> response) {
@@ -183,30 +188,50 @@ public class EnviarPeticionesUser {
      * @param context   Contexto de la aplicación
      *  Context:context => obtenerMisSensores()
      * **/
-
+    // EnviarPeticionesUser.java
     public void obtenerMisSensores(Context context) {
-        RetrofitClient.getApiService().getSensoresUser().enqueue(new Callback<List<SensorObject>>() {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int id_usuario = sharedPreferences.getInt("id", 0); // Retrieve user ID
+        Log.d(TAG, "ID del usuario: " + id_usuario);
+
+        RetrofitClient.getApiService().getMisSensores(id_usuario).enqueue(new Callback<List<SensorResponse>>() {
             @Override
-            public void onResponse(Call<List<SensorObject>> call, Response<List<SensorObject>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    List<SensorObject> sensores = response.body();
-                    // Guardar la lista de sensores en SharedPreferences
-                    SharedPreferences sharedPreferences = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
+            public void onResponse(Call<List<SensorResponse>> call, Response<List<SensorResponse>> response) {
+                if (response.isSuccessful()) {
+                    List<SensorResponse> sensorResponses = response.body();
+                    List<SensorObject> sensorObjects = new ArrayList<>();
+
+                    // Map SensorResponse to SensorObject
+                    for (SensorResponse sensorResponse : sensorResponses) {
+                        SensorResponse.Sensor sensor = sensorResponse.getSensor();
+                        SensorObject sensorObject = new SensorObject(
+                                sensorResponse.getIdSensor(),
+                                sensor.getNombre(),
+                                sensor.getNumReferencia(),
+                                sensor.getEstado(),
+                                sensor.getUuid(),
+                                sensor.isConexion(),
+                                sensor.getBateria()
+                        );
+                        sensorObjects.add(sensorObject);
+                    }
+
+                    // Save sensorObjects in SharedPreferences as JSON
                     Gson gson = new Gson();
-                    String jsonSensores = gson.toJson(sensores);
+                    String jsonSensores = gson.toJson(sensorObjects);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("sensores", jsonSensores);
                     editor.apply();
-                    Log.d(TAG, "Sensores obtenidos y almacenados: " + sensores.size());
                 } else {
-                    Log.e(TAG, "Error en la petición. Código de estado: " + response.code() + " - " + response.message());
+                    Log.e(TAG, "Error en la petición. Código de estado: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<SensorObject>> call, Throwable t) {
+            public void onFailure(Call<List<SensorResponse>> call, Throwable t) {
                 Log.e(TAG, "onFailure:", t);
             }
         });
     }
+
 }
