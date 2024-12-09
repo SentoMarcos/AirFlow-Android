@@ -10,11 +10,7 @@ import android.view.ViewGroup;
 
 import com.example.smariba_upv.airflow.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SaludFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+//TODO: completar la clase
 public class SaludFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match

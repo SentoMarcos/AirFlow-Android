@@ -1,147 +1,113 @@
 // SensorFragment.java
 package com.example.smariba_upv.airflow.PRESENTACION;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
+import com.example.smariba_upv.airflow.POJO.Medicion;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 public class SensorFragment extends Fragment {
+    private Button btnAddSensor;
+    private RecyclerView recyclerView;
+    private SensorAdapter sensorAdapter;
+    private List<SensorObject> sensorList;
+    private List<Medicion> medicionList;
+    TextView tvNoSensors;
 
-    private TextView tvSensorName, tvTypeGas, tvMeasure, tvDate, tvBattery;
-    private ProgressBar batteryIndicator;
-    private SensorObject sensor;
-    private CardView cardView;
-    private Button btnRegisterSensor;
-
-    private BroadcastReceiver sensorUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Obtener los datos del intent
-            String uuid = intent.getStringExtra("sensor_uuid");
-            String name = intent.getStringExtra("sensor_name");
-            String typegas = intent.getStringExtra("sensor_typegas");
-            int measure = intent.getIntExtra("sensor_measure", 0);
-            String date = intent.getStringExtra("sensor_date");
-            int battery = intent.getIntExtra("sensor_battery", 0);
-
-            // Actualizar el objeto sensor
-            sensor.setUuid(uuid);
-            sensor.setNombre(name);
-            sensor.setTypegas(typegas);
-            sensor.setMeasure(measure);
-            sensor.setDate(date);
-            sensor.setBateria(battery);
-
-            // Actualizar la interfaz de usuario
-            updateUI();
-        }
-    };
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_sensor, container, false);
-
-        // Obtener referencias a los elementos del diseño
-        tvSensorName = view.findViewById(R.id.tv_sensor_name);
-        tvTypeGas = view.findViewById(R.id.tv_type_gas);
-        tvMeasure = view.findViewById(R.id.tv_measure);
-        tvDate = view.findViewById(R.id.tv_date);
-        tvBattery = view.findViewById(R.id.tv_battery);
-        batteryIndicator = view.findViewById(R.id.battery_indicator);
-        cardView = view.findViewById(R.id.card_view);
-        btnRegisterSensor = view.findViewById(R.id.add_sensor);
-
-        // Inicializar el objeto sensor
-        sensor = new SensorObject("", "Air Quality Sensor", "CO2", 75, "2024-11-20", 85);
-
-        // Configurar los datos iniciales en el diseño
-        updateUI();
-
-        // Configurar el botón de registro de sensor
-        btnRegisterSensor.setOnClickListener(this::registerSensor);
-
-        return view;
+    public SensorFragment() {
+        // Required empty public constructor
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        // Registrar el BroadcastReceiver
-        IntentFilter filter = new IntentFilter("com.example.smariba_upv.airflow.SENSOR_UPDATE");
-        getActivity().registerReceiver(sensorUpdateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);    }
+        // Clear the list and fetch new data
+        sensorList.clear();
+        añadirSensoresVista();
+        sensorAdapter.notifyDataSetChanged(); // Notify adapter
+    }
+
+    private void añadirSensoresVista() {
+        EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(getContext());
+        enviarPeticionesUser.obtenerMisSensores(getContext());
+
+        // Get sensor data from SharedPreferences
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String jsonSensores = sharedPreferences.getString("sensores", null);
+
+        if (jsonSensores != null) {
+            try {
+                Gson gson = new Gson();
+                Type type = new TypeToken<List<SensorObject>>() {}.getType();
+                List<SensorObject> sensores = gson.fromJson(jsonSensores, type);
+                sensorList.addAll(sensores);
+            } catch (Exception e) {
+                Log.e("SensorFragment", "Error parsing JSON: " + e.getMessage());
+            }
+        }
+
+        // Update view visibility
+        updateView(tvNoSensors);
+    }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        // Desregistrar el BroadcastReceiver
-        getActivity().unregisterReceiver(sensorUpdateReceiver);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_sensor, container, false);
+
+        // Initialize views
+        recyclerView = view.findViewById(R.id.rv_sensors);
+        btnAddSensor = view.findViewById(R.id.add_sensor);
+        tvNoSensors = view.findViewById(R.id.tv_no_sensors);
+
+        // Set up RecyclerView
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Initialize lists and adapter
+        sensorList = new ArrayList<>();
+        medicionList = new ArrayList<>();
+        medicionList.add(new Medicion(2, "CO2", 0, 0, 10));
+        sensorAdapter = new SensorAdapter(sensorList, medicionList);
+        recyclerView.setAdapter(sensorAdapter);
+
+        // Add sensor button
+        btnAddSensor.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), QRreader.class);
+            startActivity(intent);
+        });
+
+        // Update view
+        updateView(tvNoSensors);
+
+        return view;
     }
 
-    private void updateUI() {
-        changeBackgroundColor(sensor.getMeasure());
-        tvSensorName.setText(sensor.getNombre());
-        tvTypeGas.setText("Gas Type: " + sensor.getTypegas());
-        tvMeasure.setText("Measurement: " + sensor.getMeasure() + " ppm");
-        tvDate.setText("Date: " + sensor.getDate());
-        tvBattery.setText("Battery: " + sensor.getBateria() + "%");
-        batteryIndicator.setProgress(sensor.getBateria());
-    }
-
-    private void changeBackgroundColor(int value) {
-        Log.d("SensorFragment", "Changing background color, value: " + value);
-        if (value > 200) {
-            //pone un menaje de error en el la tarjeta
-            tvSensorName.setText("Error en la medición");
-        } else if (value > 100) {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.RojoPeligroso));
-        } else if (value > 75) {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.NaranjaMalo));
-        } else if (value > 50) {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.AmarilloMedio));
-        } else if (value > 25) {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.VerdeBueno));
+    private void updateView(TextView tvNoSensors) {
+        if (sensorList.isEmpty()) {
+            tvNoSensors.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
         } else {
-            cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.RosaExcelente));
+            tvNoSensors.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
-
-    public void registerSensor(View view) {
-        // Recoger la id del usuario de sharedPreferences
-        int id_usuario = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE).getInt("id", 0);
-        String nombre_usuario = getContext().getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE).getString("nombre", "DefaultName");
-        // Crear el objeto SensorObject con los datos actuales del sensor
-        SensorObject sensorObject = new SensorObject(
-                "Activo",
-                "EPSG-GTI-PROY-3D",
-                "EPSG-GTI-PROY-3D",
-                nombre_usuario,
-                true,
-                100
-        );
-
-        // Llamar al método registrarSensor de EnviarPeticionesUser
-        EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(getContext());
-        enviarPeticionesUser.registrarSensor(id_usuario, sensorObject);
-    }
-
 }

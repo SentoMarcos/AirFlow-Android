@@ -4,70 +4,43 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
+import com.google.gson.annotations.SerializedName;
 
 public class SensorObject {
-    private int id;
+    int id;
+    @SerializedName("estado")
     private String estado;
-    private String num_referencia;
-    private String uuid;
+
+    @SerializedName("num_referencia")
+    private String num_ref;
+
+    @SerializedName("uuid")
+    private String UUID;
+
+    @SerializedName("nombre")
     private String nombre;
+
+    @SerializedName("conexion")
     private boolean conexion;
-    private int bateria;
 
-    private int measure;
-    private String date;
-    private String typegas;
-
-    public SensorObject(int id, String estado, String num_referencia, String uuid, String nombre, boolean conexion, int bateria) {
+    @SerializedName("bateria")
+    private int Bateria;
+    public SensorObject(int id, String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.id = id;
         this.estado = estado;
-        this.num_referencia = num_referencia;
-        this.uuid = uuid;
+        this.num_ref = num_ref;
+        this.UUID = UUID;
         this.nombre = nombre;
         this.conexion = conexion;
-        this.bateria = bateria;
+        Bateria = bateria;
     }
-
-    public SensorObject(String estado, String num_referencia, String uuid, String nombre, boolean conexion, int bateria) {
+    public SensorObject( String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.estado = estado;
-        this.num_referencia = num_referencia;
-        this.uuid = uuid;
+        this.num_ref = num_ref;
+        this.UUID = UUID;
         this.nombre = nombre;
         this.conexion = conexion;
-        this.bateria = bateria;
-    }
-
-    public SensorObject(String uuid, String nombre, String typegas, int measure, String date, int battery) {
-        this.uuid = uuid;
-        this.nombre = nombre;
-        this.typegas = typegas;
-        this.measure = measure;
-        this.date = date;
-        this.bateria = battery;
-    }
-
-    public int getMeasure() {
-        return measure;
-    }
-
-    public void setMeasure(int measure) {
-        this.measure = measure;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
-    public String getTypegas() {
-        return typegas;
-    }
-
-    public void setTypegas(String typegas) {
-        this.typegas = typegas;
+        Bateria = bateria;
     }
 
     public int getId() {
@@ -86,20 +59,20 @@ public class SensorObject {
         this.estado = estado;
     }
 
-    public String getNum_referencia() {
-        return num_referencia;
+    public String getNum_ref() {
+        return num_ref;
     }
 
-    public void setNum_referencia(String num_referencia) {
-        this.num_referencia = num_referencia;
+    public void setNum_ref(String num_ref) {
+        this.num_ref = num_ref;
     }
 
-    public String getUuid() {
-        return uuid;
+    public String getUUID() {
+        return UUID;
     }
 
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
+    public void setUUID(String UUID) {
+        this.UUID = UUID;
     }
 
     public String getNombre() {
@@ -119,16 +92,22 @@ public class SensorObject {
     }
 
     public int getBateria() {
-        return bateria;
+        return Bateria;
     }
 
     public void setBateria(int bateria) {
-        this.bateria = bateria;
+        Bateria = bateria;
     }
 
-    public void conectSensor(Context context) {
-        Intent serviceIntent = new Intent(context, ArduinoGetterService.class);
-        serviceIntent.putExtra("sensor_uuid", uuid);
-        context.startService(serviceIntent);
+    @Override
+    public String toString() {
+        return "SensorObject{" +
+                "estado='" + estado + '\'' +
+                ", num_ref='" + num_ref + '\'' +
+                ", UUID='" + UUID + '\'' +
+                ", nombre='" + nombre + '\'' +
+                ", conexion=" + conexion +
+                ", bateria=" + Bateria +
+                '}';
     }
 }

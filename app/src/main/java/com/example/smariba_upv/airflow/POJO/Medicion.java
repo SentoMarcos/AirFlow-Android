@@ -7,72 +7,86 @@
 
 package com.example.smariba_upv.airflow.POJO;
 
-/********************************************
- * @class Medicion
- * @brief Clase que encapsula los datos de una medición de gas, incluyendo el lugar, el tipo de gas y su valor.
- *******************************************/
+import java.util.Date;
+
+
 public class Medicion {
-    private String Lugar;
-    private String Gas;
-    private int Valor;
+    int id, idSenor;
+    String tipoGas;
+    double latitud, longitud,valor;
+    Date fecha;
 
-    /********************************************
-     * @brief Constructor de la clase Medicion.
-     * @param Lugar Nombre del lugar donde se realiza la medición.
-     * @param Gas Tipo de gas medido.
-     * @param Valor Valor medido del gas.
-     *******************************************/
-    public Medicion(String Lugar, String Gas, int Valor) {
-        this.Lugar = Lugar;
-        this.Gas = Gas;
-        this.Valor = Valor;
+    public Medicion(int id, int idSenor, String tipoGas, double latitud, double longitud, double valor) {
+        this.id = id;
+        this.idSenor = idSenor;
+        this.tipoGas = tipoGas;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.valor = valor;
+        this.fecha = new Date(); // Asignar la fecha actual
+    }
+    public Medicion( int idSenor, String tipoGas, double latitud, double longitud, double valor) {
+        this.idSenor = idSenor;
+        this.tipoGas = tipoGas;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.valor = valor;
+        this.fecha = new Date(); // Asignar la fecha actual
     }
 
-    /********************************************
-     * @brief Obtiene el lugar de la medición.
-     * @return Un String que representa el lugar.
-     *******************************************/
-    public String getLugar() {
-        return Lugar;
+    public int getId() {
+        return id;
     }
 
-    /********************************************
-     * @brief Establece el lugar de la medición.
-     * @param lugar String que representa el lugar.
-     *******************************************/
-    public void setLugar(String lugar) {
-        Lugar = lugar;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    /********************************************
-     * @brief Obtiene el tipo de gas medido.
-     * @return Un String que representa el tipo de gas.
-     *******************************************/
-    public String getGas() {
-        return Gas;
+    public int getIdSenor() {
+        return idSenor;
     }
 
-    /********************************************
-     * @brief Establece el tipo de gas medido.
-     * @param gas String que representa el tipo de gas.
-     *******************************************/
-    public void setGas(String gas) {
-        Gas = gas;
+    public void setIdSenor(int idSenor) {
+        this.idSenor = idSenor;
     }
 
-    /********************************************
-     * @brief Obtiene el valor de la medición del gas.
-     * @return Un entero que representa el valor medido.
-     *******************************************/
-    public int getValor() {
-        return Valor;
+    public String getTipoGas() {
+        return tipoGas;
     }
 
-    /********************************************
-     * @brief Establece el valor de la medición del gas.
-     * @param valor Entero que representa el valor medido.
-     *******************************************/
-    public void setValor(int valor) {
-        Valor = valor;
+    public void setTipoGas(String tipoGas) {
+        this.tipoGas = tipoGas;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public double getValor() {
+        return valor;
+    }
+
+    public void setValor(double valor) {
+        this.valor = valor;
+    }
+
+    public Date getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Date fecha) {
+        this.fecha = fecha;
     }
 }

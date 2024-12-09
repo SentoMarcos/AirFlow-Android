@@ -1,5 +1,9 @@
 package com.example.smariba_upv.airflow.PRESENTACION;
-
+/**
+ * @file LogInActivity.java
+ * @brief Clase que permite iniciar sesión en la aplicación
+ * @details Clase que permite iniciar sesión en la aplicación mediante correo electrónico y contraseña o mediante autenticación biométrica
+ */
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -29,9 +33,24 @@ import com.example.smariba_upv.airflow.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * @class LogInActivity
+ * @brief Clase que permite iniciar sesión en la aplicación
+ * @details Clase que permite iniciar sesión en la aplicación mediante correo electrónico y contraseña o mediante autenticación biométrica
+ */
 public class LogInActivity extends AppCompatActivity implements BiometricUtil.BiometricAuthListener {
-
+    /**
+     * @param TAG Etiqueta para depuración
+     * @param EmailEditText Campo de texto para el correo electrónico
+     * @param passwordEditText Campo de texto para la contraseña
+     * @param loginButton Botón para iniciar sesión
+     * @param biometricButton Botón para iniciar sesión mediante autenticación biométrica
+     * @param errorText Texto de error
+     * @param forgotPasswordText Texto para recuperar la contraseña
+     * @param Condiciones Casilla de verificación para aceptar las condiciones
+     * @param rememberMeCheckBox Casilla de verificación para recordar la sesión
+     * @param REQUEST_BLUETOOTH_PERMISSIONS Solicitud de permisos de Bluetooth
+     */
     private static final String TAG = "LogInActivity";
     EditText EmailEditText;
     EditText passwordEditText;
@@ -41,6 +60,12 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
     CheckBox Condiciones, rememberMeCheckBox;
     private static final int REQUEST_BLUETOOTH_PERMISSIONS = 1;
 
+    /**
+     * @function onCreate
+     * @brief Método que se ejecuta al crear la actividad
+     * @param savedInstanceState
+     */
+    //Bundle:savedInstanceState => onCreate():void
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +89,11 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         Condiciones.setOnClickListener(v -> showConditionsPopup());
         forgotPasswordText.setOnClickListener(v -> showForgotPasswordPopup());
     }
-
+    /**
+     * @function checkAndRequestPermissions
+     * @brief Método
+     * @details Método
+     */
     private void checkAndRequestPermissions() {
         String[] permissions = {
                 Manifest.permission.ACCESS_FINE_LOCATION,   // Permiso de ubicación precisa
@@ -92,7 +121,15 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         }
     }
 
-    // Manejar el resultado de la solicitud de permisos
+    /**
+     * @function onRequestPermissionsResult
+     * @brief Método que se ejecuta al recibir
+     * @details Método que se ejecuta al recibir
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
+    // requestCode:int, permissions:String[], grantResults:int[] => onRequestPermissionsResult():void
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -108,6 +145,10 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
         }
     }
 
+    /**
+     * @function showConditionsPopup
+     * @brief Método que muestra un popup con las condiciones de uso
+     */
     private void showConditionsPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Condiciones de Uso");
@@ -138,7 +179,10 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
 
 
     }
-
+    /**
+     * @function showForgotPasswordPopup
+     * @brief Método que muestra un popup para recuperar la contraseña
+     */
     private void showForgotPasswordPopup() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CustomDialogStyle);
         LayoutInflater inflater = getLayoutInflater();
@@ -164,7 +208,11 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
 
         dialog.show();
     }
-
+    /**
+     * @function logIn
+     * @param view
+     */
+    //View view => logIn() => void
     public void logIn(View view) {
         String emailInput = EmailEditText.getText().toString();
         String passwordInput = passwordEditText.getText().toString();
@@ -190,30 +238,41 @@ public class LogInActivity extends AppCompatActivity implements BiometricUtil.Bi
             errorText.setText("Usuario o contraseña incorrectos.");
         } else {
             errorText.setText("");
-            EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser(this);
-            //recoger el id del usuario de shared preferences
-            int id = getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getInt("id", 0);
-            enviarPeticionesUser.obtenerMisSensores(id, this);
         }
     }
-
+    /**
+     * @function biometricLogIn
+     * @param view
+     */
+    //View view => biometricLogIn() => void
     public void biometricLogIn(View view) {
         BiometricUtil.authenticate(this, this);
     }
-
+    /**
+     * @function onAuthenticationSucceeded
+     * @param result
+     */
+    //BiometricPrompt.AuthenticationResult result => onAuthenticationSucceeded() => void
     @Override
     public void onAuthenticationSucceeded(BiometricPrompt.AuthenticationResult result) {
         Intent intent = new Intent(LogInActivity.this, LandActivity.class);
         startActivity(intent);
         finish();
     }
-
+    /**
+     * @function onAuthenticationFailed
+     */
     @Override
     public void onAuthenticationFailed() {
         errorText.setText("Fallo en la autenticación");
         Log.d(TAG, "Fallo en la autenticación");
     }
-
+    /**
+     * @function onAuthenticationError
+     * @param errorCode
+     * @param errString
+     */
+    //int errorCode, CharSequence errString => onAuthenticationError() => void
     @Override
     public void onAuthenticationError(int errorCode, CharSequence errString) {
         errorText.setText("Error de autenticación");

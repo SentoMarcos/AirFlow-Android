@@ -8,10 +8,10 @@
 package com.example.smariba_upv.airflow.API;
 
 import com.example.smariba_upv.airflow.API.MODELS.SensorResponse;
-import com.example.smariba_upv.airflow.API.MODELS.UsuarioSensor;
 import com.example.smariba_upv.airflow.POJO.Medicion;
 
 import com.example.smariba_upv.airflow.API.MODELS.SensorRequest;
+import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.POJO.User;
 
 
@@ -23,7 +23,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /********************************************
  * @interface ApiService
@@ -45,14 +45,16 @@ public interface ApiService {
     Call<Void> insertarMedicion(@Body Medicion medicion);
 
     @POST("/usuarios/registrar-sensor") // Reemplaza con la ruta correcta de tu endpoint
-    Call<SensorResponse> registrarSensor(@Body SensorRequest sensorRequest);
-
-    @GET("/usuarios/mis-sensores") // Cambia por la ruta correcta del backend
-    Call<List<UsuarioSensor>> getMisSensores(@Path("id_usuario") int id_usuario);
+    Call<SensorRequest> registrarSensor(@Body SensorRequest sensorRequest);
     //actualizar sensor
     @PUT("/usuarios/actualizar-sensor")
     Call<ResponseBody> actualizarSensor(@Body SensorRequest sensorRequest);
+
+    // ApiService.java
+    @GET("/usuarios/mis-sensores")
+    Call<List<SensorResponse>> getMisSensores(@Query("id_usuario") int id_usuario);
 }
+
 
 
 

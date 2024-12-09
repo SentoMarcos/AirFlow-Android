@@ -6,7 +6,6 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
@@ -31,9 +30,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
-import com.example.smariba_upv.airflow.LOGIC.NotificationSensorUserUtil;
-import com.example.smariba_upv.airflow.LOGIC.PeticionesUserUtil;
 import com.example.smariba_upv.airflow.LOGIC.Utilidades;
+import com.example.smariba_upv.airflow.POJO.Medicion;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.POJO.TramaIBeacon;
 import com.example.smariba_upv.airflow.PRESENTACION.LogInActivity;
@@ -43,12 +41,35 @@ import java.util.Date;
 import java.util.List;
 
 public class ArduinoGetterService extends Service {
+
+    /**
+     * @brief Constantes de la clase
+     * @details Constantes de la clase
+     * @li ETIQUETA_LOG: Etiqueta de log
+     * @li BEACON_UUID: UUID que estamos buscando
+     * @li CODIGO_PETICION_PERMISOS: Código para la solicitud de permisos.
+     * @li CHANNEL_ID: ID del canal de notificación
+     * @li NOTIFICATION_INTERVAL: Intervalo de notificación
+     *
+     * @li lastNotificationTime: Última vez que se envió una notificación
+     *
+     * @li elEscanner: Escáner de dispositivos BTLE.
+     * @li callbackDelEscaneo: Callback para el proceso de escaneo.
+     * @li TIEMPO_DESCONEXION: Tiempo de desconexión
+     * @li handler: Manejador
+     * @li temporizador: Temporizador
+     * @li enviarPeticionesUser: Objeto para enviar peticiones
+     * @li dispositivoActualmenteConectado: Estado actual de conexión.
+     *
+     * @li dispositivoDetectado: Dispositivo detectado
+     * */
     private static final String ETIQUETA_LOG = "ArduinoGetterService"; // Etiqueta de log
     private static final String BEACON_UUID = "EPSG-GTI-PROY-3D"; // UUID que estamos buscando
     private static final int CODIGO_PETICION_PERMISOS = 11223344; ///< Código para la solicitud de permisos.
     private static final String CHANNEL_ID = "ArduinoGetterServiceChannel";
+    private static final long NOTIFICATION_INTERVAL = 1 * 60 * 1000; // 1 minutos
     private long lastNotificationTime = 0;
-    private static final long NOTIFICATION_INTERVAL = 60000;
+
     private BluetoothLeScanner elEscanner; ///< Escáner de dispositivos BTLE.
     private ScanCallback callbackDelEscaneo = null; ///< Callback para el proceso de escaneo.
     private static final int TIEMPO_DESCONEXION = 30000; // 30 segundos
@@ -59,8 +80,17 @@ public class ArduinoGetterService extends Service {
 
     private boolean dispositivoDetectado = false;
 
-    private int minuto = 60000; ///< 1 minuto en milisegundos.
+    //private int minuto = 60000; ///< 1 minuto en milisegundos.
 
+    /**
+     * @function onCreate
+     * @brief Método onCreate
+     * @details llamado cuando el servicio se crea
+     * @details crea el canal de notificación y llama a startForegroundService
+     * @details inicializa el bluetooth y busca el dispositivo
+     * @details Configura el temporizador para las notificaciones
+     * @details handler.post(temporizador) inicia el temporizado
+     * */
     @Override
     public void onCreate() {
         super.onCreate();
@@ -84,6 +114,15 @@ public class ArduinoGetterService extends Service {
         handler.post(temporizador); // Iniciar el temporizador
     }
 
+    /**
+     * @function createNotificationChannel
+     * @brief Método createNotificationChannel
+     * @details Crea el canal de notificación
+     * @details Verifica si la versión de Android es 8.0 (API nivel 26) o superior
+     * @details Crea un objeto AudioAttributes para definir las características del sonido
+     * @details Supongamos que el archivo se llama 'notisound.wav'
+     * @details Registrar el canal de notificación
+     * */
     private void createNotificationChannel() {
         // Verificar si la versión de Android es 8.0 (API nivel 26) o superior
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -108,7 +147,12 @@ public class ArduinoGetterService extends Service {
         }
     }
 
-
+    /**
+     * @function onDestroy
+     * @brief Método onDestroy
+     * @details llamado cuando el servicio se destruye
+     * @details Detiene el temporizador al detener el servicio
+     * */
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -117,12 +161,25 @@ public class ArduinoGetterService extends Service {
         }
     }
 
+    /**
+     * @function onBind
+     * @brief Método onBind
+     * @details Método onBind
+     * @details No se utiliza en este servicio
+     * Intent intent => onBlind() => IBinder:null
+     * */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
-
+    /**
+     * @function startForegroundService
+     * @brief Método startForegroundService
+     * @details Inicia el servicio en primer plano
+     * @details Crea una notificación para el servicio
+     * @details Intent para abrir una actividad al interactuar con la notificación
+     * */
     private void startForegroundService() {
         // Intent para abrir una actividad al interactuar con la notificación
         Intent notificationIntent = new Intent(this, LogInActivity.class);
@@ -146,116 +203,14 @@ public class ArduinoGetterService extends Service {
         startForeground(1, builder.build());
     }
 
-    private void mostrarInformacionDispositivoBTLE(ScanResult resultado) {
-        BluetoothDevice bluetoothDevice = resultado.getDevice();
-        byte[] bytes = resultado.getScanRecord().getBytes();
-        int rssi = resultado.getRssi();
 
-        Log.d(ETIQUETA_LOG, " ****************************************************");
-        Log.d(ETIQUETA_LOG, " ****** DISPOSITIVO DETECTADO BTLE ****************** ");
-        Log.d(ETIQUETA_LOG, " ****************************************************");
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-            Log.d(ETIQUETA_LOG, "  mostrarInformacionDispositivoBTLE(): NO tengo permisos para conectar ");
-            // Handle permission request
-            return;
-        }
-        Log.d(ETIQUETA_LOG, " nombre = " + bluetoothDevice.getName());
-        Log.d(ETIQUETA_LOG, " toString = " + bluetoothDevice.toString());
-        Log.d(ETIQUETA_LOG, " dirección = " + bluetoothDevice.getAddress());
-        Log.d(ETIQUETA_LOG, " rssi = " + rssi);
-        Log.d(ETIQUETA_LOG, " bytes = " + new String(bytes));
-        Log.d(ETIQUETA_LOG, " bytes (" + bytes.length + ") = " + Utilidades.bytesToHexString(bytes));
-
-        TramaIBeacon tib = new TramaIBeacon(bytes);
-
-        Log.d(ETIQUETA_LOG, " ----------------------------------------------------");
-        Log.d(ETIQUETA_LOG, " prefijo  = " + Utilidades.bytesToHexString(tib.getPrefijo()));
-        Log.d(ETIQUETA_LOG, "          advFlags = " + Utilidades.bytesToHexString(tib.getAdvFlags()));
-        Log.d(ETIQUETA_LOG, "          advHeader = " + Utilidades.bytesToHexString(tib.getAdvHeader()));
-        Log.d(ETIQUETA_LOG, "          companyID = " + Utilidades.bytesToHexString(tib.getCompanyID()));
-        Log.d(ETIQUETA_LOG, "          iBeacon type = " + Integer.toHexString(tib.getiBeaconType()));
-        Log.d(ETIQUETA_LOG, "          iBeacon length 0x = " + Integer.toHexString(tib.getiBeaconLength()) + " ( "
-                + tib.getiBeaconLength() + " ) ");
-        Log.d(ETIQUETA_LOG, " uuid  = " + Utilidades.bytesToHexString(tib.getUUID()));
-        Log.d(ETIQUETA_LOG, " uuid  = " + Utilidades.bytesToString(tib.getUUID()));
-        Log.d(ETIQUETA_LOG, " major  = " + Utilidades.bytesToHexString(tib.getMajor()) + "( "
-                + Utilidades.bytesToInt(tib.getMajor()) + " ) ");
-        Log.d(ETIQUETA_LOG, " minor  = " + Utilidades.bytesToHexString(tib.getMinor()) + "( "
-                + Utilidades.bytesToInt(tib.getMinor()) + " ) ");
-        Log.d(ETIQUETA_LOG, " txPower  = " + Integer.toHexString(tib.getTxPower()) + " ( " + tib.getTxPower() + " )");
-        Log.d(ETIQUETA_LOG, " ****************************************************");
-    }
-
-    public SensorObject buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
-        this.callbackDelEscaneo = new ScanCallback() {
-            @Override
-            public void onScanResult(int callbackType, ScanResult resultado) {
-                super.onScanResult(callbackType, resultado);
-                if (ContextCompat.checkSelfPermission(ArduinoGetterService.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-
-                byte[] bytes = resultado.getScanRecord().getBytes();
-                TramaIBeacon tib = new TramaIBeacon(bytes);
-                if (Utilidades.bytesToString(tib.getUUID()).equals(dispositivoBuscado)) {
-                    dispositivoDetectado = true; // El dispositivo ha sido detectado, reiniciar estado
-                    if (!dispositivoActualmenteConectado) {
-                        dispositivoActualmenteConectado = true; // Cambiar el estado
-                        enviarNotificacionConexion(); // Notificar conexión
-                    }
-                    String uuid = Utilidades.bytesToString(tib.getUUID());
-                    String name = resultado.getDevice().getName();
-                    String typegas = "Unknown"; // Asumiendo que typegas no está disponible
-                    int measure = Utilidades.bytesToInt(tib.getMinor());
-                    String date = new Date().toString();
-                    int battery = Utilidades.bytesToInt(tib.getMajor());
-
-                    SensorObject sensor = new SensorObject(uuid, name, typegas, measure, date, battery);
-                    handleSensorObject(sensor);
-                }
-            }
-
-            @Override
-            public void onBatchScanResults(List<ScanResult> results) {
-                super.onBatchScanResults(results);
-            }
-
-            @Override
-            public void onScanFailed(int errorCode) {
-                super.onScanFailed(errorCode);
-            }
-        };
-
-        ScanFilter sf = new ScanFilter.Builder().setDeviceName(dispositivoBuscado).build();
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            // Manejar solicitud de permisos
-            return null;
-        }
-        this.elEscanner.startScan(this.callbackDelEscaneo);
-        return null;
-    }
-    private void enviarNotificacionDesconexion() {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Desconexión de dispositivo")
-                .setContentText("El dispositivo no se ha detectado en los últimos " + (TIEMPO_DESCONEXION / 1000) + " segundos.")
-                .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
-
-        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if (manager != null) {
-            manager.notify(2, builder.build());
-        }
-        Log.d(ETIQUETA_LOG, "Notificación de desconexión enviada.");
-        dispositivoActualmenteConectado = false; // Cambiar el estado
-
-        // Obtener la id del sensor de shared preferences
-        SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        int idSensor = sharedPreferences.getInt("id_sensor", -1);
-        // Actualizar el estado en el servidor
-        enviarPeticionesUser.actualizarSensor(idSensor, "Desconexión de dispositivo", false, 0);
-    }
-
+    /**
+     * @function inicializarBlueTooth
+     * @brief Método inicializarBlueTooth
+     * @details Inicializa el adaptador Bluetooth
+     * @details Habilita el adaptador Bluetooth si no está habilitado
+     * @details Obtiene el escáner BTLE
+     * */
     private void inicializarBlueTooth() {
         Log.d(ETIQUETA_LOG, "inicializarBlueTooth(): obtenemos adaptador BT");
 
@@ -287,20 +242,119 @@ public class ArduinoGetterService extends Service {
             Log.e(ETIQUETA_LOG, "inicializarBlueTooth(): NO hemos obtenido escaner btle");
         }
     }
-
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case CODIGO_PETICION_PERMISOS:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(ETIQUETA_LOG, "onRequestPermissionResult(): Permisos concedidos");
-                    inicializarBlueTooth();
-                } else {
-                    Log.d(ETIQUETA_LOG, "onRequestPermissionResult(): Permisos NO concedidos");
+    /**
+     * @function buscarEsteDispositivoBTLE
+     * @brief Método buscarEsteDispositivoBTLE
+     * @details Busca un dispositivo BTLE con el nombre proporcionado
+     * @details Crea un ScanFilter con el nombre del dispositivo
+     * @details Inicia el escaneo
+     * @details Si el dispositivo es detectado, se crea un objeto SensorObject y se maneja
+     * @details Si el dispositivo no es detectado, se envía una notificación de desconexión
+     * @param dispositivoBuscado Nombre del dispositivo a buscar
+     * @return SensorObject
+     * Texto:dispositivoBuscado => buscarEsteDispositivoBTLE() => SensorObject
+     * */
+    public SensorObject buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
+        this.callbackDelEscaneo = new ScanCallback() {
+            @Override
+            public void onScanResult(int callbackType, ScanResult resultado) {
+                super.onScanResult(callbackType, resultado);
+                if (ContextCompat.checkSelfPermission(ArduinoGetterService.this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED) {
+                    return;
                 }
-                return;
+
+                byte[] bytes = resultado.getScanRecord().getBytes();
+                TramaIBeacon tib = new TramaIBeacon(bytes);
+                if (Utilidades.bytesToString(tib.getUUID()).equals(dispositivoBuscado)) {
+                    dispositivoDetectado = true; // El dispositivo ha sido detectado, reiniciar estado
+                    if (!dispositivoActualmenteConectado) {
+                        dispositivoActualmenteConectado = true; // Cambiar el estado
+                        enviarNotificacionConexion(); // Notificar conexión
+                    }
+                    String uuid = Utilidades.bytesToString(tib.getUUID());
+                    String name = resultado.getDevice().getName();
+                    String typegas = "Unknown"; // Asumiendo que typegas no está disponible
+                    int measure = Utilidades.bytesToInt(tib.getMinor());
+                    String date = new Date().toString();
+                    int battery = Utilidades.bytesToInt(tib.getMajor());
+
+                    SharedPreferences sharedPreferences = ArduinoGetterService.this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+                    //recoger la id del sensor con el mismo uuid
+                    if(sharedPreferences.getString("uuid", "").equals(uuid)) {
+
+// After
+                        double latitude = 0.0, longitude = 0.0;
+                        double[] location = getLocation();  // Llamada al método para obtener la ubicación
+                        if (location != null) {
+                            latitude = location[0];
+                            longitude = location[1];
+                        }  // Llamada al método para obtener la ubicación
+                        int idSensor = sharedPreferences.getInt("id_sensor", -1);
+                        SensorObject sensor = new SensorObject(idSensor, "Conectado", "1234", uuid, name, true, battery);
+                        Medicion medicion = new Medicion(0, sharedPreferences.getInt("id_sensor", -1), typegas, latitude, longitude, measure);
+                        limitcheck(sensor,medicion);
+                    }
+                }
+            }
+
+            @Override
+            public void onBatchScanResults(List<ScanResult> results) {
+                super.onBatchScanResults(results);
+            }
+
+            @Override
+            public void onScanFailed(int errorCode) {
+                super.onScanFailed(errorCode);
+            }
+        };
+
+        ScanFilter sf = new ScanFilter.Builder().setDeviceName(dispositivoBuscado).build();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
+            // Manejar solicitud de permisos
+            return null;
         }
+        this.elEscanner.startScan(this.callbackDelEscaneo);
+        return null;
     }
 
+    /**
+     * @function enviarNotificacionDesconexion
+     * @brief Método enviarNotificacionDesconexion
+     * @details Envía una notificación de desconexión
+     * @details Crea una notificación con el mensaje de desconexión
+     * @details Envia la notificación
+     * @details Cambia el estado del dispositivo a desconectado
+     * */
+    private void enviarNotificacionDesconexion() {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("Desconexión de dispositivo")
+                .setContentText("El dispositivo no se ha detectado en los últimos " + (TIEMPO_DESCONEXION / 1000) + " segundos.")
+                .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+        NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        if (manager != null) {
+            manager.notify(2, builder.build());
+        }
+        Log.d(ETIQUETA_LOG, "Notificación de desconexión enviada.");
+        dispositivoActualmenteConectado = false; // Cambiar el estado
+
+        // Obtener la id del sensor de shared preferences
+        SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        int idSensor = sharedPreferences.getInt("id_sensor", -1);
+        // Actualizar el estado en el servidor
+        enviarPeticionesUser.actualizarSensor(idSensor, "Desconexión de dispositivo", false, 0);
+    }
+
+    /**
+     * @function enviarNotificacionConexion
+     * @brief Método enviarNotificacionConexion
+     * @details Envía una notificación de conexión
+     * @details Crea una notificación con el mensaje de conexión
+     * @details Envia la notificación
+     *  enviarNotificacionConexion() => void
+     * */
     private void enviarNotificacionConexion(){
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("Conexión de dispositivo")
@@ -314,12 +368,20 @@ public class ArduinoGetterService extends Service {
         }
         Log.d(ETIQUETA_LOG, "Notificación de conexión enviada.");
     }
-
-    private void handleSensorObject(SensorObject sensor) {
-        NotificationSensorUserUtil.TakeAllDataOfSensor(this, sensor.getUuid(), sensor.getNombre(), sensor.getTypegas(), sensor.getMeasure(), sensor.getDate(), sensor.getBateria());
-        limitcheck(sensor);
-    }
-    private String getLocation() {
+    /**
+     * @return String
+     * getLocation() => String
+     * @function getLocation
+     * @brief Método getLocation
+     * @details Obtiene la ubicación del dispositivo
+     * @details Crea un LocationManager para acceder a los servicios de ubicación
+     * @details Verifica si el LocationManager está disponible
+     * @details Comprueba si tenemos permiso para acceder a la ubicación
+     * @details Obtener la ubicación más reciente del proveedor de ubicación
+     * @details Si se obtiene la ubicación, devolverla como una cadena
+     * @details Si no se puede obtener la ubicación, devolver un mensaje de error
+     */
+    private double[] getLocation() {
         // Crear un LocationManager para acceder a los servicios de ubicación
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
@@ -337,7 +399,7 @@ public class ArduinoGetterService extends Service {
                         // Si se obtiene la ubicación, devolverla como una cadena
                         double latitude = location.getLatitude();
                         double longitude = location.getLongitude();
-                        return "Lat: " + latitude + ", Long: " + longitude;
+                        return new double[]{latitude, longitude};
                     }
                 }
             } catch (SecurityException e) {
@@ -346,14 +408,26 @@ public class ArduinoGetterService extends Service {
         }
 
         // Si no se puede obtener la ubicación, devolver un mensaje de error
-        return "Ubicación no disponible";
+        return new double[]{0.0, 0.0};
     }
 
     // Comprobar límite de exceso de gas y enviar notificación con el nombre del sensor, la hora, el tipo de gas y la medida
 // Color de fondo personalizado para cada límite
 
-    private void limitcheck(SensorObject sensor) {
-        int value = sensor.getMeasure();
+    /**
+     * @function limitcheck
+     * @brief Método limitcheck
+     * @details Comprueba si la medida del sensor supera un límite
+     * @details Crea una notificación con el nombre del sensor, la hora, el tipo de gas y la medida
+     * @details Cambia el color de fondo de la notificación según el valor de la medida
+     * @details Crea y muestra la notificación usando el canal personalizado
+     * @details Actualiza el tiempo de la última notificación
+     * @param sensor SensorObject
+     * SensorObject:sensor => limitcheck() => void
+     * TODO: Cambiar funcion a NotificationSensorUserUtil
+     * */
+    private void limitcheck(SensorObject sensor,Medicion medicion) {
+        double value = medicion.getValor();
         long currentTime = System.currentTimeMillis();
 
         //si la id del sensor es distinta a la id de shared preferences se cambiará el valor de la id de shared preferences
@@ -374,10 +448,8 @@ public class ArduinoGetterService extends Service {
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_layout);
         remoteViews.setTextViewText(R.id.notification_title, "Nivel de gas");
 
-        // Obtener la ubicación del dispositivo móvil
-        String location = getLocation();  // Llamada al método para obtener la ubicación
 
-        remoteViews.setTextViewText(R.id.notification_text, "Sensor: " + sensor.getNombre() + "\nHora: " + sensor.getDate() + "\nTipo de gas: " + sensor.getTypegas() + "\nMedida: " + sensor.getMeasure() + "\nUbicación: " + location);
+        remoteViews.setTextViewText(R.id.notification_text, "Sensor: " + sensor.getNombre() + "\nHora: " + medicion.getFecha() + "\nTipo de gas: " + medicion.getTipoGas() + "\nMedida: " + medicion.getValor() + "\nUbicación: " + medicion.getLatitud() + ", " + medicion.getLongitud());
         remoteViews.setImageViewResource(R.id.notification_icon, android.R.drawable.ic_dialog_alert);
 
         int color;
