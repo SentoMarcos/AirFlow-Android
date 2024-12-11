@@ -1,6 +1,7 @@
 package com.example.smariba_upv.airflow.Services;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
 import com.example.smariba_upv.airflow.LOGIC.Utilidades;
@@ -37,6 +40,12 @@ import com.example.smariba_upv.airflow.POJO.TramaIBeacon;
 import com.example.smariba_upv.airflow.PRESENTACION.LogInActivity;
 import com.example.smariba_upv.airflow.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -97,7 +106,37 @@ public class ArduinoGetterService extends Service {
         createNotificationChannel(); // Asegúrate de crear el canal antes de usarlo
         startForegroundService();
         inicializarBlueTooth();
-        buscarEsteDispositivoBTLE(BEACON_UUID);
+        //introducir el uuid del sensor de shared preferences
+        SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String sensor = sharedPreferences.getString("sensores", "");
+        // Obtener el UUID del sensor de shared preferences
+        if (!sensor.equals("")) {
+            try {
+                List<String> dispositivosBuscados = new ArrayList<>();
+                if (sensor.startsWith("[")) {
+                    // Es un array
+                    JSONArray jsonArray = new JSONArray(sensor);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject sensorObject = jsonArray.getJSONObject(i);
+                        String uuid = sensorObject.getString("uuid");
+                        dispositivosBuscados.add(uuid);
+                    }
+                } else {
+                    // Es un objeto único
+                    JSONObject jsonObject = new JSONObject(sensor);
+                    String uuid = jsonObject.getString("uuid");
+                    dispositivosBuscados.add(uuid);
+                }
+
+                // Iniciar búsqueda con la lista de dispositivos
+                buscarDispositivosBTLE(dispositivosBuscados);
+
+            } catch (JSONException e) {
+                Log.e(ETIQUETA_LOG, "Error al obtener el UUID del sensor de shared preferences", e);
+            }
+        }
+
+
 
         // Configuración del temporizador para notificaciones
         handler = new Handler();
@@ -113,6 +152,74 @@ public class ArduinoGetterService extends Service {
         };
         handler.post(temporizador); // Iniciar el temporizador
     }
+    private void manejarDispositivoDetectado(ScanResult resultado, String uuid) {
+        byte[] bytes = resultado.getScanRecord().getBytes();
+        TramaIBeacon tib = new TramaIBeacon(bytes);
+        @SuppressLint("MissingPermission") String name = resultado.getDevice().getName();
+        String typegas = "Unknown"; // Asumiendo que no está disponible
+        int measure = Utilidades.bytesToInt(tib.getMinor());
+        int battery = Utilidades.bytesToInt(tib.getMajor());
+        String date = new Date().toString();
+
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+
+        double latitude = 0.0, longitude = 0.0;
+        double[] location = getLocation();
+        if (location != null) {
+            latitude = location[0];
+            longitude = location[1];
+        }
+
+        // Obtener la id del sensor obteniendo el sensor de shared preferences
+        String sensores = sharedPreferences.getString("sensores", "");
+        int idSensor = -1;
+        if(sensores.startsWith("[")){
+            try {
+                JSONArray jsonArray = new JSONArray(sensores);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    if(jsonObject.getString("uuid").equals(uuid)){
+                        idSensor = jsonObject.getInt("id_sensor");
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            try {
+                JSONObject jsonObject = new JSONObject(sensores);
+                if(jsonObject.getString("uuid").equals(uuid)){
+                    idSensor = jsonObject.getInt("id_sensor");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //Log.d(ETIQUETA_LOG, idSensor+"Dispositivo detectado: " + name + " con UUID: " + uuid + " y medida: " + measure);
+
+        SensorObject sensor = new SensorObject(idSensor, "Conectado", "1234", uuid, name, true, battery);
+        Medicion medicion = new Medicion(0, idSensor, typegas, latitude, longitude, measure);
+        notificarNuevaMedicion(sensor, medicion);
+            // Comprobar límites y enviar notificaciones
+        limitcheck(sensor, medicion, idSensor);
+
+    }
+
+    private void notificarNuevaMedicion(SensorObject sensor, Medicion medicion) {
+        String sensorJson = new Gson().toJson(sensor);
+        String medicionJson = new Gson().toJson(medicion);
+
+        Log.d("notificarNuevaMedicion", "Sensor JSON: " + sensorJson);
+        Log.d("notificarNuevaMedicion", "Medicion JSON: " + medicionJson);
+
+        Intent intent = new Intent("NUEVA_MEDICION");
+        intent.putExtra("sensor", sensorJson);
+        intent.putExtra("medicion", medicionJson);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+
 
     /**
      * @function createNotificationChannel
@@ -254,7 +361,8 @@ public class ArduinoGetterService extends Service {
      * @return SensorObject
      * Texto:dispositivoBuscado => buscarEsteDispositivoBTLE() => SensorObject
      * */
-    public SensorObject buscarEsteDispositivoBTLE(final String dispositivoBuscado) {
+    public void buscarDispositivosBTLE(List<String> dispositivosBuscados) {
+        //Log.d(ETIQUETA_LOG, "buscarDispositivosBTLE(): buscando dispositivos BTLE");
         this.callbackDelEscaneo = new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult resultado) {
@@ -265,35 +373,21 @@ public class ArduinoGetterService extends Service {
 
                 byte[] bytes = resultado.getScanRecord().getBytes();
                 TramaIBeacon tib = new TramaIBeacon(bytes);
-                if (Utilidades.bytesToString(tib.getUUID()).equals(dispositivoBuscado)) {
-                    dispositivoDetectado = true; // El dispositivo ha sido detectado, reiniciar estado
+                String uuid = Utilidades.bytesToString(tib.getUUID());
+               // Log.d(ETIQUETA_LOG, "UUID detectado: " + uuid);
+
+                // Verificar si el UUID está en la lista de dispositivos buscados
+                if (dispositivosBuscados.contains(uuid)) {
+                    //Log.d(ETIQUETA_LOG, "Dispositivo detectado con UUID esperado: " + uuid);
+                    dispositivoDetectado = true;
+
                     if (!dispositivoActualmenteConectado) {
-                        dispositivoActualmenteConectado = true; // Cambiar el estado
+                        dispositivoActualmenteConectado = true; // Cambiar estado
                         enviarNotificacionConexion(); // Notificar conexión
                     }
-                    String uuid = Utilidades.bytesToString(tib.getUUID());
-                    String name = resultado.getDevice().getName();
-                    String typegas = "Unknown"; // Asumiendo que typegas no está disponible
-                    int measure = Utilidades.bytesToInt(tib.getMinor());
-                    String date = new Date().toString();
-                    int battery = Utilidades.bytesToInt(tib.getMajor());
 
-                    SharedPreferences sharedPreferences = ArduinoGetterService.this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-                    //recoger la id del sensor con el mismo uuid
-                    if(sharedPreferences.getString("uuid", "").equals(uuid)) {
-
-// After
-                        double latitude = 0.0, longitude = 0.0;
-                        double[] location = getLocation();  // Llamada al método para obtener la ubicación
-                        if (location != null) {
-                            latitude = location[0];
-                            longitude = location[1];
-                        }  // Llamada al método para obtener la ubicación
-                        int idSensor = sharedPreferences.getInt("id_sensor", -1);
-                        SensorObject sensor = new SensorObject(idSensor, "Conectado", "1234", uuid, name, true, battery);
-                        Medicion medicion = new Medicion(0, sharedPreferences.getInt("id_sensor", -1), typegas, latitude, longitude, measure);
-                        limitcheck(sensor,medicion);
-                    }
+                    // Procesar datos del dispositivo detectado
+                    manejarDispositivoDetectado(resultado, uuid);
                 }
             }
 
@@ -308,15 +402,20 @@ public class ArduinoGetterService extends Service {
             }
         };
 
-        ScanFilter sf = new ScanFilter.Builder().setDeviceName(dispositivoBuscado).build();
+        // Configurar filtros (opcional, si no quieres filtrar por nombre)
+        List<ScanFilter> filters = new ArrayList<>();
+        ScanSettings scanSettings = new ScanSettings.Builder()
+                .setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY)
+                .build();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) != PackageManager.PERMISSION_GRANTED) {
-            // Manejar solicitud de permisos
-            return null;
+            Log.e(ETIQUETA_LOG, "No tienes permisos para escanear dispositivos BLE.");
+            return;
         }
-        this.elEscanner.startScan(this.callbackDelEscaneo);
-        return null;
+
+        this.elEscanner.startScan(filters, scanSettings, this.callbackDelEscaneo);
     }
+
 
     /**
      * @function enviarNotificacionDesconexion
@@ -426,25 +525,21 @@ public class ArduinoGetterService extends Service {
      * SensorObject:sensor => limitcheck() => void
      * TODO: Cambiar funcion a NotificationSensorUserUtil
      * */
-    private void limitcheck(SensorObject sensor,Medicion medicion) {
+    private void limitcheck(SensorObject sensor,Medicion medicion,int idSensor) {
         double value = medicion.getValor();
         long currentTime = System.currentTimeMillis();
 
-        //si la id del sensor es distinta a la id de shared preferences se cambiará el valor de la id de shared preferences
-        SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        int idSensor = sharedPreferences.getInt("id_sensor", -1);
 
-
-        Log.d(ETIQUETA_LOG, "SensorObject: " + idSensor);
+        //Log.d(ETIQUETA_LOG, "SensorObject: " + idSensor);
         sensor.setId(idSensor);
 
         // Check if enough time has passed since the last notification
         if (currentTime - lastNotificationTime < NOTIFICATION_INTERVAL) {
-            Log.d(ETIQUETA_LOG, "Skipping notification to avoid spamming.");
+            //Log.d(ETIQUETA_LOG, "Skipping notification to avoid spamming.");
             return;
         }
 
-        Log.d(ETIQUETA_LOG, "Changing background color, value: " + value);
+        //Log.d(ETIQUETA_LOG, "Changing background color, value: " + value);
         RemoteViews remoteViews = new RemoteViews(getPackageName(), R.layout.custom_notification_layout);
         remoteViews.setTextViewText(R.id.notification_title, "Nivel de gas");
 

@@ -2,11 +2,12 @@ package com.example.smariba_upv.airflow.POJO;
 
 import android.content.Context;
 import android.content.Intent;
-
-import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class SensorObject {
+    @SerializedName("id_sensor")
     int id;
     @SerializedName("estado")
     private String estado;
@@ -25,6 +26,7 @@ public class SensorObject {
 
     @SerializedName("bateria")
     private int Bateria;
+
     public SensorObject(int id, String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.id = id;
         this.estado = estado;
@@ -34,6 +36,7 @@ public class SensorObject {
         this.conexion = conexion;
         Bateria = bateria;
     }
+
     public SensorObject( String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.estado = estado;
         this.num_ref = num_ref;
@@ -102,6 +105,7 @@ public class SensorObject {
     @Override
     public String toString() {
         return "SensorObject{" +
+                "id=" + id +
                 "estado='" + estado + '\'' +
                 ", num_ref='" + num_ref + '\'' +
                 ", UUID='" + UUID + '\'' +
@@ -110,4 +114,5 @@ public class SensorObject {
                 ", bateria=" + Bateria +
                 '}';
     }
+
 }

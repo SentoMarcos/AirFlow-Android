@@ -139,7 +139,7 @@ public class EnviarPeticionesUser {
         String uuidTrimmed = sensorObject.getUUID().trim();
         SensorRequest sensorRequest = new SensorRequest(id_usuario, sensorObject.getEstado(), sensorObject.getNum_ref(), uuidTrimmed, sensorObject.getNombre(), sensorObject.isConexion(), sensorObject.getBateria());
         //ver datos del sensor
-        Log.d(TAG, "Sensor: " + sensorObject.getId() + " - " + sensorObject.getEstado() + " - " + sensorObject.getNum_ref() + " - " + uuidTrimmed + " - " + sensorObject.getNombre() + " - " + sensorObject.isConexion() + " - " + sensorObject.getBateria());
+        //Log.d(TAG, "Sensor: " + sensorObject.getId() + " - " + sensorObject.getEstado() + " - " + sensorObject.getNum_ref() + " - " + uuidTrimmed + " - " + sensorObject.getNombre() + " - " + sensorObject.isConexion() + " - " + sensorObject.getBateria());
         RetrofitClient.getApiService().registrarSensor(sensorRequest).enqueue(new Callback<SensorRequest>() {
             @Override
             public void onResponse(Call<SensorRequest> call, Response<SensorRequest> response) {
@@ -201,20 +201,22 @@ public class EnviarPeticionesUser {
                     List<SensorResponse> sensorResponses = response.body();
                     List<SensorObject> sensorObjects = new ArrayList<>();
 
-                    // Map SensorResponse to SensorObject
+                    Log.d(TAG, "Sensores: " + sensorResponses.toString());
                     for (SensorResponse sensorResponse : sensorResponses) {
                         SensorResponse.Sensor sensor = sensorResponse.getSensor();
                         SensorObject sensorObject = new SensorObject(
-                                sensorResponse.getIdSensor(),
-                                sensor.getNombre(),
-                                sensor.getNumReferencia(),
+                                sensor.getIdSensor(),
                                 sensor.getEstado(),
+                                sensor.getNumReferencia(),
                                 sensor.getUuid(),
+                                sensor.getNombre(),
                                 sensor.isConexion(),
                                 sensor.getBateria()
                         );
                         sensorObjects.add(sensorObject);
                     }
+
+                    //Log.d(TAG,sensorObjects.toString());
 
                     // Save sensorObjects in SharedPreferences as JSON
                     Gson gson = new Gson();

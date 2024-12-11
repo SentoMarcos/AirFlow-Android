@@ -8,32 +8,34 @@
 package com.example.smariba_upv.airflow.POJO;
 
 import java.util.Date;
-
+import java.util.Objects;
 
 public class Medicion {
-    int id, idSenor;
-    String tipoGas;
-    double latitud, longitud,valor;
-    Date fecha;
+    private int id, idSensor;
+    private String tipoGas;
+    private double latitud, longitud, valor;
+    private Date fecha;
 
-    public Medicion(int id, int idSenor, String tipoGas, double latitud, double longitud, double valor) {
+    public Medicion(int id, int idSensor, String tipoGas, double latitud, double longitud, double valor) {
         this.id = id;
-        this.idSenor = idSenor;
+        this.idSensor = idSensor;
         this.tipoGas = tipoGas;
         this.latitud = latitud;
         this.longitud = longitud;
         this.valor = valor;
-        this.fecha = new Date(); // Asignar la fecha actual
-    }
-    public Medicion( int idSenor, String tipoGas, double latitud, double longitud, double valor) {
-        this.idSenor = idSenor;
-        this.tipoGas = tipoGas;
-        this.latitud = latitud;
-        this.longitud = longitud;
-        this.valor = valor;
-        this.fecha = new Date(); // Asignar la fecha actual
+        this.fecha = new Date();
     }
 
+    public Medicion(int idSensor, String tipoGas, double latitud, double longitud, double valor) {
+        this.idSensor = idSensor;
+        this.tipoGas = tipoGas;
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.valor = valor;
+        this.fecha = new Date();
+    }
+
+    // Getters y Setters
     public int getId() {
         return id;
     }
@@ -42,12 +44,12 @@ public class Medicion {
         this.id = id;
     }
 
-    public int getIdSenor() {
-        return idSenor;
+    public int getIdSensor() {
+        return idSensor;
     }
 
-    public void setIdSenor(int idSenor) {
-        this.idSenor = idSenor;
+    public void setIdSensor(int idSensor) {
+        this.idSensor = idSensor;
     }
 
     public String getTipoGas() {
@@ -89,4 +91,7 @@ public class Medicion {
     public void setFecha(Date fecha) {
         this.fecha = fecha;
     }
+
+
 }
+

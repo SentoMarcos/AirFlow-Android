@@ -17,6 +17,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -30,7 +31,8 @@
         android:networkSecurityConfig="@xml/networksecurityconfig"
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AirFlow">
+        android:theme="@style/Theme.AirFlow"
+        android:enableOnBackInvokedCallback="true">
         <activity
             android:name=".PRESENTACION.QRreader"
             android:exported="false" />
@@ -71,7 +73,8 @@
 
         <service
             android:name=".Services.ArduinoGetterService"
-            android:foregroundServiceType="location" />
+            android:foregroundServiceType="location"
+            android:exported="false"/>
     </application>
 
 </manifest>
