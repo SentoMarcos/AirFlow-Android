@@ -52,6 +52,8 @@ public class SensorFragment extends Fragment {
         añadirSensoresVista();
         LocalBroadcastManager.getInstance(requireContext())
                 .registerReceiver(nuevaMedicionReceiver, new IntentFilter("NUEVA_MEDICION"));
+        LocalBroadcastManager.getInstance(requireContext())
+                .registerReceiver(nuevaMedicionReceiver, new IntentFilter("ACTUALIZAR_SENSOR"));
     }
 
     @Override
@@ -60,21 +62,23 @@ public class SensorFragment extends Fragment {
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(nuevaMedicionReceiver);
     }
 
+
     private final BroadcastReceiver nuevaMedicionReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String sensorJson = intent.getStringExtra("sensor");
             String medicionJson = intent.getStringExtra("medicion");
 
+
             Log.d("nuevaMedicionReceiver", "Datos recibidos: sensor=" + sensorJson + ", medicion=" + medicionJson);
 
-            if (sensorJson != null && medicionJson != null) {
+            if (sensorJson != null && medicionJson != null ) {
                 Gson gson = new Gson();
                 SensorObject sensor = gson.fromJson(sensorJson, SensorObject.class);
                 Medicion medicion = gson.fromJson(medicionJson, Medicion.class);
 
-                Log.d("nuevaMedicionReceiver", "Sensor deserializado: " + sensor.getId());
-                Log.d("nuevaMedicionReceiver", "Medicion deserializada: idSensor=" + medicion.getIdSensor() + ", valor=" + medicion.getValor());
+                //Log.d("nuevaMedicionReceiver", "Sensor deserializado: " + sensor.getId());
+                //Log.d("nuevaMedicionReceiver", "Medicion deserializada: idSensor=" + medicion.getIdSensor() + ", valor=" + medicion.getValor());
 
                 if (sensor.getId() != -1 && medicion.getIdSensor() == sensor.getId()) {
                     actualizarVista(sensor, medicion);
@@ -88,7 +92,7 @@ public class SensorFragment extends Fragment {
 
     };
 
-    private void actualizarVista(SensorObject sensor, Medicion medicion) {
+    private void actualizarVista(SensorObject sensor, Medicion medicion ) {
         // Actualizar o agregar el sensor
         boolean sensorExistente = false;
         for (int i = 0; i < sensorList.size(); i++) {

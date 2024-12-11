@@ -47,6 +47,7 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ArduinoGetterService extends Service {
@@ -139,85 +140,122 @@ public class ArduinoGetterService extends Service {
 
 
         // Configuración del temporizador para notificaciones
+        // Configuración del temporizador para manejar desconexión
         handler = new Handler();
         temporizador = new Runnable() {
             @Override
             public void run() {
                 if (!dispositivoDetectado) {
-                    enviarNotificacionDesconexion();
+                    enviarNotificacionDesconexion(); // Enviar notificación
+                    actualizarEstadoDesconexion(); // Actualizar estado
                 }
                 dispositivoDetectado = false; // Resetear para la siguiente verificación
-                handler.postDelayed(this, TIEMPO_DESCONEXION);
+                handler.postDelayed(this, TIEMPO_DESCONEXION); // Repetir el temporizador
             }
         };
         handler.post(temporizador); // Iniciar el temporizador
+
+    }private void actualizarEstadoDesconexion() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String sensores = sharedPreferences.getString("sensores", "");
+
+        if (sensores != null && !sensores.isEmpty()) {
+            try {
+                if (sensores.startsWith("[")) {
+                    JSONArray jsonArray = new JSONArray(sensores);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        int idSensor = jsonObject.getInt("id_sensor");
+                        String nombre = jsonObject.getString("nombre");
+
+                        // Actualizar en la base de datos
+                        enviarPeticionesUser.actualizarSensor(idSensor, "Desconectado", false, 0);
+
+                        // Actualizar localmente
+                        SensorObject sensor = new SensorObject(idSensor, "Desconectado", "1234", jsonObject.getString("uuid"), nombre, false, 0);
+                        notificarNuevaMedicion(sensor, null); // Notificar la desconexión
+                    }
+                } else {
+                    JSONObject jsonObject = new JSONObject(sensores);
+                    int idSensor = jsonObject.getInt("id_sensor");
+                    String nombre = jsonObject.getString("nombre");
+
+                    // Actualizar en la base de datos
+                    enviarPeticionesUser.actualizarSensor(idSensor, "Desconectado", false, 0);
+
+                    // Actualizar localmente
+                    SensorObject sensor = new SensorObject(idSensor, "Desconectado", "1234", jsonObject.getString("uuid"), nombre, false, 0);
+                    notificarNuevaMedicion(sensor, null); // Notificar la desconexión
+                }
+            } catch (JSONException e) {
+                Log.e(ETIQUETA_LOG, "Error al procesar sensores para desconexión", e);
+            }
+        }
     }
+
+
+
     private void manejarDispositivoDetectado(ScanResult resultado, String uuid) {
         byte[] bytes = resultado.getScanRecord().getBytes();
         TramaIBeacon tib = new TramaIBeacon(bytes);
         @SuppressLint("MissingPermission") String name = resultado.getDevice().getName();
-        String typegas = "Unknown"; // Asumiendo que no está disponible
-        int measure = Utilidades.bytesToInt(tib.getMinor());
-        int battery = Utilidades.bytesToInt(tib.getMajor());
-        String date = new Date().toString();
+        int rssi = resultado.getRssi();
+        int txPower = tib.getTxPower();
+        int minor = Utilidades.bytesToInt(tib.getMinor());
 
+        // Calcular distancia y asignarla como batería temporalmente
+        double distancia = calcularDistancia(rssi, txPower);
+        int battery = (int) distancia; // Enviar distancia como valor de batería para pruebas
+
+        Log.d("Distancia", "Distancia aproximada: " + distancia + " metros");
+
+        // Resto del código existente
         SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-
-        double latitude = 0.0, longitude = 0.0;
-        double[] location = getLocation();
-        if (location != null) {
-            latitude = location[0];
-            longitude = location[1];
-        }
-
-        // Obtener la id del sensor obteniendo el sensor de shared preferences
         String sensores = sharedPreferences.getString("sensores", "");
         int idSensor = -1;
-        if(sensores.startsWith("[")){
-            try {
+        try {
+            if (sensores.startsWith("[")) {
                 JSONArray jsonArray = new JSONArray(sensores);
                 for (int i = 0; i < jsonArray.length(); i++) {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    if(jsonObject.getString("uuid").equals(uuid)){
+                    if (jsonObject.getString("uuid").equals(uuid)) {
                         idSensor = jsonObject.getInt("id_sensor");
                     }
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else {
-            try {
+            } else {
                 JSONObject jsonObject = new JSONObject(sensores);
-                if(jsonObject.getString("uuid").equals(uuid)){
+                if (jsonObject.getString("uuid").equals(uuid)) {
                     idSensor = jsonObject.getInt("id_sensor");
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        //Log.d(ETIQUETA_LOG, idSensor+"Dispositivo detectado: " + name + " con UUID: " + uuid + " y medida: " + measure);
-
-        SensorObject sensor = new SensorObject(idSensor, "Conectado", "1234", uuid, name, true, battery);
-        Medicion medicion = new Medicion(0, idSensor, typegas, latitude, longitude, measure);
+        SensorObject sensor = new SensorObject(idSensor, "Conectado", "1234", uuid, name, true, battery, distancia);
+        Medicion medicion = new Medicion(0, idSensor, "Unknown", 0.0, 0.0, minor);
         notificarNuevaMedicion(sensor, medicion);
-            // Comprobar límites y enviar notificaciones
-        limitcheck(sensor, medicion, idSensor);
-
     }
 
-    private void notificarNuevaMedicion(SensorObject sensor, Medicion medicion) {
+    private void notificarNuevaMedicion(SensorObject sensor, @Nullable Medicion medicion) {
         String sensorJson = new Gson().toJson(sensor);
-        String medicionJson = new Gson().toJson(medicion);
+        String medicionJson = medicion != null ? new Gson().toJson(medicion) : null;
 
         Log.d("notificarNuevaMedicion", "Sensor JSON: " + sensorJson);
-        Log.d("notificarNuevaMedicion", "Medicion JSON: " + medicionJson);
+        if (medicionJson != null) {
+            Log.d("notificarNuevaMedicion", "Medicion JSON: " + medicionJson);
+        } else {
+            Log.d("notificarNuevaMedicion", "Medicion: null (desconexión)");
+        }
 
         Intent intent = new Intent("NUEVA_MEDICION");
         intent.putExtra("sensor", sensorJson);
-        intent.putExtra("medicion", medicionJson);
+        if (medicionJson != null) {
+            intent.putExtra("medicion", medicionJson);
+        }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
+
 
 
 
@@ -439,11 +477,7 @@ public class ArduinoGetterService extends Service {
         Log.d(ETIQUETA_LOG, "Notificación de desconexión enviada.");
         dispositivoActualmenteConectado = false; // Cambiar el estado
 
-        // Obtener la id del sensor de shared preferences
-        SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        int idSensor = sharedPreferences.getInt("id_sensor", -1);
-        // Actualizar el estado en el servidor
-        enviarPeticionesUser.actualizarSensor(idSensor, "Desconexión de dispositivo", false, 0);
+
     }
 
     /**
@@ -510,8 +544,82 @@ public class ArduinoGetterService extends Service {
         return new double[]{0.0, 0.0};
     }
 
-    // Comprobar límite de exceso de gas y enviar notificación con el nombre del sensor, la hora, el tipo de gas y la medida
-// Color de fondo personalizado para cada límite
+
+
+    // Método robusto y preciso para calcular la distancia
+    private double calcularDistancia(int rssi, int txPower) {
+        if (rssi == 0 || txPower == 0) {
+            return -1.0; // No se puede calcular la distancia
+        }
+
+        // Constantes ajustables para calibración
+        double environmentalFactor = 2.2; // Ajusta según el entorno (2 para espacios abiertos, >3 para interiores)
+        int calibratedTxPower = calibrarTxPower(txPower); // Si es necesario, calibra el Tx Power aquí
+
+        // Filtrar valores anómalos antes de suavizar
+        rssi = filtrarValoresAnomalos(rssi);
+
+        // Suavizado del RSSI para reducir fluctuaciones
+        rssi = calcularRSSISuavizado(rssi);
+
+        // Calcular la distancia basada en RSSI y Tx Power calibrado
+        double ratio = rssi * 1.0 / calibratedTxPower;
+        double distance;
+
+        if (ratio < 1.0) {
+            distance = Math.pow(ratio, 10);
+        } else {
+            distance = Math.pow(10, (calibratedTxPower - rssi) / (10 * environmentalFactor));
+        }
+
+        // Limitar la distancia a dos decimales
+        return Math.round(distance * 100.0) / 100.0;
+    }
+
+    // Método para calibrar el Tx Power si es necesario
+    private int calibrarTxPower(int txPower) {
+        // Si tienes un valor calibrado basado en pruebas específicas, devuélvelo aquí
+        // Por defecto, devuelve el mismo valor recibido
+        return txPower;
+    }
+
+    // Método para suavizar los valores RSSI utilizando una media móvil
+    private int calcularRSSISuavizado(int nuevoRSSI) {
+        final int WINDOW_SIZE = 15; // Tamaño de la ventana para la media móvil
+        LinkedList<Integer> rssiWindow = new LinkedList<>();
+
+        // Añadir el nuevo RSSI a la ventana
+        rssiWindow.add(nuevoRSSI);
+
+        // Eliminar el valor más antiguo si excede el tamaño de la ventana
+        if (rssiWindow.size() > WINDOW_SIZE) {
+            rssiWindow.poll();
+        }
+
+        // Calcular la media de los valores en la ventana
+        int sum = 0;
+        for (int value : rssiWindow) {
+            sum += value;
+        }
+
+        return sum / rssiWindow.size();
+    }
+
+    // Método adicional para detectar y corregir valores anómalos
+    private int filtrarValoresAnomalos(int rssi) {
+        final int THRESHOLD = 10; // Límite para considerar una fluctuación como anómala
+        Integer ultimoRSSI = null;
+
+        if (ultimoRSSI != null && Math.abs(rssi - ultimoRSSI) > THRESHOLD) {
+            // Si el valor actual varía demasiado del último valor, usa el último como referencia
+            return ultimoRSSI;
+        }
+
+        // Actualizar el último valor y devolver el actual
+        ultimoRSSI = rssi;
+        return rssi;
+    }
+
 
     /**
      * @function limitcheck

@@ -28,7 +28,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
         updateData(initialSensorList, initialMedicionList);
     }
 
-    public void updateData(List<SensorObject> newSensorList, List<Medicion> newMedicionList) {
+    public void updateData(List<SensorObject> newSensorList, List<Medicion> newMedicionList ) {
         // Actualizar lista de sensores
         sensorList.clear();
         if (newSensorList != null) {
@@ -61,14 +61,13 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
         // Configurar datos del sensor
         holder.tvSensorName.setText(sensor.getNombre());
         holder.tvEstado.setText("Estado: " + (sensor.isConexion() ? "Conectado" : "Desconectado"));
-        holder.tvBattery.setText("Batería: " + sensor.getBateria() + "%");
-        holder.batteryIndicator.setProgress(sensor.getBateria());
-        holder.tvRef.setText("Num. Referencia: " + sensor.getNum_ref());
+        holder.tvBattery.setText("Batería: " + (sensor.isConexion() ? sensor.getBateria() + "%" : "N/A"));
+        holder.batteryIndicator.setProgress(sensor.isConexion() ? sensor.getBateria() : 0);
+        holder.tvdistancia.setText("Distancia: " + sensor.getDistancia());
 
-        // Obtener medición asociada al sensor
+        // Manejar desconexión
         Medicion medicionAsociada = medicionMap.get(sensor.getId());
-
-        if (medicionAsociada != null) {
+        if (medicionAsociada != null && sensor.isConexion()) {
             holder.tvGasType.setText("Tipo de Gas: " + medicionAsociada.getTipoGas());
             holder.tvMeasurement.setText("Medición: " + medicionAsociada.getValor());
             holder.tvDate.setText("Fecha: " + medicionAsociada.getFecha());
@@ -85,7 +84,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
     }
 
     static class SensorViewHolder extends RecyclerView.ViewHolder {
-        TextView tvSensorName, tvEstado, tvBattery, tvGasType, tvMeasurement, tvDate, tvRef;
+        TextView tvSensorName, tvEstado, tvBattery, tvGasType, tvMeasurement, tvDate, tvRef, tvdistancia;
         ProgressBar batteryIndicator;
 
         public SensorViewHolder(@NonNull View itemView) {
@@ -98,6 +97,7 @@ public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorView
             tvGasType = itemView.findViewById(R.id.tv_gas_type);
             tvMeasurement = itemView.findViewById(R.id.tv_measurement);
             tvDate = itemView.findViewById(R.id.tv_date);
+            tvdistancia = itemView.findViewById(R.id.tv_distancia);
         }
     }
 }
