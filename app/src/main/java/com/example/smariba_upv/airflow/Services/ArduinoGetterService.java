@@ -43,6 +43,9 @@ import com.example.smariba_upv.airflow.R;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -106,6 +109,7 @@ public class ArduinoGetterService extends Service {
         super.onCreate();
         createNotificationChannel(); // Asegúrate de crear el canal antes de usarlo
         startForegroundService();
+        initLocationProvider();
         inicializarBlueTooth();
         //introducir el uuid del sensor de shared preferences
         SharedPreferences sharedPreferences = this.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
@@ -231,9 +235,20 @@ public class ArduinoGetterService extends Service {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        double[] location = getLocation();
         SensorObject sensor = new SensorObject(idSensor, "Conectado", "1234", uuid, name, true, battery, distancia);
-        Medicion medicion = new Medicion(0, idSensor, "Unknown", 0.0, 0.0, minor);
+        Medicion medicion = new Medicion(idSensor, "CO2", location[0], location[1], minor);
+
+        EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser();
+        handler = new Handler();
+        temporizador = new Runnable() {
+            @Override
+            public void run() {
+                enviarPeticionesUser.createMedicion(medicion);
+                handler.postDelayed(this, 60000); // Repetir cada 60 segundos (1 minuto)
+            }
+        };
+        handler.post(temporizador); // Iniciar el temporizador
         notificarNuevaMedicion(sensor, medicion);
     }
 
@@ -252,8 +267,10 @@ public class ArduinoGetterService extends Service {
         intent.putExtra("sensor", sensorJson);
         if (medicionJson != null) {
             intent.putExtra("medicion", medicionJson);
+            limitcheck(sensor, medicion, sensor.getId());
         }
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+
     }
 
 
@@ -514,35 +531,50 @@ public class ArduinoGetterService extends Service {
      * @details Si se obtiene la ubicación, devolverla como una cadena
      * @details Si no se puede obtener la ubicación, devolver un mensaje de error
      */
+    private FusedLocationProviderClient fusedLocationProviderClient;
+
+    private void initLocationProvider() {
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+    }
+
     private double[] getLocation() {
-        // Crear un LocationManager para acceder a los servicios de ubicación
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-        // Verificar si el LocationManager está disponible
-        if (locationManager != null) {
-            try {
-                // Comprobamos si tenemos permiso para acceder a la ubicación
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-                        ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-                    // Obtener la ubicación más reciente del proveedor de ubicación
-                    Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-                    if (location != null) {
-                        // Si se obtiene la ubicación, devolverla como una cadena
-                        double latitude = location.getLatitude();
-                        double longitude = location.getLongitude();
-                        return new double[]{latitude, longitude};
-                    }
-                }
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
+        if (locationManager == null) {
+            Log.e("Location", "El LocationManager es nulo.");
+            return new double[]{0.0, 0.0};
         }
 
-        // Si no se puede obtener la ubicación, devolver un mensaje de error
-        return new double[]{0.0, 0.0};
+        try {
+            // Comprobar permisos
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Log.e("Location", "Permisos de ubicación no otorgados.");
+                return new double[]{0.0, 0.0};
+            }
+
+            // Obtener la última ubicación conocida
+            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            if (location == null) {
+                Log.e("Location", "No se pudo obtener la última ubicación conocida del GPS_PROVIDER.");
+                location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                if (location == null) {
+                    Log.e("Location", "No se pudo obtener la última ubicación conocida del NETWORK_PROVIDER.");
+                    return new double[]{0.0, 0.0};
+                }
+            }
+
+            // Si se obtiene la ubicación, devolverla
+            Log.d("Location", "Ubicación obtenida: " + location.getLatitude() + ", " + location.getLongitude());
+            return new double[]{location.getLatitude(), location.getLongitude()};
+        } catch (Exception e) {
+            Log.e("Location", "Error al obtener la ubicación: " + e.getMessage());
+            e.printStackTrace();
+            return new double[]{0.0, 0.0};
+        }
     }
+
+
 
 
 
@@ -634,6 +666,7 @@ public class ArduinoGetterService extends Service {
      * TODO: Cambiar funcion a NotificationSensorUserUtil
      * */
     private void limitcheck(SensorObject sensor,Medicion medicion,int idSensor) {
+
         double value = medicion.getValor();
         long currentTime = System.currentTimeMillis();
 

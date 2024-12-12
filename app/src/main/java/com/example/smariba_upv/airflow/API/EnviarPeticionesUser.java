@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.smariba_upv.airflow.API.MODELS.SensorResponse;
+import com.example.smariba_upv.airflow.POJO.Medicion;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.API.MODELS.SensorRequest;
 import com.example.smariba_upv.airflow.POJO.User;
@@ -232,6 +233,39 @@ public class EnviarPeticionesUser {
             @Override
             public void onFailure(Call<List<SensorResponse>> call, Throwable t) {
                 Log.e(TAG, "onFailure:", t);
+            }
+        });
+    }
+
+    public void createMedicion(Medicion medicion) {
+        Log.d(TAG, "Creando medición: " + medicion);
+        RetrofitClient.getApiService().createMedicion(medicion).enqueue(new Callback<Medicion>() {
+            @Override
+            public void onResponse(Call<Medicion> call, Response<Medicion> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "Medición creada correctamente: " + response.body());
+                } else {
+                    Log.e(TAG, "Error en la petición. Código de estado: " + response.code());
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Sin cuerpo de error";
+                        Log.e(TAG, "Cuerpo del error: " + errorBody);
+                        if (response.code() == 400) {
+                            // Manejar errores específicos de validación
+                            Log.e(TAG, "Error de validación: Verifica los parámetros enviados.");
+                        }
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error al leer el cuerpo del error", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Medicion> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Log.e(TAG, "Fallo de red o timeout:", t);
+                } else {
+                    Log.e(TAG, "Error inesperado:", t);
+                }
             }
         });
     }

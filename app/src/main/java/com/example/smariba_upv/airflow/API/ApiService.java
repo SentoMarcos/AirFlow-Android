@@ -53,6 +53,9 @@ public interface ApiService {
     // ApiService.java
     @GET("/usuarios/mis-sensores")
     Call<List<SensorResponse>> getMisSensores(@Query("id_usuario") int id_usuario);
+
+    @POST("/mediciones/mediciones/add")
+    Call<Medicion> createMedicion(@Body Medicion medicion);
 }
 
 

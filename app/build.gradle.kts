@@ -43,7 +43,7 @@ dependencies {
     implementation("androidx.biometric:biometric:1.2.0")
     implementation("androidx.biometric:biometric-ktx:1.4.0-alpha02")
 
-    // QR Reader
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")

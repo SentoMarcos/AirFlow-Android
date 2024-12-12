@@ -1,11 +1,10 @@
-/********************************************
- * @file RetrofitClient.java
- * @brief Clase encargada de gestionar la instancia de Retrofit para interactuar con el servidor.
- * @version 1.0
- * @date 2024
- *******************************************/
-
 package com.example.smariba_upv.airflow.API;
+
+import com.example.smariba_upv.airflow.LOGIC.DateTypeAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Date;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -21,9 +20,14 @@ public class RetrofitClient {
 
     public static ApiService getApiService() {
         if (retrofit == null) {
+            // Configurar Gson con el adaptador para fechas
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Date.class, new DateTypeAdapter())
+                    .create();
+
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
         return retrofit.create(ApiService.class);
