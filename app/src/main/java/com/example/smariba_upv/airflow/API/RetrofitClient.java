@@ -1,31 +1,34 @@
-/********************************************
- * @file RetrofitClient.java
- * @brief Clase encargada de gestionar la instancia de Retrofit para interactuar con el servidor.
- * @version 1.0
- * @date 2024
- *******************************************/
-
 package com.example.smariba_upv.airflow.API;
+
+import com.example.smariba_upv.airflow.LOGIC.DateTypeAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.util.Date;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/********************************************
- * @class RetrofitClient
- * @brief Clase que proporciona la instancia de Retrofit configurada para realizar llamadas a la API REST.
- *******************************************/
 public class RetrofitClient {
 
-    private static final String BASE_URL = "http://10.237.30.68:3000/"; // Ensure this is correct
-    private static Retrofit retrofit = null;
+    private static Retrofit retrofitLocal = null;
+    private static Retrofit retrofitAirVisual = null;
 
-    public static ApiService getApiService() {
-        if (retrofit == null) {
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .addConverterFactory(GsonConverterFactory.create())
+    private static final String LOCAL_BASE_URL = "http://192.168.1.19:3000/"; // URL del servidor local
+
+
+    // Configura Retrofit para el servidor local
+    public static ApiService getLocalApiService() {
+        if (retrofitLocal == null) {
+            Gson gson = new GsonBuilder()
+                    .registerTypeAdapter(Date.class, new DateTypeAdapter())
+                    .create();
+
+            retrofitLocal = new Retrofit.Builder()
+                    .baseUrl(LOCAL_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
-        return retrofit.create(ApiService.class);
+        return retrofitLocal.create(ApiService.class);
     }
 }

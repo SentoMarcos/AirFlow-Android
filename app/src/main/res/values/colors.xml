@@ -18,5 +18,8 @@
     <color name="AzulCuadrático">#52CCD7</color>
     <color name="VerdeAnálogo">#52D7A0</color>
     <color name="gris_texto">#A0A0A0</color>
-    <color name="Gris">#E7E7E7</color>
+    <color name="background_color">#F5F5F5</color>
+    <color name="card_background_color">#FFFFFF</color>
+    <color name="text_primary">#333333</color>
+
 </resources>

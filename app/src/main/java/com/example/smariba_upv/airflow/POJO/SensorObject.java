@@ -2,11 +2,12 @@ package com.example.smariba_upv.airflow.POJO;
 
 import android.content.Context;
 import android.content.Intent;
-
-import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Objects;
+
 public class SensorObject {
+    @SerializedName("id_sensor")
     int id;
     @SerializedName("estado")
     private String estado;
@@ -25,6 +26,8 @@ public class SensorObject {
 
     @SerializedName("bateria")
     private int Bateria;
+    private double distancia;
+
     public SensorObject(int id, String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.id = id;
         this.estado = estado;
@@ -34,6 +37,19 @@ public class SensorObject {
         this.conexion = conexion;
         Bateria = bateria;
     }
+
+    public SensorObject(int id, String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria,double distancia) {
+        this.id = id;
+        this.estado = estado;
+        this.num_ref = num_ref;
+        this.UUID = UUID;
+        this.nombre = nombre;
+        this.conexion = conexion;
+        Bateria = bateria;
+        this.distancia = distancia;
+    }
+
+
     public SensorObject( String estado, String num_ref, String UUID, String nombre, boolean conexion, int bateria) {
         this.estado = estado;
         this.num_ref = num_ref;
@@ -99,9 +115,18 @@ public class SensorObject {
         Bateria = bateria;
     }
 
+    public double getDistancia() {
+        return distancia;
+    }
+
+    public void setDistancia(double distancia) {
+        this.distancia = distancia;
+    }
+
     @Override
     public String toString() {
         return "SensorObject{" +
+                "id=" + id +
                 "estado='" + estado + '\'' +
                 ", num_ref='" + num_ref + '\'' +
                 ", UUID='" + UUID + '\'' +
@@ -110,4 +135,5 @@ public class SensorObject {
                 ", bateria=" + Bateria +
                 '}';
     }
+
 }

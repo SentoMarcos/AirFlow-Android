@@ -67,6 +67,10 @@ public class SensorResponse {
          * @param bateria Nivel de batería del sensor
          * @return Sensor
          */
+        //id del sensor
+        @SerializedName("id_sensor")
+        private int idSensor;
+
         @SerializedName("estado")
         private String estado;
 
@@ -132,6 +136,10 @@ public class SensorResponse {
 
         public void setBateria(int bateria) {
             this.bateria = bateria;
+        }
+
+        public int getIdSensor() {
+            return idSensor;
         }
     }
 }

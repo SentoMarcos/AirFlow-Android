@@ -49,5 +49,12 @@
 </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="current_time">Current Time: %1$s</string>
+    <string name="last_measurement">Last Measurement: %1$s</string>
+    <string name="daily_exposure">Daily Exposure: %1$s</string>
+    <string name="distance_covered">Distance Covered: %1$s</string>
+    <string name="average_value">Media: %1$.2f</string>
+    <string name="total_exposure">Exposición total: %1$.2f</string>
+
 
 </resources>
