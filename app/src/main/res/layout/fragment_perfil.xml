@@ -1,0 +1,1056 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PRESENTACION.PerfilFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="1944dp">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="50dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Notificaciones"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView12"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView12" />
+
+                <TextView
+                    android:id="@+id/perfil_dato_sensor1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="último dato recogido: 220pp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_bateria_sensor1"
+                    app:layout_constraintStart_toStartOf="@+id/textView17" />
+
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="48dp"
+                    android:src="@drawable/perfil_fondo"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_datos_usuario2" />
+
+                <LinearLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="15dp"
+                    android:backgroundTint="@color/AzulCuadrático"
+                    android:orientation="horizontal"
+                    app:layoutDescription="@xml/fragment_perfil_xml_constraintlayout_scene"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView8"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="@+id/imageView8"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <ImageView
+                        android:id="@+id/perfil_foto_usuarioyo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/perfil_foto_perfil_usuario" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:backgroundTint="@color/AzulCuadrático"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/perfil_nombre_usuario6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="11dp"
+                            android:layout_marginTop="3dp"
+                            android:fontFamily="@font/poppins"
+                            android:text="Nadia"
+                            android:textColor="@color/Blanco"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/perfil_datos_usuario6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:fontFamily="@font/poppins"
+                            android:paddingLeft="11dp"
+                            android:text="45 días aportando datos"
+                            android:textColor="@color/Blanco"
+                            android:textSize="15sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/perfil_puntuacion_usuario5"
+                        android:layout_width="48dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="15dp"
+                        android:backgroundTint="@color/Azul_v3"
+                        android:paddingTop="20dp"
+                        android:text="102"
+                        android:textColor="@color/Blanco" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="03"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario3"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario3" />
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_segundotercercuardolugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario4"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario4"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario3" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_segundotercercuardolugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario3"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario3"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario4" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="04"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario2" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="02"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_datos_usuario4"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario4" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Gretter"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario2"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario2" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="410 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario2"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario4" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Amelia"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario3"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario3" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="342 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario3"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario3" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="340 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario2" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Carlos"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario4"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario4" />
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/textView6"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Juan"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="512 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario1" />
+
+                <ImageView
+                    android:id="@+id/imageView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_primerlugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="01"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+                <TextView
+                    android:id="@+id/perfil_datos_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins"
+                    android:text="512 días aportando datos"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_nombre_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_nombre_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Juan"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_foto_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="48dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Datos personales"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Leaderboard"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilBtEditarPerfil" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Datos de envío"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="10dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Valencia, España"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="3dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="46022, Avenida de las Flores, 6"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginEnd="36dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="2º piso, puerta 4, dejar en consejería si no hay respuesta"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+
+                <Button
+                    android:id="@+id/perfilBtEditarPerfil"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="24sp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginRight="24sp"
+                    android:backgroundTint="@color/AzulCuadrático"
+                    android:fontFamily="@font/ibm_plex_mono"
+                    android:text="Editar perfil"
+                    android:textColor="@color/GrisOscuro"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintStart_toStartOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilNumeroTelefonico" />
+
+                <TextView
+                    android:id="@+id/perfilNumeroTelefonico"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="+34 123 45 67 89"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/perfilCorreo"
+                    app:layout_constraintStart_toStartOf="@+id/perfilCorreo"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilCorreo" />
+
+                <TextView
+                    android:id="@+id/perfilNombreCompleto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Nadia Lorenzo Castellanos"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/Bienvenida"
+                    app:layout_constraintStart_toStartOf="@+id/Bienvenida"
+                    app:layout_constraintTop_toBottomOf="@+id/Bienvenida" />
+
+                <TextView
+                    android:id="@+id/perfilCorreo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="nadiapriv@gmail.com"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintStart_toStartOf="@+id/perfilNombreCompleto"
+                    app:layout_constraintTop_toBottomOf="@+id/perfilNombreCompleto" />
+
+                <TextView
+                    android:id="@+id/Bienvenida"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:text="Buenos días Nadia"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_foto_usuarioyo_grande"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_foto_usuarioyo_grande"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_foto_usuarioyo_grande" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_usuario1"
+                    app:layout_constraintStart_toStartOf="@+id/textView6"
+                    app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_primerlugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario1"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario1" />
+
+                <TextView
+                    android:id="@+id/perfil_puntuacion_usuario1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="01"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_datos_usuario1"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/perfil_usuario2"
+                    app:layout_constraintStart_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:src="@drawable/perfil_usuario3"
+                    app:layout_constraintStart_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_foto_usuario2" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuario4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_usuario4"
+                    app:layout_constraintStart_toStartOf="@+id/imageView5"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_foto_usuario3" />
+
+                <ImageView
+                    android:id="@+id/perfil_foto_usuarioyo_grande"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="110dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_foto_perfil_usuario_grande"
+                    app:layout_constraintStart_toStartOf="@+id/textView"
+                    app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/perfil_segundotercercuardolugar"
+                    app:layout_constraintEnd_toEndOf="@+id/perfil_puntuacion_usuario2"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_puntuacion_usuario2"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_foto_usuario2" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Historial de compra"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="20dp"
+                    android:fontFamily="@font/poppins"
+                    android:text="Mis sensores"
+                    android:textColor="@color/black"
+                    android:textSize="24sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+
+                <ImageView
+                    android:id="@+id/imageView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="36dp"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_membresia"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+                <ImageView
+                    android:id="@+id/imageView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_imagen_producto"
+                    app:layout_constraintStart_toStartOf="@+id/imageView10"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView10" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:text="Membresía 1 mes"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView10"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7" />
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="100sp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Fecha:"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView8"
+                    app:layout_constraintStart_toStartOf="@+id/textView8"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Precio:"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView9"
+                    app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+                <TextView
+                    android:id="@+id/perfil_precio_membresia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="5.99€"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView9"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_fecha_membresia" />
+
+                <TextView
+                    android:id="@+id/perfil_fecha_membresia"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="9/10/2023"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView9"
+                    app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+                <TextView
+                    android:id="@+id/textView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Sensor AF1"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/imageView9"
+                    app:layout_constraintTop_toTopOf="@+id/imageView9" />
+
+                <TextView
+                    android:id="@+id/textView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Fecha:"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView13"
+                    app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Precio:"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toStartOf="@+id/textView14"
+                    app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
+                <TextView
+                    android:id="@+id/perfil_fecha_producto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="35dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="11/11/2023"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView13"
+                    app:layout_constraintTop_toTopOf="@+id/textView14" />
+
+                <TextView
+                    android:id="@+id/perfil_precio_producto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="29.99€"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/textView14"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_fecha_producto"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_fecha_producto" />
+
+                <ImageView
+                    android:id="@+id/imageView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_sensor1"
+                    app:layout_constraintStart_toStartOf="@+id/textView12"
+                    app:layout_constraintTop_toBottomOf="@+id/textView12" />
+
+                <ImageView
+                    android:id="@+id/imageView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_sensor2"
+                    app:layout_constraintStart_toStartOf="@+id/textView12"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView11" />
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:text="Ozono 01"
+                    app:layout_constraintStart_toEndOf="@+id/imageView11"
+                    app:layout_constraintTop_toTopOf="@+id/imageView11" />
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="11dp"
+                    android:text="Ozono 02"
+                    app:layout_constraintStart_toEndOf="@+id/imageView12"
+                    app:layout_constraintTop_toTopOf="@+id/imageView12" />
+
+                <TextView
+                    android:id="@+id/perfil_dato_sensor2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="último dato recogido: 120pp"
+                    app:layout_constraintBottom_toBottomOf="@+id/perfil_bateria_sensor2"
+                    app:layout_constraintStart_toStartOf="@+id/textView19"
+                    app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+                <TextView
+                    android:id="@+id/perfil_bateria_sensor1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="87%"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView14"
+                    app:layout_constraintStart_toStartOf="@+id/imageView14"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView14" />
+
+                <TextView
+                    android:id="@+id/perfil_bateria_sensor2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="45%"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView13"
+                    app:layout_constraintStart_toStartOf="@+id/imageView13"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView13" />
+
+                <ImageView
+                    android:id="@+id/imageView14"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="255dp"
+                    android:layout_marginTop="3dp"
+                    android:src="@drawable/perfil_bateriaalta"
+                    app:layout_constraintStart_toEndOf="@+id/imageView11"
+                    app:layout_constraintTop_toTopOf="@+id/imageView11" />
+
+                <ImageView
+                    android:id="@+id/imageView13"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="255dp"
+                    android:layout_marginTop="3dp"
+                    android:src="@drawable/perfil_bateriamedia"
+                    app:layout_constraintStart_toEndOf="@+id/imageView12"
+                    app:layout_constraintTop_toTopOf="@+id/imageView12" />
+
+                <ImageView
+                    android:id="@+id/imageView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="36dp"
+                    android:src="@drawable/perfil_decoracion"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView12" />
+
+                <ImageView
+                    android:id="@+id/imageView17"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_buena"
+                    app:layout_constraintStart_toStartOf="@+id/imageView18"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView18" />
+
+                <ImageView
+                    android:id="@+id/imageView18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_excelente"
+                    app:layout_constraintStart_toEndOf="@+id/textView11"
+                    app:layout_constraintStart_toStartOf="@+id/textView11"
+                    app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+                <ImageView
+                    android:id="@+id/imageView23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_mala"
+                    app:layout_constraintStart_toStartOf="@+id/imageView25"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView25" />
+
+                <ImageView
+                    android:id="@+id/imageView24"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_peligroso"
+                    app:layout_constraintStart_toStartOf="@+id/imageView23"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView23" />
+
+                <ImageView
+                    android:id="@+id/imageView25"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:src="@drawable/perfil_medio"
+                    app:layout_constraintStart_toStartOf="@+id/imageView17"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView17" />
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Excelente"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView18"
+                    app:layout_constraintStart_toEndOf="@+id/imageView18"
+                    app:layout_constraintTop_toTopOf="@+id/imageView18" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Buena"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView17"
+                    app:layout_constraintStart_toEndOf="@+id/imageView17"
+                    app:layout_constraintTop_toTopOf="@+id/imageView17" />
+
+                <TextView
+                    android:id="@+id/textView20"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Media"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView25"
+                    app:layout_constraintStart_toEndOf="@+id/imageView25"
+                    app:layout_constraintTop_toTopOf="@+id/imageView25" />
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Mala"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView23"
+                    app:layout_constraintStart_toEndOf="@+id/imageView23"
+                    app:layout_constraintTop_toTopOf="@+id/imageView23"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/textView23"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="Peligrosa"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="20sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView24"
+                    app:layout_constraintStart_toEndOf="@+id/imageView24"
+                    app:layout_constraintTop_toTopOf="@+id/imageView24" />
+
+                <CheckBox
+                    android:id="@+id/checkBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:layout_marginStart="20dp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="activada"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView15"
+                    app:layout_constraintStart_toEndOf="@+id/textView15"
+                    app:layout_constraintTop_toTopOf="@+id/textView15" />
+
+                <CheckBox
+                    android:id="@+id/checkBox2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="activada"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView18"
+                    app:layout_constraintEnd_toEndOf="@+id/checkBox"
+                    app:layout_constraintStart_toStartOf="@+id/checkBox"
+                    app:layout_constraintTop_toTopOf="@+id/textView18" />
+
+                <CheckBox
+                    android:id="@+id/checkBox3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="activada"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView20"
+                    app:layout_constraintStart_toStartOf="@+id/checkBox"
+                    app:layout_constraintTop_toTopOf="@+id/textView20" />
+
+                <CheckBox
+                    android:id="@+id/checkBox4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="activada"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView22"
+                    app:layout_constraintStart_toStartOf="@+id/checkBox"
+                    app:layout_constraintTop_toTopOf="@+id/textView22" />
+
+                <CheckBox
+                    android:id="@+id/checkBox5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="activada"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView23"
+                    app:layout_constraintStart_toStartOf="@+id/checkBox"
+                    app:layout_constraintTop_toTopOf="@+id/textView23" />
+
+                <CheckBox
+                    android:id="@+id/perfil_cb_comun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="común"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintStart_toStartOf="@+id/imageView24"
+                    app:layout_constraintTop_toTopOf="@+id/perfil_cb_niños" />
+
+                <CheckBox
+                    android:id="@+id/perfil_cb_embarazada"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:layout_marginTop="4dp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="embarazada"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintStart_toEndOf="@+id/perfil_cb_comun"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_cb_comun"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_cb_comun" />
+
+                <CheckBox
+                    android:id="@+id/checkBox8"
+                    android:layout_width="120sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="problemas cardiacos"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintStart_toStartOf="@+id/imageView24"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_cb_embarazada" />
+
+                <CheckBox
+                    android:id="@+id/perfil_cb_niños"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:layout_marginTop="15dp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="niños"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintStart_toStartOf="@+id/checkBox"
+                    app:layout_constraintTop_toBottomOf="@+id/checkBox5" />
+
+                <CheckBox
+                    android:id="@+id/perfil_cb_mayores"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:layout_marginTop="4dp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="mayores"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_cb_niños"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_cb_niños" />
+
+                <CheckBox
+                    android:id="@+id/perfil_cb_problemas_respiratorios"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20sp"
+                    android:layout_marginTop="4dp"
+                    android:buttonTint="@color/gris_texto"
+                    android:fontFamily="@font/poppins_light"
+                    android:text="problemas respiratorios"
+                    android:textColor="@color/gris_texto"
+                    android:textSize="13sp"
+                    app:buttonIconTint="@color/gris_texto"
+                    app:layout_constraintStart_toStartOf="@+id/perfil_cb_niños"
+                    app:layout_constraintTop_toBottomOf="@+id/perfil_cb_mayores" />
+
+                <Button
+                    android:id="@+id/perfil_b_logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/RojoCuadrático"
+                    android:fontFamily="@font/ibm_plex_mono"
+                    android:text="Logout"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/checkBox8" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

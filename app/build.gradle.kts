@@ -4,7 +4,7 @@ plugins {
 
 android {
     namespace = "com.example.smariba_upv.airflow"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.smariba_upv.airflow"
@@ -15,7 +15,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
+    buildFeatures {
+        buildConfig = true
+    }
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -32,12 +34,46 @@ android {
 }
 
 dependencies {
-
+    // AndroidX
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation(libs.androidx.core)
+    implementation("androidx.recyclerview:recyclerview:1.3.0")
+    implementation("com.google.android.gms:play-services-base:16.0.1")
+    //cardview
+    implementation("androidx.cardview:cardview:1.0.0")
+    // Biometric
+    implementation("androidx.biometric:biometric:1.2.0")
+    implementation("androidx.biometric:biometric-ktx:1.4.0-alpha02")
+
+    implementation("com.google.android.gms:play-services-location:21.0.1")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    // MySQL
+    implementation("mysql:mysql-connector-java:8.0.32")
+    implementation(libs.play.services.vision.common)
+    implementation(libs.play.services.vision)
+    implementation(libs.play.services.maps)
+    implementation(libs.firebase.crashlytics.buildtools)
+
+    // Testing
+    testImplementation(libs.junit.junit)
+    testImplementation(libs.rules)
+    testImplementation(libs.junit.jupiter)
+    testImplementation("org.mockito:mockito-core:4.2.0")
+    androidTestImplementation(libs.junit.junit)
+
+    // Maps
+    implementation("org.osmdroid:osmdroid-android:6.1.14")
+    implementation ("org.osmdroid:osmdroid-wms:6.1.14")
+    implementation ("org.osmdroid:osmdroid-mapsforge:6.1.14")
+    implementation ("com.google.maps.android:android-maps-utils:2.3.0")
+    //implementation ("implementation 'com.google.android.gms:play-services-maps:18.0.0")
+
+
 }
