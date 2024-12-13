@@ -56,7 +56,7 @@ public class EnviarPeticionesUser {
     public boolean login(String email, String password) {
         final boolean[] loginSuccessful = {false};
 
-        RetrofitClient.getApiService().login(new User(email, password)).enqueue(new Callback<User>() {
+        RetrofitClient.getLocalApiService().login(new User(email, password)).enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
@@ -110,7 +110,7 @@ public class EnviarPeticionesUser {
      * **/
     public void editUsuario(int id, String nombre, String apellidos, String email, String telefono) {
         if (id > 0 && nombre != null && email != null && telefono != null) {
-            RetrofitClient.getApiService().editUsuario(new User(id, nombre, apellidos, email, telefono)).enqueue(new Callback<User>() {
+            RetrofitClient.getLocalApiService().editUsuario(new User(id, nombre, apellidos, email, telefono)).enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
                     if (response.isSuccessful()) {
@@ -141,7 +141,7 @@ public class EnviarPeticionesUser {
         SensorRequest sensorRequest = new SensorRequest(id_usuario, sensorObject.getEstado(), sensorObject.getNum_ref(), uuidTrimmed, sensorObject.getNombre(), sensorObject.isConexion(), sensorObject.getBateria());
         //ver datos del sensor
         //Log.d(TAG, "Sensor: " + sensorObject.getId() + " - " + sensorObject.getEstado() + " - " + sensorObject.getNum_ref() + " - " + uuidTrimmed + " - " + sensorObject.getNombre() + " - " + sensorObject.isConexion() + " - " + sensorObject.getBateria());
-        RetrofitClient.getApiService().registrarSensor(sensorRequest).enqueue(new Callback<SensorRequest>() {
+        RetrofitClient.getLocalApiService().registrarSensor(sensorRequest).enqueue(new Callback<SensorRequest>() {
             @Override
             public void onResponse(Call<SensorRequest> call, Response<SensorRequest> response) {
                 if (response.isSuccessful()) {
@@ -168,7 +168,7 @@ public class EnviarPeticionesUser {
      * **/
     public void actualizarSensor(int id_sensor, String estado, boolean conexion, int bateria) {
         SensorRequest sensorRequest = new SensorRequest(id_sensor, estado, conexion, bateria);
-        RetrofitClient.getApiService().actualizarSensor(sensorRequest).enqueue(new Callback<ResponseBody>() {
+        RetrofitClient.getLocalApiService().actualizarSensor(sensorRequest).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.isSuccessful()) {
@@ -195,7 +195,7 @@ public class EnviarPeticionesUser {
         int id_usuario = sharedPreferences.getInt("id", 0); // Retrieve user ID
         Log.d(TAG, "ID del usuario: " + id_usuario);
 
-        RetrofitClient.getApiService().getMisSensores(id_usuario).enqueue(new Callback<List<SensorResponse>>() {
+        RetrofitClient.getLocalApiService().getMisSensores(id_usuario).enqueue(new Callback<List<SensorResponse>>() {
             @Override
             public void onResponse(Call<List<SensorResponse>> call, Response<List<SensorResponse>> response) {
                 if (response.isSuccessful()) {
@@ -239,7 +239,7 @@ public class EnviarPeticionesUser {
 
     public void createMedicion(Medicion medicion) {
         Log.d(TAG, "Creando medición: " + medicion);
-        RetrofitClient.getApiService().createMedicion(medicion).enqueue(new Callback<Medicion>() {
+        RetrofitClient.getLocalApiService().createMedicion(medicion).enqueue(new Callback<Medicion>() {
             @Override
             public void onResponse(Call<Medicion> call, Response<Medicion> response) {
                 if (response.isSuccessful()) {
@@ -268,6 +268,10 @@ public class EnviarPeticionesUser {
                 }
             }
         });
+    }
+
+    public void getMediciones(Callback<List<Medicion>> callback) {
+        RetrofitClient.getLocalApiService().getAllMediciones().enqueue(callback);
     }
 
 }

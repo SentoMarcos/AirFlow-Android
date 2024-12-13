@@ -201,6 +201,8 @@ public class SensorFragment extends Fragment {
             startActivity(intent);
         });
 
+        
+
         // Update view
         updateView(tvNoSensors);
 

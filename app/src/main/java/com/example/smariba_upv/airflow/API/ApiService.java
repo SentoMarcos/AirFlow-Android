@@ -56,6 +56,9 @@ public interface ApiService {
 
     @POST("/mediciones/mediciones/add")
     Call<Medicion> createMedicion(@Body Medicion medicion);
+
+    @GET("/mediciones/mediciones")
+    Call<List<Medicion>> getAllMediciones();
 }
 
 

@@ -34,7 +34,11 @@ public class Medicion {
         this.valor = valor;
         this.fecha = fecha;
     }
-
+    public Medicion(double latitud, double longitud, double valor) {
+        this.latitud = latitud;
+        this.longitud = longitud;
+        this.valor = valor;
+    }
     public Medicion(int idSensor, String tipoGas, double latitud, double longitud, double valor, Date fecha) {
         this(0, idSensor, tipoGas, latitud, longitud, valor, fecha);
     }
