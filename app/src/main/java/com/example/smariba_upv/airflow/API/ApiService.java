@@ -59,6 +59,9 @@ public interface ApiService {
 
     @GET("/mediciones/mediciones")
     Call<List<Medicion>> getAllMediciones();
+
+    @GET("/mapa/getMapaHtml")
+    Call<String> getMapaHtml();
 }
 
 
