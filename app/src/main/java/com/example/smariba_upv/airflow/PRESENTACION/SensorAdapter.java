@@ -1,3 +1,8 @@
+/**
+ * @file SensorAdapter.java
+ * @brief Adadpter para los elementos del recyclerView de sensores
+ * @author Sento Marcos Ibarra
+ * */
 package com.example.smariba_upv.airflow.PRESENTACION;
 
 import android.view.LayoutInflater;
@@ -18,10 +23,18 @@ import java.util.HashMap;
 import java.util.List;
 
 public class SensorAdapter extends RecyclerView.Adapter<SensorAdapter.SensorViewHolder> {
-
+    /**
+     * @param sensorList Lista con los objetos sensor del usuario
+     * @param medicionMap HashMap con los las mediciones tomadas por el usuario
+     * */
     private final List<SensorObject> sensorList;
     private final HashMap<Integer, Medicion> medicionMap;
 
+    /**
+     * @function SensorAdapter
+     * @brief Constructo de la clase SensorAdapter
+     * @details SensorObject[]
+     * */
     public SensorAdapter(List<SensorObject> initialSensorList, List<Medicion> initialMedicionList) {
         this.sensorList = new ArrayList<>();
         this.medicionMap = new HashMap<>();
