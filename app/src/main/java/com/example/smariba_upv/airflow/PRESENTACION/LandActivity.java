@@ -4,7 +4,6 @@ package com.example.smariba_upv.airflow.PRESENTACION;
  * @brief Clase que permite visualizar la pantalla principal de la aplicación
  * @details Clase que permite visualizar la pantalla principal de la aplicación y navegar entre las diferentes opciones de la aplicación
  */
-import static androidx.test.InstrumentationRegistry.getContext;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.smariba_upv.airflow.POJO.SensorObject;
+import com.example.smariba_upv.airflow.PRESENTACION.Helpers.SensorFragment;
 import com.example.smariba_upv.airflow.R;
 import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -31,7 +31,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 public class LandActivity extends AppCompatActivity {
     /**

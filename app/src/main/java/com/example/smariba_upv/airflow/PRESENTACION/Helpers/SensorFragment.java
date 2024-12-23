@@ -1,5 +1,5 @@
 // SensorFragment.java
-package com.example.smariba_upv.airflow.PRESENTACION;
+package com.example.smariba_upv.airflow.PRESENTACION.Helpers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -22,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
 import com.example.smariba_upv.airflow.POJO.Medicion;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
+import com.example.smariba_upv.airflow.PRESENTACION.QRreader;
+import com.example.smariba_upv.airflow.PRESENTACION.SensorAdapter;
 import com.example.smariba_upv.airflow.R;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;

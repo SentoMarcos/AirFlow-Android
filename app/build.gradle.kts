@@ -75,5 +75,6 @@ dependencies {
     implementation ("com.google.maps.android:android-maps-utils:2.3.0")
     //implementation ("implementation 'com.google.android.gms:play-services-maps:18.0.0")
 
-
+    //Calendar
+    implementation ("com.prolificinteractive:material-calendarview:1.4.3")
 }
