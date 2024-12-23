@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # AirFlow - Android
+=======
+# AirFlow - Android 
+>>>>>>> origin/main
 > #### Proyecto Aplicaciones de Biometría y Medio Ambiente
 ---
 
@@ -19,13 +23,18 @@ Para ejecutar este proyecto en tu entorno local, sigue estos pasos:
    ```bash
    git clone https://github.com/SentoMarcos/AirFlow-Android.git
    ```
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> origin/main
 2. Abre el proyecto en Android Studio.
 
 3. Sincroniza Gradle y compila el proyecto.
 
 4. Ejecuta la aplicación en un emulador o dispositivo físico con Bluetooth habilitado.
 
+<<<<<<< HEAD
 ## Características principales
 
 - **Gestión de sensores:** Registro, actualización y visualización de sensores utilizando el protocolo BTLE.
@@ -35,6 +44,8 @@ Para ejecutar este proyecto en tu entorno local, sigue estos pasos:
 - **Lectura de códigos QR:** Escaneo y decodificación de información útil para la interacción con sensores.
 - **Notificaciones en tiempo real:** Soporte para notificaciones relacionadas con los dispositivos y sensores.
 
+=======
+>>>>>>> origin/main
 ## Implementaciones
 #### Biometría
 ```kotlin
@@ -42,6 +53,7 @@ implementation("androidx.biometric:biometric:1.2.0")
 implementation("androidx.biometric:biometric-ktx:1.4.0-alpha02")
 ```
 
+<<<<<<< HEAD
 ## Requisitos previos
 
 Antes de empezar, asegúrate de tener lo siguiente:
@@ -72,6 +84,8 @@ La estructura principal de los paquetes es la siguiente:
 2. **`ArduinoGetterService`**: Servicio que escanea dispositivos BTLE y gestiona las conexiones.
 3. **`BiometricUtil`**: Maneja la autenticación biométrica en dispositivos compatibles.
 
+=======
+>>>>>>> origin/main
 ## Autores
 - [SentoMarcos](https://github.com/SentoMarcos "SentoMarcos")
 - [ferrangv](https://github.com/ferrangv "ferrangv")
@@ -85,7 +99,10 @@ La documentación completa del proyecto se encuentra en el repositorio de GitHub
 ## Proyectos Relacionados
 - [**AirFlow Web**](https://github.com/SentoMarcos/AirFlow-Web "**AirFlow Web**")
 - [**AirFlow Arduino**](https://github.com/SentoMarcos/AirFlow-Arduino "**AirFlow Arduino**")
+<<<<<<< HEAD
 
 ## Licencia
 
 Este proyecto está licenciado bajo [nombre de la licencia]. Consulta el archivo `LICENSE` para más detalles.
+=======
+>>>>>>> origin/main

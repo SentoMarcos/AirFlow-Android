@@ -55,6 +55,8 @@
     <string name="distance_covered">Distance Covered: %1$s</string>
     <string name="average_value">Media: %1$.2f</string>
     <string name="total_exposure">Exposición total: %1$.2f</string>
+    <string name="back"><![CDATA[<-]]></string>
+    <string name="forward"><![CDATA[->]]></string>
 
 
 </resources>
