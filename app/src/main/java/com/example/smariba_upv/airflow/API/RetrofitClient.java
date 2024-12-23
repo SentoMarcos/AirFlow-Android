@@ -14,7 +14,7 @@ public class RetrofitClient {
 
     private static Retrofit retrofitLocalJson = null;   // Para JSON
     private static Retrofit retrofitLocalHtml = null;   // Para HTML
-    private static final String LOCAL_BASE_URL = "http://192.168.1.248:3000/"; // URL del servidor local
+    private static final String LOCAL_BASE_URL = "http://192.168.1.158:3000/"; // URL del servidor local
 
     // Configura Retrofit para el servidor local (JSON)
     public static ApiService getLocalApiService() {
