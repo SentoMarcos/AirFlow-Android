@@ -51,6 +51,8 @@ public class MapFragment extends Fragment {
         webSettings.setAllowContentAccess(true);
         webSettings.setAllowUniversalAccessFromFileURLs(true);
         webSettings.setAllowFileAccessFromFileURLs(true);
+        WebView.setWebContentsDebuggingEnabled(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
 
 
         // Establecer WebViewClient para que los enlaces se abran en el WebView y no en el navegador
@@ -93,8 +95,13 @@ public class MapFragment extends Fragment {
                     String html = response.body();
                     if (html != null) {
                         Log.d("MapFragment", "HTML recibido del servidor, cargando en WebView");
-                        Log.d("MapFragment", "HTML recibido: " + html);
-                        webView.loadData(html, "text/html", "UTF-8");
+                        webView.loadDataWithBaseURL(
+                                "https://example.com",  // Base URL para recursos relativos
+                                html,                  // Contenido HTML
+                                "text/html",           // MIME type
+                                "UTF-8",               // Encoding
+                                null                   // URL para redirección posterior
+                        );
                     } else {
                         Log.e("MapFragment", "El cuerpo de la respuesta está vacío");
                         Toast.makeText(getContext(), "No se recibió HTML del mapa", Toast.LENGTH_SHORT).show();
@@ -113,4 +120,5 @@ public class MapFragment extends Fragment {
             }
         });
     }
+
 }
