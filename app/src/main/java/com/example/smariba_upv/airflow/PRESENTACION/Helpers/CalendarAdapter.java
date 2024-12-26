@@ -15,17 +15,22 @@ import com.example.smariba_upv.airflow.R;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     private final ArrayList<String> daysOfMonth;
     private final OnItemListener onItemListener;
+    private final HashMap<String, Integer> selectedDaysMap;
 
+    // Variables para rastrear el mes y año actual
+    private int displayedMonth;
+    private int displayedYear;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener) {
+    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener, HashMap<String, Integer> selectedDaysMap) {
         this.daysOfMonth = daysOfMonth;
         this.onItemListener = onItemListener;
+        this.selectedDaysMap = selectedDaysMap;
     }
-
 
     @Override
     public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -44,33 +49,28 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         return new CalendarViewHolder(view, onItemListener);
     }
 
-// Updated code for applying colors dynamically based on measurements and logical rules
-
-    // Variable to track the selected day
-    private int selectedDay = LocalDate.now().getDayOfMonth();
-
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder holder, int position) {
         String dayText = daysOfMonth.get(position);
         holder.dayOfMonth.setText(dayText);
 
+        // Clave única para el mes y año actual
+        String currentMonthYearKey = displayedMonth + "-" + displayedYear;
+
         if (!dayText.trim().isEmpty()) {
             int day = Integer.parseInt(dayText);
 
-            // Get the current date to compare with days in the calendar
-            LocalDate currentDate = LocalDate.now();
-            int currentDay = currentDate.getDayOfMonth();
-            int currentMonth = currentDate.getMonthValue();
-            int currentYear = currentDate.getYear();
+            // Determinar si este día debe estar seleccionado
+            boolean isSelected = selectedDaysMap.containsKey(currentMonthYearKey) &&
+                    selectedDaysMap.get(currentMonthYearKey) == day;
 
-            // Variable to store the background color for the current day
+            // Asignar color de fondo basado en lógica
             int backgroundColor;
 
-            // Logic for applying colors based on whether the day is valid and has measurements
-            if ((displayedYear < currentYear) ||
-                    (displayedYear == currentYear && displayedMonth < currentMonth) ||
-                    (displayedYear == currentYear && displayedMonth == currentMonth && day <= currentDay)) {
-                // Past days, including today, have measurements
+            if ((displayedYear < LocalDate.now().getYear()) ||
+                    (displayedYear == LocalDate.now().getYear() && displayedMonth < LocalDate.now().getMonthValue()) ||
+                    (displayedYear == LocalDate.now().getYear() && displayedMonth == LocalDate.now().getMonthValue() && day <= LocalDate.now().getDayOfMonth())) {
+                // Días pasados o hoy
                 if (day % 5 == 0) {
                     backgroundColor = R.color.RosaExcelente;
                 } else if (day % 3 == 0) {
@@ -81,62 +81,61 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
                     backgroundColor = R.color.NaranjaMalo;
                 }
             } else {
-                // Future days have no measurements
+                // Días futuros
                 backgroundColor = R.color.GrisClaro;
             }
 
-            // Apply the background color with rounded corners
-            holder.itemView.findViewById(R.id.bg_color).setBackground(getRoundedDrawable(holder.itemView.getContext(), backgroundColor));
+            // Aplicar el fondo redondeado
+            holder.itemView.findViewById(R.id.bg_color).setBackground(
+                    isSelected ? getNeonBorderDrawable(holder.itemView.getContext(), backgroundColor)
+                            : getRoundedDrawable(holder.itemView.getContext(), backgroundColor)
+            );
 
-            // Highlight the selected day with a neon border, or the current day by default
-            if (day == selectedDay) {
-                holder.itemView.findViewById(R.id.bg_color).setBackground(getNeonBorderDrawable(holder.itemView.getContext(), backgroundColor));
-            }
-
-            // Handle day selection
+            // Manejar selección del día
             holder.itemView.setOnClickListener(v -> {
-                selectedDay = day;
-                notifyDataSetChanged(); // Refresh the adapter to update the selection
+                // Limpiar el mapa de días seleccionados antes de agregar el nuevo día
+                selectedDaysMap.clear();
+                // Guardar el día seleccionado en el mapa para este mes y año
+                selectedDaysMap.put(currentMonthYearKey, day);
+                notifyDataSetChanged(); // Refrescar la vista para mostrar la selección
             });
         } else {
-            // Empty or invalid days always have the default background color
-            holder.itemView.findViewById(R.id.bg_color).setBackground(getRoundedDrawable(holder.itemView.getContext(), R.color.GrisClaro));
+            // Celdas vacías
+            holder.itemView.findViewById(R.id.bg_color).setBackground(
+                    getRoundedDrawable(holder.itemView.getContext(), R.color.GrisClaro)
+            );
         }
     }
 
-    // Method to create a rounded drawable dynamically
-    private Drawable getRoundedDrawable(Context context, int backgroundColor) {
-        GradientDrawable rounded = new GradientDrawable();
-        rounded.setColor(ContextCompat.getColor(context, backgroundColor)); // Set the background color
-        rounded.setCornerRadii(new float[]{12f, 12f, 12f, 12f, 20f, 20f, 20f, 20f}); // Apply rounded corners
-        return rounded;
-    }
-
-    // Method to create a neon border drawable dynamically
-    private Drawable getNeonBorderDrawable(Context context, int backgroundColor) {
-        GradientDrawable border = new GradientDrawable();
-        border.setColor(ContextCompat.getColor(context, backgroundColor)); // Set the background color
-        border.setCornerRadii(new float[]{12f, 12f, 12f, 12f, 20f, 20f, 20f, 20f}); // Corner radius for the border
-        border.setStroke(4, ContextCompat.getColor(context, R.color.Blanco)); // White neon-like border
-        return border;
-    }
-
-    // Variables to track displayed month and year
-    private int displayedMonth;
-    private int displayedYear;
-
-    // Ensure displayedMonth and displayedYear are updated correctly when the calendar changes
+    // Método para actualizar mes y año
     public void updateDisplayedMonthYear(int month, int year) {
         this.displayedMonth = month;
         this.displayedYear = year;
+
+        // Refrescar la vista al cambiar de mes/año
+        notifyDataSetChanged();
     }
-
-
-
 
     @Override
     public int getItemCount() {
         return daysOfMonth.size();
+    }
+
+    // Método para crear un drawable redondeado dinámicamente
+    private Drawable getRoundedDrawable(Context context, int backgroundColor) {
+        GradientDrawable rounded = new GradientDrawable();
+        rounded.setColor(ContextCompat.getColor(context, backgroundColor));
+        rounded.setCornerRadii(new float[]{12f, 12f, 12f, 12f, 20f, 20f, 20f, 20f});
+        return rounded;
+    }
+
+    // Método para crear un drawable con borde de neón dinámico
+    private Drawable getNeonBorderDrawable(Context context, int backgroundColor) {
+        GradientDrawable border = new GradientDrawable();
+        border.setColor(ContextCompat.getColor(context, backgroundColor));
+        border.setCornerRadii(new float[]{12f, 12f, 12f, 12f, 20f, 20f, 20f, 20f});
+        border.setStroke(4, ContextCompat.getColor(context, R.color.Blanco)); // Borde blanco tipo neón
+        return border;
     }
 
     public interface OnItemListener {

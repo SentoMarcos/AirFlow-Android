@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SaludFragment extends Fragment implements CalendarAdapter.OnItemListener {
 
@@ -28,6 +29,7 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
     private LocalDate selectedDate;
     private Button previousMonth;
     private Button nextMonth;
+    private HashMap<String, Integer> selectedDaysMap = new HashMap<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,6 +37,11 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
         View view = inflater.inflate(R.layout.fragment_salud, container, false);
         InitWidgets(view);
         selectedDate = LocalDate.now();
+
+        // Initialize selectedDaysMap with the current date
+        String currentMonthYearKey = selectedDate.getMonthValue() + "-" + selectedDate.getYear();
+        selectedDaysMap.put(currentMonthYearKey, selectedDate.getDayOfMonth());
+
         setMonthView();
         previousMonth = view.findViewById(R.id.btnpreviousMonth);
         nextMonth = view.findViewById(R.id.btnnextMonth);
@@ -66,13 +73,12 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
         // Log para depuración
         Log.d("SaludFragment", "Days in Month: " + daysInMonth.toString());
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this);
+        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, selectedDaysMap);
         calendarAdapter.updateDisplayedMonthYear(selectedDate.getMonthValue(), selectedDate.getYear()); // Actualizar mes y año
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
         calendarRecyclerView.setLayoutManager(layoutManager);
         calendarRecyclerView.setAdapter(calendarAdapter);
     }
-
 
     private ArrayList<String> daysInMonthArray(LocalDate date) {
         ArrayList<String> daysInMonthArray = new ArrayList<>();
@@ -97,7 +103,6 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
 
         return daysInMonthArray;
     }
-
 
     private String monthYearFromDate(LocalDate date) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
