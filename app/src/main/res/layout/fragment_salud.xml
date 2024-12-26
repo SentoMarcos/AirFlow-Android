@@ -1,232 +1,184 @@
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/Blanco"
-    tools:context=".PRESENTACION.SaludFragment">
-
-    <ScrollView
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:paddingBottom="20dp">
 
-        <LinearLayout
+        <!-- Fondo Negro para el Título -->
+
+        <!-- Navegación de Meses -->
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="40dp"
-            android:orientation="vertical"
-            android:padding="16dp"
-            android:paddingBottom="20dp">
+            android:layout_height="match_parent"
+            android:background="@drawable/subtract">
 
-            <!-- Fondo Negro para el Título -->
-
-            <!-- Navegación de Meses -->
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/subtract">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:background="@null"
+                android:padding="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5">
 
-                <RelativeLayout
-                    android:id="@+id/relativeLayout"
-                    android:layout_width="match_parent"
+                <!-- Título -->
+                <TextView
+                    android:id="@+id/tv_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Salud"
+                    android:textColor="@color/Negro"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <!-- Subtítulo -->
+                <TextView
+                    android:id="@+id/tv_subtitle"
+                    android:layout_width="189dp"
+                    android:layout_height="68dp"
+                    android:layout_below="@id/tv_title"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="165dp"
+                    android:layout_marginTop="-38dp"
+                    android:layout_marginEnd="9dp"
+                    android:text="Calidad del aire según la OMS."
+                    android:textAlignment="center"
+                    android:textColor="@color/GrisClaro"
+                    android:textSize="20sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
+                android:layout_height="19dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/rv_calendar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
+                app:layout_constraintVertical_bias="0.5">
+
+                <TextView
+                    style="@style/CalendarDayHeader"
+                    android:text="Dom" />
+
+                <TextView
+                    style="@style/CalendarDayHeader"
+                    android:text="Lun" />
+
+                <TextView
+                    style="@style/CalendarDayHeader"
+                    android:text="Mar" />
+
+                <TextView
+                    style="@style/CalendarDayHeader"
+                    android:text="Mié" />
+
+                <TextView
+                    style="@style/CalendarDayHeader"
+                    android:text="Jue" />
+
+                <TextView
+                    style="@style/CalendarDayHeader"
+                    android:text="Vie" />
+
+                <TextView
+                    style="@style/CalendarDayHeader"
+                    android:text="Sáb" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/rounded_calendar_background"
+                android:clipToPadding="false"
+                android:padding="8dp"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|center_vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_calendar"
+                app:layout_constraintVertical_bias="0.5">
+
+                <Button
+                    android:id="@+id/btnpreviousMonth"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@null"
-                    android:padding="16dp"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.5">
+                    android:text="←"
+                    android:textColor="@color/Blanco"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                    <!-- Título -->
-                    <TextView
-                        android:id="@+id/tv_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Salud"
-                        android:textColor="@color/Negro"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
-
-                    <!-- Subtítulo -->
-                    <TextView
-                        android:id="@+id/tv_subtitle"
-                        android:layout_width="189dp"
-                        android:layout_height="68dp"
-                        android:layout_below="@id/tv_title"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginStart="165dp"
-                        android:layout_marginTop="-38dp"
-                        android:layout_marginEnd="9dp"
-                        android:text="Calidad del aire según la OMS."
-                        android:textAlignment="center"
-                        android:textColor="@color/GrisClaro"
-                        android:textSize="20sp" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_month"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@+id/rv_calendar"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/relativeLayout"
-                    app:layout_constraintVertical_bias="0.5">
+                    android:text="Diciembre 2024"
+                    android:textColor="@color/Blanco"
+                    android:textSize="18sp" />
 
-                    <TextView
-                        style="@style/CalendarDayHeader"
-                        android:text="Dom" />
-
-                    <TextView
-                        style="@style/CalendarDayHeader"
-                        android:text="Lun" />
-
-                    <TextView
-                        style="@style/CalendarDayHeader"
-                        android:text="Mar" />
-
-                    <TextView
-                        style="@style/CalendarDayHeader"
-                        android:text="Mié" />
-
-                    <TextView
-                        style="@style/CalendarDayHeader"
-                        android:text="Jue" />
-
-                    <TextView
-                        style="@style/CalendarDayHeader"
-                        android:text="Vie" />
-
-                    <TextView
-                        style="@style/CalendarDayHeader"
-                        android:text="Sáb" />
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_calendar"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/btnnextMonth"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/rounded_calendar_background"
-                    android:clipToPadding="false"
-                    android:padding="8dp"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-                    app:layout_constraintVertical_bias="0.5" />
+                    android:background="@null"
+                    android:text="→"
+                    android:textColor="@color/Blanco"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center|center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_calendar"
-                    app:layout_constraintVertical_bias="0.5">
-
-                    <Button
-                        android:id="@+id/btnpreviousMonth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:text="←"
-                        android:textColor="@color/Blanco"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tv_month"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:layout_marginEnd="16dp"
-                        android:text="Diciembre 2024"
-                        android:textColor="@color/Blanco"
-                        android:textSize="18sp" />
-
-                    <Button
-                        android:id="@+id/btnnextMonth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@null"
-                        android:text="→"
-                        android:textColor="@color/Blanco"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linearLayout3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    app:layout_constraintBottom_toTopOf="@+id/air_quality_today"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
-                    app:layout_constraintVertical_bias="0.5">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:text="Excelente"
-                        android:textColor="@color/RosaExcelente" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:text="Bueno"
-                        android:textColor="@color/VerdeBueno" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:text="Medio"
-                        android:textColor="@color/AmarilloMedio" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:text="Malo"
-                        android:textColor="@color/NaranjaMalo" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Peligroso"
-                        android:textColor="@color/RojoPeligroso" />
-                </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:orientation="vertical"
+                android:padding="10dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout2">
 
                 <LinearLayout
                     android:id="@+id/air_quality_today"
@@ -234,10 +186,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="24dp"
-                    android:background="@drawable/rounded_neon_border"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="0dp"
+                    android:paddingLeft="27dp"
+                    android:paddingTop="27dp"
+                    android:paddingEnd="27dp"
+                    android:paddingRight="27dp"
+                    android:paddingBottom="12dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -245,44 +201,200 @@
                     app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
                     app:layout_constraintVertical_bias="0.5">
 
-                    <TextView
-                        android:id="@+id/tv_air_quality_label"
+                    <!-- Icono de la cara -->
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Calidad del aire hoy"
-                        android:textColor="@color/Blanco"
-                        android:textSize="18sp" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/tv_air_quality_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Excelente"
-                        android:textColor="@color/RosaExcelente"
-                        android:textSize="24sp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tv_air_quality_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Calidad del aire hoy"
+                            android:textColor="@color/Blanco"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/tv_air_quality_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Excelente"
+                            android:textColor="@color/RosaExcelente"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_air_quality_face"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="64dp"
+                        android:src="@drawable/landing_excelente" />
+
+                    <!-- Textos de calidad del aire -->
                 </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button2"
+                    <ImageView
+                        android:id="@+id/imageView26"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/landing_excelente" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Excelente"
+                        android:textColor="@color/RosaExcelente" />
+
+                    <ImageView
+                        android:id="@+id/imageView29"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/landing_bueno" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Bueno"
+                        android:textColor="@color/VerdeBueno" />
+
+                    <ImageView
+                        android:id="@+id/imageView30"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/landing_media" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Medio"
+                        android:textColor="@color/AmarilloMedio" />
+                </LinearLayout>
+
+                <!-- Segunda fila -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginEnd="24dp"
+                    android:gravity="start|center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView31"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/landing_malo" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Malo"
+                        android:textColor="@color/NaranjaMalo" />
+
+                    <ImageView
+                        android:id="@+id/imageView32"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="16dp"
+                        android:src="@drawable/landing_peligroso" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Peligroso"
+                        android:textColor="@color/RojoPeligroso" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView38"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:text="Exposicion a gases"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
 
-            <!-- Días de la semana -->
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView38"
+                app:layout_constraintVertical_bias="0.5">
 
-            <!-- Calendario -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_expo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal" />
+            </LinearLayout>
 
-            <!-- Indicadores de calidad del aire -->
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <!-- Calidad del aire hoy -->
+        <TextView
+            android:id="@+id/textView36"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Exposicion a gases"
+            android:textSize="24sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_notisSalud"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
         </LinearLayout>
-    </ScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!-- Días de la semana -->
+
+        <!-- Calendario -->
+
+        <!-- Indicadores de calidad del aire -->
+
+        <!-- Calidad del aire hoy -->
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

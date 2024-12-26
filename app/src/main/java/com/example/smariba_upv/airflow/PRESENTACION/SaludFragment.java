@@ -11,9 +11,12 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smariba_upv.airflow.POJO.ExposicionItem;
 import com.example.smariba_upv.airflow.PRESENTACION.Helpers.CalendarAdapter;
+import com.example.smariba_upv.airflow.PRESENTACION.Helpers.ExposicionAdapter;
 import com.example.smariba_upv.airflow.R;
 
 import java.time.LocalDate;
@@ -25,7 +28,7 @@ import java.util.HashMap;
 public class SaludFragment extends Fragment implements CalendarAdapter.OnItemListener {
 
     private TextView monthYearText;
-    private RecyclerView calendarRecyclerView;
+    private RecyclerView calendarRecyclerView, exposicionRecyclerView;
     private LocalDate selectedDate;
     private Button previousMonth;
     private Button nextMonth;
@@ -36,6 +39,7 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_salud, container, false);
         InitWidgets(view);
+        initExposicionRecyclerView();
         selectedDate = LocalDate.now();
 
         // Initialize selectedDaysMap with the current date
@@ -62,9 +66,21 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
 
     private void InitWidgets(View view) {
         calendarRecyclerView = view.findViewById(R.id.rv_calendar);
+        exposicionRecyclerView = view.findViewById(R.id.rv_expo);
         monthYearText = view.findViewById(R.id.tv_month);
         selectedDate = LocalDate.now();
     }
+    private void initExposicionRecyclerView() {
+        ArrayList<ExposicionItem> exposicionItems = new ArrayList<>();
+        exposicionItems.add(new ExposicionItem("Exposición última semana", "media", "media"));
+        exposicionItems.add(new ExposicionItem("Exposición último mes", "excelente", "excelente"));
+
+        ExposicionAdapter adapter = new ExposicionAdapter(exposicionItems);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        exposicionRecyclerView.setLayoutManager(layoutManager);
+        exposicionRecyclerView.setAdapter(adapter);
+    }
+
 
     private void setMonthView() {
         monthYearText.setText(monthYearFromDate(selectedDate));
