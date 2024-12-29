@@ -80,14 +80,59 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
     }
     private void initExposicionRecyclerView() {
         ArrayList<ExposicionItem> exposicionItems = new ArrayList<>();
-        exposicionItems.add(new ExposicionItem("Exposición última semana", "media", "media"));
-        exposicionItems.add(new ExposicionItem("Exposición último mes", "excelente", "excelente"));
 
-        ExposicionAdapter adapter = new ExposicionAdapter(exposicionItems);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        exposicionRecyclerView.setLayoutManager(layoutManager);
-        exposicionRecyclerView.setAdapter(adapter);
+
+        // Llamada para obtener las mediciones
+        enviarPeticionesUser.getMediaMedicionesUsuario(2, new Callback<List<MedicionMedia>>() {
+            @Override
+            public void onResponse(Call<List<MedicionMedia>> call, Response<List<MedicionMedia>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    List<MedicionMedia> mediciones = response.body();
+
+                    // Calcular medias para cada periodo
+                    exposicionItems.add(new ExposicionItem(
+                            "Exposición diaria",
+                            calcularMedia(mediciones, Periodo.DIA),
+                            obtenerClasificacion(calcularMedia(mediciones, Periodo.DIA))
+                    ));
+                    exposicionItems.add(new ExposicionItem(
+                            "Exposición semanal",
+                            calcularMedia(mediciones, Periodo.SEMANA),
+                            obtenerClasificacion(calcularMedia(mediciones, Periodo.SEMANA))
+                    ));
+                    exposicionItems.add(new ExposicionItem(
+                            "Exposición mensual",
+                            calcularMedia(mediciones, Periodo.MES),
+                            obtenerClasificacion(calcularMedia(mediciones, Periodo.MES))
+                    ));
+                    exposicionItems.add(new ExposicionItem(
+                            "Exposición anual",
+                            calcularMedia(mediciones, Periodo.ANIO),
+                            obtenerClasificacion(calcularMedia(mediciones, Periodo.ANIO))
+                    ));
+                    exposicionItems.add(new ExposicionItem(
+                            "Exposición total",
+                            calcularMedia(mediciones, Periodo.TOTAL),
+                            obtenerClasificacion(calcularMedia(mediciones, Periodo.TOTAL))
+                    ));
+
+                    // Configurar el RecyclerView
+                    ExposicionAdapter adapter = new ExposicionAdapter(exposicionItems);
+                    LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+                    exposicionRecyclerView.setLayoutManager(layoutManager);
+                    exposicionRecyclerView.setAdapter(adapter);
+                } else {
+                    Log.e("SaludFragment", "Error al obtener las mediciones: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MedicionMedia>> call, Throwable t) {
+                Log.e("SaludFragment", "Fallo al obtener las mediciones", t);
+            }
+        });
     }
+
 
 
     private void setMonthView() {
@@ -162,4 +207,78 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
             Log.d("SaludFragment", message);
         }
     }
+
+    private String calcularMedia(List<MedicionMedia> mediciones, Periodo periodo) {
+        LocalDate now = LocalDate.now();
+        double suma = 0;
+        int contador = 0;
+
+        for (MedicionMedia medicion : mediciones) {
+            LocalDate fecha = LocalDate.parse(medicion.getFecha());
+
+            switch (periodo) {
+                case DIA:
+                    if (fecha.isEqual(now)) {
+                        suma += medicion.getValorPromedio();
+                        contador++;
+                    }
+                    break;
+                case SEMANA:
+                    if (!fecha.isBefore(now.minusWeeks(1))) {
+                        suma += medicion.getValorPromedio();
+                        contador++;
+                    }
+                    break;
+                case MES:
+                    if (!fecha.isBefore(now.minusMonths(1))) {
+                        suma += medicion.getValorPromedio();
+                        contador++;
+                    }
+                    break;
+                case ANIO:
+                    if (!fecha.isBefore(now.minusYears(1))) {
+                        suma += medicion.getValorPromedio();
+                        contador++;
+                    }
+                    break;
+                case TOTAL:
+                    suma += medicion.getValorPromedio();
+                    contador++;
+                    break;
+            }
+        }
+
+        return contador > 0 ? String.format("%.2f", suma / contador) : "N/A";
+    }
+    private String obtenerClasificacion(String valor) {
+        if (valor.equals("N/A")) return "Sin datos";
+
+        // Reemplazar coma por punto para evitar errores de formato
+        valor = valor.replace(",", ".");
+
+        double valorPromedio = Double.parseDouble(valor);
+
+        if (valorPromedio < 50) {
+            return "excelente";
+        } else if (valorPromedio < 100) {
+            return "buena";
+        } else if (valorPromedio < 150) {
+            return "media";
+        } else if (valorPromedio < 200) {
+            return "mala";
+        }
+        else {
+            return "Peligroso";
+        }
+    }
+
+    private enum Periodo {
+        DIA,
+        SEMANA,
+        MES,
+        ANIO,
+        TOTAL
+    }
+
+
 }

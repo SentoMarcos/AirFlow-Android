@@ -60,6 +60,13 @@ public class ExposicionAdapter extends RecyclerView.Adapter<ExposicionAdapter.Ex
                 holder.cardView.setBackgroundTintList(holder.itemView.getContext().getResources().getColorStateList(R.color.RojoPeligroso));
                 holder.ivEstado.setImageResource(R.drawable.landing_peligroso);
                 break;
+            default:
+                holder.tvTitulo.setText("No hay datos disponibles");
+                holder.tvNivel.setText("");
+                holder.tvNivel.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.Negro));
+                holder.tvTitulo.setTextColor(holder.itemView.getContext().getResources().getColor(R.color.Negro));
+                holder.cardView.setBackgroundTintList(holder.itemView.getContext().getResources().getColorStateList(R.color.white));
+                holder.ivEstado.setImageResource(R.drawable.edittext_border);
         }
     }
 
