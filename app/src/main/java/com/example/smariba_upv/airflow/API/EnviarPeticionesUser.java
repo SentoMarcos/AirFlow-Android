@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.example.smariba_upv.airflow.API.MODELS.MedicionMedia;
 import com.example.smariba_upv.airflow.API.MODELS.SensorResponse;
 import com.example.smariba_upv.airflow.POJO.Medicion;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
@@ -273,5 +274,43 @@ public class EnviarPeticionesUser {
     public void getMediciones(Callback<List<Medicion>> callback) {
         RetrofitClient.getLocalApiService().getAllMediciones().enqueue(callback);
     }
+
+    /**
+     * @brief Método para obtener la media de mediciones por usuario
+     * @param idUsuario ID del usuario
+     * @param callback Callback para manejar la respuesta
+     */
+    public void getMediaMedicionesUsuario(int idUsuario, Callback<List<MedicionMedia>> callback) {
+        Log.d(TAG, "Obteniendo media de mediciones para usuario: " + idUsuario);
+
+        RetrofitClient.getLocalApiService().getMediaMedicionesUsuario(idUsuario).enqueue(new Callback<List<MedicionMedia>>() {
+            @Override
+            public void onResponse(Call<List<MedicionMedia>> call, Response<List<MedicionMedia>> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "Media de mediciones obtenida: " + response.body());
+                    callback.onResponse(call, response);
+                } else {
+                    Log.e(TAG, "Error en la petición. Código de estado: " + response.code());
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Sin cuerpo de error";
+                        Log.e(TAG, "Cuerpo del error: " + errorBody);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error al leer el cuerpo del error", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MedicionMedia>> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Log.e(TAG, "Fallo de red o timeout:", t);
+                } else {
+                    Log.e(TAG, "Error inesperado:", t);
+                }
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
 
 }

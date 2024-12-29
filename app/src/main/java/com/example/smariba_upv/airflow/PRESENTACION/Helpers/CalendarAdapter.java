@@ -11,25 +11,28 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smariba_upv.airflow.API.MODELS.MedicionMedia;
 import com.example.smariba_upv.airflow.R;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     private final ArrayList<String> daysOfMonth;
     private final OnItemListener onItemListener;
     private final HashMap<String, Integer> selectedDaysMap;
-
+    private final List<MedicionMedia> medicionesMedia;
     // Variables para rastrear el mes y año actual
     private int displayedMonth;
     private int displayedYear;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener, HashMap<String, Integer> selectedDaysMap) {
+    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener, HashMap<String, Integer> selectedDaysMap, List<MedicionMedia> medicionesMedia) {
         this.daysOfMonth = daysOfMonth;
         this.onItemListener = onItemListener;
         this.selectedDaysMap = selectedDaysMap;
+        this.medicionesMedia = medicionesMedia;
     }
 
     @Override
@@ -59,30 +62,30 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
 
         if (!dayText.trim().isEmpty()) {
             int day = Integer.parseInt(dayText);
+            String formattedDate = String.format("%04d-%02d-%02d", displayedYear, displayedMonth, day);
+
 
             // Determinar si este día debe estar seleccionado
             boolean isSelected = selectedDaysMap.containsKey(currentMonthYearKey) &&
                     selectedDaysMap.get(currentMonthYearKey) == day;
 
             // Asignar color de fondo basado en lógica
+            MedicionMedia medicion = findMedicionByDate(formattedDate);
             int backgroundColor;
 
-            if ((displayedYear < LocalDate.now().getYear()) ||
-                    (displayedYear == LocalDate.now().getYear() && displayedMonth < LocalDate.now().getMonthValue()) ||
-                    (displayedYear == LocalDate.now().getYear() && displayedMonth == LocalDate.now().getMonthValue() && day <= LocalDate.now().getDayOfMonth())) {
-                // Días pasados o hoy
-                if (day % 5 == 0) {
+            if (medicion != null) {
+                double valorPromedio = medicion.getValorPromedio();
+                if (valorPromedio < 50) {
                     backgroundColor = R.color.RosaExcelente;
-                } else if (day % 3 == 0) {
+                } else if (valorPromedio < 100) {
                     backgroundColor = R.color.VerdeBueno;
-                } else if (day % 2 == 0) {
+                } else if (valorPromedio < 150) {
                     backgroundColor = R.color.AmarilloMedio;
                 } else {
                     backgroundColor = R.color.NaranjaMalo;
                 }
             } else {
-                // Días futuros
-                backgroundColor = R.color.GrisClaro;
+                backgroundColor = R.color.GrisClaro; // Sin medición
             }
 
             // Aplicar el fondo redondeado
@@ -105,6 +108,17 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
                     getRoundedDrawable(holder.itemView.getContext(), R.color.GrisClaro)
             );
         }
+    }
+
+    private MedicionMedia findMedicionByDate(String date) {
+        if (medicionesMedia != null) {
+            for (MedicionMedia medicion : medicionesMedia) {
+                if (medicion.getFecha().equals(date)) {
+                    return medicion;
+                }
+            }
+        }
+        return null;
     }
 
     // Método para actualizar mes y año

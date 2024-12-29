@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.smariba_upv.airflow.API.EnviarPeticionesUser;
+import com.example.smariba_upv.airflow.API.MODELS.MedicionMedia;
 import com.example.smariba_upv.airflow.POJO.ExposicionItem;
 import com.example.smariba_upv.airflow.PRESENTACION.Helpers.CalendarAdapter;
 import com.example.smariba_upv.airflow.PRESENTACION.Helpers.ExposicionAdapter;
@@ -24,6 +26,11 @@ import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SaludFragment extends Fragment implements CalendarAdapter.OnItemListener {
 
@@ -33,6 +40,7 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
     private Button previousMonth;
     private Button nextMonth;
     private HashMap<String, Integer> selectedDaysMap = new HashMap<>();
+    private EnviarPeticionesUser enviarPeticionesUser = new EnviarPeticionesUser();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,18 +91,30 @@ public class SaludFragment extends Fragment implements CalendarAdapter.OnItemLis
 
 
     private void setMonthView() {
-        monthYearText.setText(monthYearFromDate(selectedDate));
-        ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
+        enviarPeticionesUser.getMediaMedicionesUsuario(2, new Callback<List<MedicionMedia>>() {
+            @Override
+            public void onResponse(Call<List<MedicionMedia>> call, Response<List<MedicionMedia>> response) {
+                if (response.isSuccessful()) {
+                    List<MedicionMedia> medicionesMedia = response.body();
 
-        // Log para depuración
-        Log.d("SaludFragment", "Days in Month: " + daysInMonth.toString());
+                    monthYearText.setText(monthYearFromDate(selectedDate));
+                    ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
 
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, this, selectedDaysMap);
-        calendarAdapter.updateDisplayedMonthYear(selectedDate.getMonthValue(), selectedDate.getYear()); // Actualizar mes y año
-        RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
-        calendarRecyclerView.setLayoutManager(layoutManager);
-        calendarRecyclerView.setAdapter(calendarAdapter);
+                    CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, SaludFragment.this, selectedDaysMap, medicionesMedia);
+                    calendarAdapter.updateDisplayedMonthYear(selectedDate.getMonthValue(), selectedDate.getYear());
+                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
+                    calendarRecyclerView.setLayoutManager(layoutManager);
+                    calendarRecyclerView.setAdapter(calendarAdapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<MedicionMedia>> call, Throwable t) {
+                Log.e("SaludFragment", "Error al obtener mediciones", t);
+            }
+        });
     }
+
 
     private ArrayList<String> daysInMonthArray(LocalDate date) {
         ArrayList<String> daysInMonthArray = new ArrayList<>();
