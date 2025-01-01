@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.AirFlow" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.AirFlow" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Personaliza colores y atributos aquí si es necesario -->
+        <item name="colorPrimary">@color/Azul_v3</item>
+        <item name="android:windowFullscreen">true</item>
     </style>
-
     <style name="Theme.AirFlow" parent="Base.Theme.AirFlow" />
     <style name="CustomDialogStyle" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowBackground">@drawable/popup_background</item>

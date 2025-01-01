@@ -374,18 +374,25 @@
             android:layout_height="wrap_content"
             android:text="Exposicion a gases"
             android:textSize="24sp" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Spinner
+                android:id="@+id/spinnerFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/spinner_background" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_notisSalud"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical" />
+                android:layout_marginTop="0dp" />
         </LinearLayout>
+
 
         <!-- Días de la semana -->
 

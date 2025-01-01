@@ -59,7 +59,7 @@ public interface ApiService {
     @POST("/mediciones/mediciones/add")
     Call<Medicion> createMedicion(@Body Medicion medicion);
 
-    @GET("/mediciones/mediciones")
+    @GET("/mediciones/mediciones-all")
     Call<List<Medicion>> getAllMediciones();
 
     @GET("/mapa/getMapaHtml")
@@ -67,6 +67,9 @@ public interface ApiService {
 
     @GET("/mediciones/getMediaMedicionesUsuario/{idUsuario}")
     Call<List<MedicionMedia>> getMediaMedicionesUsuario(@Path("idUsuario") int idUsuario);
+
+    @GET("/mediciones/getAllMedicionesUsuario/{idUsuario}")
+    Call<List<Medicion>> getAllMedicionesUsuario(@Path("idUsuario") int idUsuario);
 
 }
 

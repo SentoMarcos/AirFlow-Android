@@ -312,5 +312,36 @@ public class EnviarPeticionesUser {
         });
     }
 
+    public void getAllMedicionesUsuario(int idUsuario, Callback<List<Medicion>> callback) {
+        Log.d(TAG, "Obteniendo mediciones para usuario: " + idUsuario);
+
+        RetrofitClient.getLocalApiService().getAllMedicionesUsuario(idUsuario).enqueue(new Callback<List<Medicion>>() {
+            @Override
+            public void onResponse(Call<List<Medicion>> call, Response<List<Medicion>> response) {
+                if (response.isSuccessful()) {
+                    Log.d(TAG, "Mediciones obtenidas: " + response.body());
+                    callback.onResponse(call, response);
+                } else {
+                    Log.e(TAG, "Error en la petición. Código de estado: " + response.code());
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "Sin cuerpo de error";
+                        Log.e(TAG, "Cuerpo del error: " + errorBody);
+                    } catch (IOException e) {
+                        Log.e(TAG, "Error al leer el cuerpo del error", e);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Medicion>> call, Throwable t) {
+                if (t instanceof IOException) {
+                    Log.e(TAG, "Fallo de red o timeout:", t);
+                } else {
+                    Log.e(TAG, "Error inesperado:", t);
+                }
+                callback.onFailure(call, t);
+            }
+        });
+    }
 
 }

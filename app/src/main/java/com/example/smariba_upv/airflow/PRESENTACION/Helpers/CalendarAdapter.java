@@ -28,12 +28,14 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     private int displayedMonth;
     private int displayedYear;
 
-    public CalendarAdapter(ArrayList<String> daysOfMonth, OnItemListener onItemListener, HashMap<String, Integer> selectedDaysMap, List<MedicionMedia> medicionesMedia) {
-        this.daysOfMonth = daysOfMonth;
+    public CalendarAdapter(List<String> daysOfMonth, OnItemListener onItemListener, HashMap<String, Integer> selectedDaysMap, List<MedicionMedia> medicionesMedia) {
+        this.daysOfMonth = new ArrayList<>(daysOfMonth); // Asegurar un ArrayList interno
         this.onItemListener = onItemListener;
         this.selectedDaysMap = selectedDaysMap;
-        this.medicionesMedia = medicionesMedia;
+        this.medicionesMedia = (medicionesMedia != null) ? medicionesMedia : new ArrayList<>();
     }
+
+
 
     @Override
     public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -111,15 +113,17 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     }
 
     private MedicionMedia findMedicionByDate(String date) {
-        if (medicionesMedia != null) {
-            for (MedicionMedia medicion : medicionesMedia) {
-                if (medicion.getFecha().equals(date)) {
-                    return medicion;
-                }
+        if (medicionesMedia == null || medicionesMedia.isEmpty()) {
+            return null;
+        }
+        for (MedicionMedia medicion : medicionesMedia) {
+            if (medicion.getFecha().equals(date)) {
+                return medicion;
             }
         }
         return null;
     }
+
 
     // Método para actualizar mes y año
     public void updateDisplayedMonthYear(int month, int year) {

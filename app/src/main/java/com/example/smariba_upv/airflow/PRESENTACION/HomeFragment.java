@@ -143,7 +143,7 @@ public class HomeFragment extends Fragment {
         peticiones.getMediciones(new Callback<List<Medicion>>() {
             @Override
             public void onResponse(Call<List<Medicion>> call, Response<List<Medicion>> response) {
-                if (response.isSuccessful() && response.body() != null) {
+                if (isAdded() && response.isSuccessful() && response.body() != null) {
                     List<Medicion> mediciones = response.body();
 
                     // Procesar datos reales
@@ -167,9 +167,8 @@ public class HomeFragment extends Fragment {
                     tvAverage.setText(getString(R.string.average_value, media));
                     tvExposure.setText(getString(R.string.total_exposure, exposicionTotal));
                     tvDailyExposure.setText(getString(R.string.daily_exposure, nivelExposicion));
-                    tvCurrentTime.setText(getString(R.string.current_time, new Date().toString()));
                 } else {
-                    Log.e("HomeFragment", "No se recibieron datos de mediciones.");
+                    Log.e("HomeFragment", "Fragment no asociado o no se recibieron datos de mediciones.");
                 }
             }
 
