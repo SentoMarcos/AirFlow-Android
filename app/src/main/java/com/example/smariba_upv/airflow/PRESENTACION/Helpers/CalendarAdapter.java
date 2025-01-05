@@ -3,6 +3,7 @@ package com.example.smariba_upv.airflow.PRESENTACION.Helpers;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,8 +36,6 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         this.medicionesMedia = (medicionesMedia != null) ? medicionesMedia : new ArrayList<>();
     }
 
-
-
     @Override
     public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -66,29 +65,12 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
             int day = Integer.parseInt(dayText);
             String formattedDate = String.format("%04d-%02d-%02d", displayedYear, displayedMonth, day);
 
-
             // Determinar si este día debe estar seleccionado
             boolean isSelected = selectedDaysMap.containsKey(currentMonthYearKey) &&
                     selectedDaysMap.get(currentMonthYearKey) == day;
 
             // Asignar color de fondo basado en lógica
-            MedicionMedia medicion = findMedicionByDate(formattedDate);
-            int backgroundColor;
-
-            if (medicion != null) {
-                double valorPromedio = medicion.getValorPromedio();
-                if (valorPromedio < 50) {
-                    backgroundColor = R.color.RosaExcelente;
-                } else if (valorPromedio < 100) {
-                    backgroundColor = R.color.VerdeBueno;
-                } else if (valorPromedio < 150) {
-                    backgroundColor = R.color.AmarilloMedio;
-                } else {
-                    backgroundColor = R.color.NaranjaMalo;
-                }
-            } else {
-                backgroundColor = R.color.GrisClaro; // Sin medición
-            }
+            int backgroundColor = getBackgroundColor(findMedicionByDate(formattedDate));
 
             // Aplicar el fondo redondeado
             holder.itemView.findViewById(R.id.bg_color).setBackground(
@@ -103,7 +85,11 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
                 // Guardar el día seleccionado en el mapa para este mes y año
                 selectedDaysMap.put(currentMonthYearKey, day);
                 notifyDataSetChanged(); // Refrescar la vista para mostrar la selección
+
+                // Notificar al fragmento del día seleccionado
+                onItemListener.onItemClick(position, dayText);
             });
+
         } else {
             // Celdas vacías
             holder.itemView.findViewById(R.id.bg_color).setBackground(
@@ -124,6 +110,23 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
         return null;
     }
 
+    private int getBackgroundColor(MedicionMedia medicion) {
+        if (medicion == null) {
+            return R.color.grisclaro_semiTransparante; // Sin medición
+        }
+        double valorPromedio = medicion.getValorPromedio();
+        if (valorPromedio < 50) {
+            return R.color.RosaExcelente;
+        } else if (valorPromedio < 100) {
+            return R.color.VerdeBueno;
+        } else if (valorPromedio < 150) {
+            return R.color.AmarilloMedio;
+        } else if (valorPromedio < 200) {
+            return R.color.NaranjaMalo;
+        } else {
+            return R.color.RojoPeligroso;
+        }
+    }
 
     // Método para actualizar mes y año
     public void updateDisplayedMonthYear(int month, int year) {
@@ -158,5 +161,17 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
 
     public interface OnItemListener {
         void onItemClick(int position, String dayText);
+    }
+
+    public double getValorPromedio(int position) {
+        //comprobar si la posición es válida
+        if (position < 0 || position >= daysOfMonth.size() || daysOfMonth.get(position).isEmpty()) {
+            return -1;
+        }
+        String dayText = daysOfMonth.get(position);
+        String formattedDate = String.format("%04d-%02d-%02d", displayedYear, displayedMonth, Integer.parseInt(dayText));
+        MedicionMedia medicion = findMedicionByDate(formattedDate);
+        Log.d("ValorPromedio", "ValorPromedio: " + (medicion != null ? medicion.getValorPromedio() : -1));
+        return (medicion != null) ? medicion.getValorPromedio() : -1;
     }
 }

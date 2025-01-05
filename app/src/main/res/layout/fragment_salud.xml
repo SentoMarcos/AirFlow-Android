@@ -229,9 +229,17 @@
                         android:id="@+id/iv_air_quality_face"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:layout_marginStart="64dp"
+                        android:layout_marginStart="24dp"
                         android:src="@drawable/landing_excelente" />
 
+                    <ImageView
+                        android:id="@+id/iv_more_info"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="Más información"
+                        android:src="@drawable/baseline_info_24"
+                        app:tint="#FFFFFF" />
                     <!-- Textos de calidad del aire -->
                 </LinearLayout>
 
