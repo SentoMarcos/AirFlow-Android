@@ -102,24 +102,7 @@ public class CalculationUtils {
         return "Peligroso";
     }
 
-    /**
-     * Crea una lista de notificaciones basadas en las mediciones.
-     *
-     * @param mediciones Lista de mediciones.
-     * @return Lista de notificaciones.
-     */
-    public static List<ItemNotisSalud> createNotifications(List<Medicion> mediciones) {
-        List<ItemNotisSalud> notifications = new ArrayList<>();
 
-        for (Medicion medicion : mediciones) {
-            String estado = obtenerClasificacion(String.valueOf(medicion.getValor()));
-            String mensaje = generarMensaje(estado, medicion);
-            String fechaFormateada = Medicion.formatFecha(medicion.getFecha());
-            notifications.add(new ItemNotisSalud(fechaFormateada, mensaje, estado));
-        }
-
-        return notifications;
-    }
 
     private static String generarMensaje(String estado, Medicion medicion) {
         return "La calidad del aire es " + estado + ". Valor: " + medicion.getValor();

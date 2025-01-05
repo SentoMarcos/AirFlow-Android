@@ -1,5 +1,7 @@
 package com.example.smariba_upv.airflow.PRESENTACION;
 
+import static com.example.smariba_upv.airflow.LOGIC.CalculationUtils.obtenerClasificacion;
+
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +16,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,15 +34,17 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SaludFragment extends Fragment {
+public class SaludFragment extends Fragment implements CalendarAdapter.OnItemListener {
 
     private TextView monthYearText;
     private RecyclerView calendarRecyclerView, exposicionRecyclerView, notisRecyclerView;
@@ -53,6 +55,8 @@ public class SaludFragment extends Fragment {
     private Spinner spinnerFilter;
     private NotisAdapter adapter;
     private List<ItemNotisSalud> allNotisItems = new ArrayList<>();
+    private List<ItemNotisSalud> filteredNotisItems = new ArrayList<>();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,19 +128,24 @@ public class SaludFragment extends Fragment {
         });
         animator.start();
     }
-
     private void initNotisRecyclerView() {
         enviarPeticionesUser.getAllMedicionesUsuario(2, new Callback<List<Medicion>>() {
             @Override
             public void onResponse(Call<List<Medicion>> call, Response<List<Medicion>> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss 'GMT'XXX yyyy", Locale.ENGLISH);
+                    Log.d("SaludFragment", "Received data: " + response.body());
+                    // Almacenar los datos originales
                     allNotisItems = response.body().stream()
                             .map(medicion -> new ItemNotisSalud(
-                                    Medicion.formatFecha(medicion.getFecha()),
+                                    LocalDate.parse(medicion.getFecha().toString(), inputFormatter).format(formatter),
                                     generateMessage(medicion),
-                                    classify(medicion.getValor())))
+                                    obtenerClasificacion(String.valueOf(medicion.getValor()))
+                            ))
                             .collect(Collectors.toList());
 
+                    // Inicializar el adaptador con todos los datos
                     adapter = new NotisAdapter(getContext(), allNotisItems, notisRecyclerView);
                     notisRecyclerView.setAdapter(adapter);
                 }
@@ -149,32 +158,85 @@ public class SaludFragment extends Fragment {
         });
     }
 
-    private void applyFilter(String filter) {
-        LocalDate now = LocalDate.now();
-        List<ItemNotisSalud> filteredItems = allNotisItems.stream()
-                .filter(item -> isValidForFilter(item, filter, now))
-                .collect(Collectors.toList());
-        adapter.updateData(filteredItems);
-    }
 
-    private boolean isValidForFilter(ItemNotisSalud item, String filter, LocalDate referenceDate) {
-        LocalDate itemDate = LocalDate.parse(item.getTime().substring(0, 10));
+    private void applyFilter(String filter) {
+        if (allNotisItems == null || allNotisItems.isEmpty()) return;
+
+        LocalDate now = LocalDate.now();
+        List<ItemNotisSalud> newFilteredItems;
+
         switch (filter) {
-            case "Hoy": return itemDate.isEqual(referenceDate);
-            case "Ayer": return itemDate.isEqual(referenceDate.minusDays(1));
-            case "Semana": return !itemDate.isBefore(referenceDate.minusWeeks(1));
-            case "Mes": return !itemDate.isBefore(referenceDate.minusMonths(1));
-            case "Año": return !itemDate.isBefore(referenceDate.minusYears(1));
-            default: return true;
+            case "Hoy":
+                newFilteredItems = filterByDate(now);
+                break;
+            case "Ayer":
+                newFilteredItems = filterByDate(now.minusDays(1));
+                break;
+            case "Semana":
+                newFilteredItems = filterByRange(now.minusWeeks(1), now);
+                break;
+            case "Mes":
+                newFilteredItems = filterByRange(now.minusMonths(1), now);
+                break;
+            case "Año":
+                newFilteredItems = filterByRange(now.minusYears(1), now);
+                break;
+            case "Todos":
+            default:
+                newFilteredItems = new ArrayList<>(allNotisItems);
+        }
+
+        // Solo actualizamos el adaptador si hay cambios en los datos filtrados
+        if (!filteredNotisItems.equals(newFilteredItems)) {
+            filteredNotisItems = Collections.unmodifiableList(newFilteredItems);
+            adapter.updateData(filteredNotisItems);
+            Log.d("Filter", "Filter applied: " + filter + ", Items: " + filteredNotisItems.size());
+        } else {
+            Log.d("Filter", "No changes detected for filter: " + filter);
         }
     }
+
+    private List<ItemNotisSalud> filterByDate(LocalDate date) {
+        return Collections.unmodifiableList(
+                allNotisItems.stream()
+                        .filter(item -> {
+                            LocalDate itemDate = parseItemDate(item.getTime());
+                            return itemDate != null && itemDate.isEqual(date);
+                        })
+                        .collect(Collectors.toList())
+        );
+    }
+
+    private List<ItemNotisSalud> filterByRange(LocalDate startDate, LocalDate endDate) {
+        return Collections.unmodifiableList(
+                allNotisItems.stream()
+                        .filter(item -> {
+                            LocalDate itemDate = parseItemDate(item.getTime());
+                            return itemDate != null && !itemDate.isBefore(startDate) && !itemDate.isAfter(endDate);
+                        })
+                        .collect(Collectors.toList())
+        );
+    }
+
+    private LocalDate parseItemDate(String time) {
+        try {
+            return LocalDate.parse(time.substring(0, 10)); // Ajusta según el formato
+        } catch (Exception e) {
+            Log.e("ParseDate", "Error parsing date: " + time, e);
+            return null;
+        }
+    }
+
+
+
 
     private void initExposicionRecyclerView() {
         enviarPeticionesUser.getMediaMedicionesUsuario(2, new Callback<List<MedicionMedia>>() {
             @Override
             public void onResponse(Call<List<MedicionMedia>> call, Response<List<MedicionMedia>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    List<ExposicionItem> exposicionItems = generateExposicionItems(response.body());
+                    List<MedicionMedia> mediciones = response.body();
+                    List<ExposicionItem> exposicionItems = generateExposicionItems(mediciones);
                     ExposicionAdapter exposicionAdapter = new ExposicionAdapter(exposicionItems);
                     exposicionRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
                     exposicionRecyclerView.setAdapter(exposicionAdapter);
@@ -240,17 +302,28 @@ public class SaludFragment extends Fragment {
     }
 
     private void setMonthView() {
-        monthYearText.setText(monthYearFromDate(selectedDate));
-        ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
-
-        CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, new CalendarAdapter.OnItemListener() {
+        enviarPeticionesUser.getMediaMedicionesUsuario(2, new Callback<List<MedicionMedia>>() {
             @Override
-            public void onItemClick(int position, String dayText) {
-                // Implement the click behavior here
+            public void onResponse(Call<List<MedicionMedia>> call, Response<List<MedicionMedia>> response) {
+                if (response.isSuccessful()) {
+                    List<MedicionMedia> medicionesMedia = response.body();
+
+                    monthYearText.setText(monthYearFromDate(selectedDate));
+                    ArrayList<String> daysInMonth = daysInMonthArray(selectedDate);
+
+                    CalendarAdapter calendarAdapter = new CalendarAdapter(daysInMonth, SaludFragment.this, selectedDaysMap, medicionesMedia);
+                    RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getContext(), 7);
+                    calendarRecyclerView.setLayoutManager(layoutManager);
+                    calendarRecyclerView.setAdapter(calendarAdapter);
+                    calendarAdapter.updateDisplayedMonthYear(selectedDate.getMonthValue(), selectedDate.getYear());
+                }
             }
-        }, selectedDaysMap, new ArrayList<>());
-        calendarRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 7));
-        calendarRecyclerView.setAdapter(calendarAdapter);
+
+            @Override
+            public void onFailure(Call<List<MedicionMedia>> call, Throwable t) {
+                Log.e("SaludFragment", "Error al obtener mediciones", t);
+            }
+        });
     }
 
     private ArrayList<String> daysInMonthArray(LocalDate date) {
@@ -297,6 +370,14 @@ public class SaludFragment extends Fragment {
             return classify(val);
         } catch (NumberFormatException e) {
             return "Sin datos";
+        }
+    }
+
+    @Override
+    public void onItemClick(int position, String dayText) {
+        if (!dayText.trim().isEmpty()) {
+            String message = "Selected Date " + dayText + " " + monthYearFromDate(selectedDate);
+            Log.d("SaludFragment", message);
         }
     }
 

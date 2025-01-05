@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.smariba_upv.airflow.POJO.ItemNotisSalud;
 import com.example.smariba_upv.airflow.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotisAdapter extends RecyclerView.Adapter<NotisAdapter.NotisViewHolder> {
@@ -86,10 +87,14 @@ public class NotisAdapter extends RecyclerView.Adapter<NotisAdapter.NotisViewHol
         }
     }
 
-    // Método para actualizar los datos del adaptador
     public void updateData(List<ItemNotisSalud> newData) {
-        this.notificationList.clear(); // Limpia la lista existente
-        this.notificationList.addAll(newData); // Añade los nuevos datos
-        notifyDataSetChanged(); // Notifica al adaptador que los datos han cambiado
+        if (newData == null || newData.isEmpty()) {
+            this.notificationList.clear();
+        } else {
+            this.notificationList = new ArrayList<>(newData);
+        }
+        notifyDataSetChanged();
     }
+
+
 }
