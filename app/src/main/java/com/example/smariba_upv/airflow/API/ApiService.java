@@ -7,6 +7,7 @@
 
 package com.example.smariba_upv.airflow.API;
 
+import com.example.smariba_upv.airflow.API.MODELS.MedicionMedia;
 import com.example.smariba_upv.airflow.API.MODELS.SensorResponse;
 import com.example.smariba_upv.airflow.POJO.Medicion;
 
@@ -23,6 +24,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /********************************************
@@ -57,11 +59,18 @@ public interface ApiService {
     @POST("/mediciones/mediciones/add")
     Call<Medicion> createMedicion(@Body Medicion medicion);
 
-    @GET("/mediciones/mediciones")
+    @GET("/mediciones/mediciones-all")
     Call<List<Medicion>> getAllMediciones();
 
     @GET("/mapa/getMapaHtml")
     Call<String> getMapaHtml();
+
+    @GET("/mediciones/getMediaMedicionesUsuario/{idUsuario}")
+    Call<List<MedicionMedia>> getMediaMedicionesUsuario(@Path("idUsuario") int idUsuario);
+
+    @GET("/mediciones/getAllMedicionesUsuario/{idUsuario}")
+    Call<List<Medicion>> getAllMedicionesUsuario(@Path("idUsuario") int idUsuario);
+
 }
 
 

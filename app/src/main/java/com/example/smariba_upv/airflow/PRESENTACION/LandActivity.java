@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.smariba_upv.airflow.POJO.SensorObject;
-import com.example.smariba_upv.airflow.PRESENTACION.Helpers.SensorFragment;
 import com.example.smariba_upv.airflow.R;
 import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
 import com.google.android.material.bottomnavigation.BottomNavigationView;

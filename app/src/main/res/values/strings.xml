@@ -58,5 +58,13 @@
     <string name="back"><![CDATA[<-]]></string>
     <string name="forward"><![CDATA[->]]></string>
 
+    <string-array name="filter_options">
+        <item>Todas</item>
+        <item>Hoy</item>
+        <item>Ayer</item>
+        <item>Semana</item>
+        <item>Mes</item>
+        <item>Año</item>
+    </string-array>
 
 </resources>
