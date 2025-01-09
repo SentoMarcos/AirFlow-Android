@@ -26,7 +26,7 @@ public class SensorRequest {
     private String nombre;
     private boolean conexion;
     private int bateria;
-
+    private int id;
     /**
      * @fn SensorRequest()
      * @brief Constructor de la clase SensorRequest.
@@ -84,6 +84,13 @@ public class SensorRequest {
         this.conexion = conexion;
         this.bateria = bateria;
     }
+
+    // Constructor
+    public SensorRequest(int id, String nombre) {
+        this.id = id;
+        this.nombre = nombre;
+    }
+
 
     /**
      * @fn getIdUsuario()

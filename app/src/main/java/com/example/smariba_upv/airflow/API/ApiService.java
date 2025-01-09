@@ -71,6 +71,10 @@ public interface ApiService {
     @GET("/mediciones/getAllMedicionesUsuario/{idUsuario}")
     Call<List<Medicion>> getAllMedicionesUsuario(@Path("idUsuario") int idUsuario);
 
+    @PUT("/sensores/changeNameSensor")
+    Call<ResponseBody> editNombreSensor(@Body SensorRequest sensorRequest);
+
+
 }
 
 

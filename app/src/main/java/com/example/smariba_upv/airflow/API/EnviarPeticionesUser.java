@@ -344,4 +344,24 @@ public class EnviarPeticionesUser {
         });
     }
 
+    public void editNombreSensor(int id_sensor, String nombre) {
+        SensorRequest request = new SensorRequest(id_sensor, nombre);
+        RetrofitClient.getLocalApiService().editNombreSensor(request).enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.d("API", "Nombre del sensor actualizado correctamente");
+                } else {
+                    Log.e("API", "Error al actualizar el sensor: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("API", "Error en la llamada API", t);
+            }
+        });
+
+    }
+
 }
