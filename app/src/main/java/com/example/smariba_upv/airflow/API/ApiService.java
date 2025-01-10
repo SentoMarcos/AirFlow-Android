@@ -14,6 +14,7 @@ import com.example.smariba_upv.airflow.POJO.Medicion;
 import com.example.smariba_upv.airflow.API.MODELS.SensorRequest;
 import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.POJO.User;
+import com.google.gson.JsonObject;
 
 
 import java.util.List;
@@ -22,6 +23,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -73,6 +75,9 @@ public interface ApiService {
 
     @PUT("/sensores/changeNameSensor")
     Call<ResponseBody> editNombreSensor(@Body SensorRequest sensorRequest);
+
+    @GET("mediciones/mediciones/{id}")
+    Call<List<Medicion>> getMedicionesPorSensor(@Path("id") int sensorId);
 
 
 }

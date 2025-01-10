@@ -13,6 +13,7 @@ import com.example.smariba_upv.airflow.API.MODELS.SensorRequest;
 import com.example.smariba_upv.airflow.POJO.User;
 import com.example.smariba_upv.airflow.PRESENTACION.LandActivity;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -363,5 +364,37 @@ public class EnviarPeticionesUser {
         });
 
     }
+
+    public void getMedicionesPorSensor(int sensorId, Callback<List<Medicion>> callback) {
+        ApiService apiService = RetrofitClient.getLocalApiService();
+
+        // Realizar la llamada GET con el ID del sensor
+        Call<List<Medicion>> call = apiService.getMedicionesPorSensor(sensorId);
+        call.enqueue(new Callback<List<Medicion>>() {
+            @Override
+            public void onResponse(Call<List<Medicion>> call, Response<List<Medicion>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    // Llamar al callback con los datos obtenidos
+                    callback.onResponse(call, response);
+                } else {
+                    // Manejar errores de respuesta
+                    Log.e("Retrofit", "Error en la respuesta: " + response.message());
+                    callback.onFailure(call, new Throwable("Error en la respuesta: " + response.message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Medicion>> call, Throwable t) {
+                // Manejar errores de conexión o del servidor
+                Log.e("Retrofit", "Error en la petición", t);
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+
+
+
+
 
 }

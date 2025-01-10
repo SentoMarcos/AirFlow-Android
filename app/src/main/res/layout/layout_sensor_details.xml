@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Nombre del Sensor -->
+    <TextView
+        android:id="@+id/tv_sensor_detail_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre del Sensor"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingBottom="8dp" />
+
+    <!-- Estado del Sensor -->
+    <TextView
+        android:id="@+id/tv_sensor_detail_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Estado: Conectado/Desconectado"
+        android:paddingBottom="8dp" />
+
+    <!-- Última Medición -->
+    <TextView
+        android:id="@+id/tv_last_measurement"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Última Medición: "
+        android:textStyle="bold"
+        android:paddingBottom="4dp" />
+
+    <!-- Fecha de la Última Medición -->
+    <TextView
+        android:id="@+id/tv_last_measurement_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fecha: "
+        android:paddingBottom="16dp" />
+
+    <!-- Gráfica de Barras -->
+    <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/bar_chart_sensor"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp" />
+</LinearLayout>
