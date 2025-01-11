@@ -1,6 +1,8 @@
 package com.example.smariba_upv.airflow.PRESENTACION;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,19 +25,34 @@ public class PaginaDeCarga extends AppCompatActivity {
         VideoView videoView = findViewById(R.id.videoView);
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.flow3);
         videoView.setVideoURI(videoUri);
+        SharedPreferences sharedPreferences = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        boolean isLoggedIn = sharedPreferences.getBoolean("isLoggedIn", false);
+
+
+
+
 
         // Configurar el video para reproducirse en bucle
         videoView.setOnPreparedListener(mp -> {
             mp.setLooping(true); // Repetir el video continuamente
+            mp.setPlaybackParams(mp.getPlaybackParams().setSpeed(2.0f)); // Velocidad normal
             videoView.start();  // Iniciar la reproducción
         });
 
         // Cambiar de pantalla después de 5 segundos
         new Handler().postDelayed(() -> {
             videoView.stopPlayback(); // Detener el video
-            Intent intent = new Intent(PaginaDeCarga.this, LogInActivity.class); // Cambia LogInActivity a tu actividad de destino
-            startActivity(intent);
-            finish(); // Finalizar la actividad actual
+            if (isLoggedIn) {
+                // El usuario ya está logueado, ir directamente a MainActivity
+                Intent intent = new Intent(this, LandActivity.class);
+                startActivity(intent);
+                finish(); // Cierra la actividad actual
+            } else {
+                // El usuario no está logueado, mostrar la pantalla de inicio de sesión
+                Intent intent = new Intent(this, LogInActivity.class);
+                startActivity(intent);
+                finish(); // Cierra la actividad actual
+            }
         }, TIEMPO);
     }
 }
