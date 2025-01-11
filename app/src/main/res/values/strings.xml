@@ -67,4 +67,13 @@
         <item>Año</item>
     </string-array>
 
+    <string-array name="filter_optionsB">
+        <item>Todos</item>
+        <item>Hoy</item>
+        <item>Ayer</item>
+        <item>Última semana</item>
+        <item>Último mes</item>
+    </string-array>
+
+
 </resources>

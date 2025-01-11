@@ -37,64 +37,67 @@
                 android:id="@+id/tv_estado"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Estado: Activo"
                 android:textColor="#666666"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="14sp" />
 
             <!-- Referencia -->
             <TextView
                 android:id="@+id/tv_num_referencia"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Referencia: 12345"
                 android:textColor="#666666"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="14sp" />
 
             <!-- Conexión -->
             <TextView
                 android:id="@+id/tv_conexion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Conexión: Conectado"
                 android:textColor="#666666"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="14sp" />
 
             <!-- Tipo de gas -->
             <TextView
                 android:id="@+id/tv_gas_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Tipo de Gas: CO2"
                 android:textColor="#666666"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="14sp" />
 
             <!-- Fecha -->
             <TextView
                 android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
                 android:text="Fecha: 2024-12-06"
                 android:textColor="#666666"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
+                android:textSize="14sp" />
 
             <!-- Nivel de batería -->
-            <TextView
-                android:id="@+id/tv_distancia"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Distancia:" />
+            <ImageView
+                android:id="@+id/iv_signal_strength"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="Nivel de señal"
+                android:src="@drawable/baseline_signal_wifi_0_bar_24" />
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
-                android:layout_marginTop="8dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/tv_battery"
@@ -108,12 +111,12 @@
                     android:id="@+id/battery_indicator"
                     android:layout_width="0dp"
                     android:layout_height="8dp"
-                    android:layout_weight="1"
                     android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:indeterminateOnly="false"
                     android:max="100"
                     android:progress="85"
-                    android:progressTint="#4CAF50"
-                    android:indeterminateOnly="false" />
+                    android:progressTint="#4CAF50" />
             </LinearLayout>
 
         </LinearLayout>
@@ -131,11 +134,25 @@
                 android:id="@+id/tv_measurement"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:text="75 ppm"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
-                android:textStyle="bold"
-                android:gravity="center" />
+                android:textStyle="bold" />
+
         </FrameLayout>
+
+        <ImageButton
+            android:id="@+id/btn_edit_sensor"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="34dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Editar sensor"
+            android:src="@drawable/baseline_edit_square_24" />
+
+
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

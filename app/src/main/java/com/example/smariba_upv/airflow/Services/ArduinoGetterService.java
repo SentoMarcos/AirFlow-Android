@@ -577,79 +577,27 @@ public class ArduinoGetterService extends Service {
 
 
 
-
-    // Método robusto y preciso para calcular la distancia
+    // Método simplificado para calcular la distancia basada en la señal RSSI y Tx Power
     private double calcularDistancia(int rssi, int txPower) {
         if (rssi == 0 || txPower == 0) {
             return -1.0; // No se puede calcular la distancia
         }
 
-        // Constantes ajustables para calibración
+        // Constante ajustable para calibración
         double environmentalFactor = 2.2; // Ajusta según el entorno (2 para espacios abiertos, >3 para interiores)
-        int calibratedTxPower = calibrarTxPower(txPower); // Si es necesario, calibra el Tx Power aquí
 
-        // Filtrar valores anómalos antes de suavizar
-        rssi = filtrarValoresAnomalos(rssi);
-
-        // Suavizado del RSSI para reducir fluctuaciones
-        rssi = calcularRSSISuavizado(rssi);
-
-        // Calcular la distancia basada en RSSI y Tx Power calibrado
-        double ratio = rssi * 1.0 / calibratedTxPower;
+        // Calcular la distancia basada en RSSI y Tx Power
+        double ratio = rssi * 1.0 / txPower;
         double distance;
 
         if (ratio < 1.0) {
             distance = Math.pow(ratio, 10);
         } else {
-            distance = Math.pow(10, (calibratedTxPower - rssi) / (10 * environmentalFactor));
+            distance = Math.pow(10, (txPower - rssi) / (10 * environmentalFactor));
         }
 
         // Limitar la distancia a dos decimales
         return Math.round(distance * 100.0) / 100.0;
-    }
-
-    // Método para calibrar el Tx Power si es necesario
-    private int calibrarTxPower(int txPower) {
-        // Si tienes un valor calibrado basado en pruebas específicas, devuélvelo aquí
-        // Por defecto, devuelve el mismo valor recibido
-        return txPower;
-    }
-
-    // Método para suavizar los valores RSSI utilizando una media móvil
-    private int calcularRSSISuavizado(int nuevoRSSI) {
-        final int WINDOW_SIZE = 15; // Tamaño de la ventana para la media móvil
-        LinkedList<Integer> rssiWindow = new LinkedList<>();
-
-        // Añadir el nuevo RSSI a la ventana
-        rssiWindow.add(nuevoRSSI);
-
-        // Eliminar el valor más antiguo si excede el tamaño de la ventana
-        if (rssiWindow.size() > WINDOW_SIZE) {
-            rssiWindow.poll();
-        }
-
-        // Calcular la media de los valores en la ventana
-        int sum = 0;
-        for (int value : rssiWindow) {
-            sum += value;
-        }
-
-        return sum / rssiWindow.size();
-    }
-
-    // Método adicional para detectar y corregir valores anómalos
-    private int filtrarValoresAnomalos(int rssi) {
-        final int THRESHOLD = 10; // Límite para considerar una fluctuación como anómala
-        Integer ultimoRSSI = null;
-
-        if (ultimoRSSI != null && Math.abs(rssi - ultimoRSSI) > THRESHOLD) {
-            // Si el valor actual varía demasiado del último valor, usa el último como referencia
-            return ultimoRSSI;
-        }
-
-        // Actualizar el último valor y devolver el actual
-        ultimoRSSI = rssi;
-        return rssi;
     }
 
 

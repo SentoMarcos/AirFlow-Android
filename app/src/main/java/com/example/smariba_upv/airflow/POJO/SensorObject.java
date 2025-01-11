@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class SensorObject {
+public class SensorObject implements Serializable {
     @SerializedName("id_sensor")
     int id;
     @SerializedName("estado")
