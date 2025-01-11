@@ -81,4 +81,7 @@ dependencies {
 
     //graph
     implementation ("com.github.PhilJay:MPAndroidChart:v3.1.0")
+
+    //animation
+    implementation ("com.airbnb.android:lottie:5.2.0")
 }
