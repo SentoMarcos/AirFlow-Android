@@ -49,7 +49,7 @@ public class PaginaDeCarga extends AppCompatActivity {
                 finish(); // Cierra la actividad actual
             } else {
                 // El usuario no está logueado, mostrar la pantalla de inicio de sesión
-                Intent intent = new Intent(this, LogInActivity.class);
+                Intent intent = new Intent(this, PasaralainfoAndroid.class);
                 startActivity(intent);
                 finish(); // Cierra la actividad actual
             }

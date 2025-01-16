@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
     <domain-config cleartextTrafficPermitted="true">
-        <domain includeSubdomains="true">192.168.105.205</domain>
+        <domain includeSubdomains="true">192.168.1.42</domain>
         <domain includeSubdomains="true">unpkg.com</domain> <!-- Para la librería Leaflet -->
         <domain includeSubdomains="true">tile.openstreetmap.org</domain> <!-- Para los tiles de OSM -->
     </domain-config>

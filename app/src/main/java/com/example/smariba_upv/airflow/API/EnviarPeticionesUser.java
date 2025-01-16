@@ -12,6 +12,7 @@ import com.example.smariba_upv.airflow.POJO.SensorObject;
 import com.example.smariba_upv.airflow.API.MODELS.SensorRequest;
 import com.example.smariba_upv.airflow.POJO.User;
 import com.example.smariba_upv.airflow.PRESENTACION.LandActivity;
+import com.example.smariba_upv.airflow.PRESENTACION.firstLogin;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -76,7 +77,7 @@ public class EnviarPeticionesUser {
                         editor.putBoolean("isLoggedIn", true);
                         editor.apply();
 
-                        Intent intent = new Intent(context, LandActivity.class);
+                        Intent intent = new Intent(context, firstLogin.class);
                         context.startActivity(intent);
                     } else {
                         Log.e(TAG, "Context is null");

@@ -49,9 +49,9 @@ public class QRreader extends AppCompatActivity {
     private String tokenanterior = "";
 
     /**
+     * @param savedInstanceState Instancia guardada
      * @brief Método que se ejecuta al crear la actividad
      * @details Método que se ejecuta al crear la actividad y permite leer un código QR
-     * @param savedInstanceState Instancia guardada
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,19 +115,21 @@ public class QRreader extends AppCompatActivity {
                     }
                 }
             }
+
             /**
-             * @function surfaceChanged
              * @param holder Holder
              * @param format Formato
-             * @param width Ancho
+             * @param width  Ancho
              * @param height Alto
+             * @function surfaceChanged
              */
             @Override
             public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             }
+
             /**
-             * @function surfaceDestroyed
              * @param holder Holder
+             * @function surfaceDestroyed
              */
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
@@ -150,44 +152,54 @@ public class QRreader extends AppCompatActivity {
                 final SparseArray<Barcode> barcodes = detections.getDetectedItems();
 
                 if (barcodes.size() > 0) {
-
-                    // obtenemos el token
+                    // Obtenemos el token
                     token = barcodes.valueAt(0).displayValue;
 
-                    // verificamos que el token anterior no se igual al actual
-                    // esto es util para evitar multiples llamadas empleando el mismo token
+                    // Verificamos que el token anterior no sea igual al actual
                     if (!token.equals(tokenanterior)) {
-
-                        // guardamos el ultimo token proceado
+                        // Guardamos el último token procesado
                         tokenanterior = token;
                         Log.i("token", token);
 
-                        // Mostrar el contenido del código QR en un Toast y cerrar la actividad
+                        // Mostrar el popup del éxito del escaneo
                         runOnUiThread(() -> {
-                            Toast.makeText(QRreader.this, "QR Code: " + token, Toast.LENGTH_LONG).show();
-                            //registrar sensor
+                            showPopup("Éxito", "Código QR escaneado: " + token);
                             PeticionesUserUtil.registrarSensor(token, QRreader.this);
 
-                            finish(); // Cerrar la actividad
                         });
 
-                        new Thread(new Runnable() {
-                            public void run() {
-                                try {
-                                    synchronized (this) {
-                                        wait(5000);
-                                        // limpiamos el token
-                                        tokenanterior = "";
-                                    }
-                                } catch (InterruptedException e) {
-                                    Log.e("Error", "Waiting didn't work!!");
-                                    e.printStackTrace();
+                        new Thread(() -> {
+                            try {
+                                synchronized (this) {
+                                    wait(5000);
+                                    // Limpiamos el token
+                                    tokenanterior = "";
                                 }
+                            } catch (InterruptedException e) {
+                                Log.e("Error", "Waiting didn't work!!");
+                                e.printStackTrace();
                             }
                         }).start();
                     }
+                } else {
+                    // Si no se detectan códigos QR, muestra un popup de error
+                    //runOnUiThread(() -> showPopup("Error", "No se pudo escanear el código QR. Inténtalo de nuevo."));
                 }
             }
         });
     }
+    private void showPopup(String title, String message) {
+        runOnUiThread(() -> {
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle(title)
+                    .setMessage(message)
+                    .setPositiveButton("OK", (dialog, which) -> {
+                        dialog.dismiss();
+                        finish();
+                    })
+                    .show();
+        });
+    }
+
+
 }
