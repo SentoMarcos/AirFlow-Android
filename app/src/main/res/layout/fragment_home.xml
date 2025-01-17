@@ -1,174 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/background_color"
+    android:background="#FFFFFF"
+    android:backgroundTint="#FFFFFF"
     tools:context=".PRESENTACION.HomeFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="419dp" />
+
+    <ImageView
+        android:id="@+id/Iconestado"
+        android:layout_width="53dp"
+        android:layout_height="39dp"
+        android:layout_weight="1"
+        android:src="@drawable/salud_excelente"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/tvDailyExposure"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView21"
+        app:layout_constraintVertical_bias="0.00999999" />
+
+    <VideoView
+        android:id="@+id/videoView2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/textView21"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="La calidad del aire es:"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.572"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/videoView2" />
+
+    <TextView
+        android:id="@+id/tvDailyExposure"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Excelente"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/Iconestado"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.58"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/Iconestado" />
+
+    <ImageView
+        android:id="@+id/imageView19"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/pasos"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDailyExposure"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="82dp"
+        android:layout_marginEnd="50dp"
+        android:foregroundGravity="right"
+        android:gravity="end"
         android:orientation="vertical"
-        android:gravity="center">
+        app:layout_constraintBottom_toBottomOf="@+id/imageView19"
+        app:layout_constraintEnd_toEndOf="@+id/imageView19"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/imageView19"
+        app:layout_constraintTop_toTopOf="@+id/imageView19"
+        app:layout_constraintVertical_bias="0.867">
 
-        <!-- Última Medición -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/card_background_color">
+            android:text="Hoy"
+            android:textSize="20sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tvLastMeasurement"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Última medición: -"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Media -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/card_background_color">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvDistancePasos"
+                android:layout_width="33dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_weight="1"
+                android:text="0000"
+                android:textAlignment="viewEnd"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/tvAverage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Media: -"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="bottom"
+                android:text="Pasos"
+                android:textAlignment="viewStart"
+                android:textSize="10sp" />
+        </LinearLayout>
 
-        <!-- Exposición Total -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/card_background_color">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tvDistanceCovered"
+                android:layout_width="90dp"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:layout_weight="1"
+                android:text="0"
+                android:textAlignment="viewEnd"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/tvExposure"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Exposición total: -"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Hora Actual -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/card_background_color">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tvCurrentTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Hora actual: --:--:--"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Exposición Diaria -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/card_background_color">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tvDailyExposure"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Exposición diaria: N/A"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Distancia Recorrida -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/card_background_color">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/tvDistanceCovered"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Distancia recorrida: N/A"
-                    android:textColor="@color/text_primary"
-                    android:textSize="18sp"
-                    android:fontFamily="sans-serif-medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:gravity="bottom"
+                android:text="M"
+                android:textAlignment="viewStart"
+                android:textSize="10sp" />
+        </LinearLayout>
 
     </LinearLayout>
-</ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

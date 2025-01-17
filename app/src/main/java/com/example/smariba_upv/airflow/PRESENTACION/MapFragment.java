@@ -96,12 +96,12 @@ public class MapFragment extends Fragment {
                     if (html != null) {
                         Log.d("MapFragment", "HTML recibido del servidor, cargando en WebView");
                         webView.loadDataWithBaseURL(
-                                "https://example.com",  // Base URL para recursos relativos
-                                html,                  // Contenido HTML
-                                "text/html",           // MIME type
-                                "UTF-8",               // Encoding
-                                null                   // URL para redirección posterior
-                        );
+                                "http://192.168.121.21:3000/",  // Base URL para recursos relativos
+                                html,                        // Contenido HTML
+                                "text/html",                 // MIME type
+                                "UTF-8",                     // Encoding
+                                null                         // URL para redirección posterior
+                                );
                     } else {
                         Log.e("MapFragment", "El cuerpo de la respuesta está vacío");
                         Toast.makeText(getContext(), "No se recibió HTML del mapa", Toast.LENGTH_SHORT).show();

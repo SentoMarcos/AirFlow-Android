@@ -1,16 +1,23 @@
 package com.example.smariba_upv.airflow.PRESENTACION;
 
+import static java.lang.String.valueOf;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import androidx.fragment.app.Fragment;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -22,23 +29,13 @@ import com.example.smariba_upv.airflow.R;
 import com.example.smariba_upv.airflow.Services.ArduinoGetterService;
 import com.example.smariba_upv.airflow.Services.DistanceTrackingService;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment implements SensorEventListener {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -46,12 +43,17 @@ public class HomeFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private TextView tvLastMeasurement;
-    private TextView tvAverage;
-    private TextView tvExposure;
     private TextView tvDistanceCovered;
     private TextView tvDailyExposure;
-    private TextView tvCurrentTime;
+    private TextView tvDistancePasos;
+    private VideoView videoView;
+    private ImageView iconoExposicion;
+
+    private SensorManager sensorManager;
+    private Sensor stepCounterSensor;
+    private boolean isSensorRegistered = false;
+    private int totalSteps = 0;
+    private int stepsAtReset = 0;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -79,66 +81,48 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // Inicializar los TextViews
-        tvLastMeasurement = view.findViewById(R.id.tvLastMeasurement);
-        tvAverage = view.findViewById(R.id.tvAverage);
-        tvExposure = view.findViewById(R.id.tvExposure);
+        // Inicializar los TextViews y otros elementos de la UI
         tvDistanceCovered = view.findViewById(R.id.tvDistanceCovered);
         tvDailyExposure = view.findViewById(R.id.tvDailyExposure);
-        tvCurrentTime = view.findViewById(R.id.tvCurrentTime);
+        tvDistancePasos = view.findViewById(R.id.tvDistancePasos);
+        videoView = view.findViewById(R.id.videoView2);
+        iconoExposicion = view.findViewById(R.id.Iconestado);
 
-        // Iniciar el servicio de distancia
+        // Inicializar SensorManager
+        sensorManager = (SensorManager) requireContext().getSystemService(Context.SENSOR_SERVICE);
+        if (sensorManager != null) {
+            stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        } else {
+            Log.e("HomeFragment", "SensorManager no disponible.");
+        }
+
+        // Iniciar los servicios
         Intent intent = new Intent(requireContext(), DistanceTrackingService.class);
         requireContext().startService(intent);
         Intent intent2 = new Intent(requireContext(), ArduinoGetterService.class);
         requireContext().startService(intent2);
 
-        // Configurar la actualización de la hora
-        startClockUpdate();
-
-
-
         // Registrar el BroadcastReceiver para la distancia
         IntentFilter filter = new IntentFilter("ACTUALIZAR_DISTANCIA");
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(distanceReceiver, filter);
 
-
-
         return view;
-    }
-
-    private final Handler clockHandler = new Handler();
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-
-    private final Runnable clockRunnable = new Runnable() {
-        @Override
-        public void run() {
-            if (isAdded() && tvCurrentTime != null) {
-                // Obtener la hora actual y formatearla
-                String currentTime = timeFormat.format(new Date());
-                tvCurrentTime.setText(getString(R.string.current_time, currentTime));
-            } else {
-                Log.w("HomeFragment", "Fragmento no está asociado al contexto. Deteniendo reloj.");
-                return; // Salir del Runnable si el fragmento no está asociado
-            }
-
-            // Repetir cada segundo
-            clockHandler.postDelayed(this, 1000);
-        }
-    };
-
-    private void startClockUpdate() {
-        clockHandler.post(clockRunnable);
-    }
-
-    private void stopClockUpdate() {
-        clockHandler.removeCallbacks(clockRunnable);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        startClockUpdate();
+
+        // Registrar el sensor de pasos
+        if (stepCounterSensor != null && !isSensorRegistered) {
+            sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_UI);
+            isSensorRegistered = true;
+            Log.d("HomeFragment", "Sensor de pasos registrado.");
+        } else if (stepCounterSensor == null) {
+            Log.e("HomeFragment", "Sensor de pasos no disponible.");
+        }
+
+        // Obtener mediciones
         EnviarPeticionesUser peticiones = new EnviarPeticionesUser(requireContext());
         peticiones.getMediciones(new Callback<List<Medicion>>() {
             @Override
@@ -146,27 +130,38 @@ public class HomeFragment extends Fragment {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {
                     List<Medicion> mediciones = response.body();
 
-                    // Procesar datos reales
-                    Medicion ultimaMedicion = MedicionUtils.obtenerUltimaMedicion(mediciones);
                     double media = MedicionUtils.calcularMediaValores(mediciones);
-                    double exposicionTotal = MedicionUtils.calcularExposicionTotal(mediciones);
 
                     String nivelExposicion;
-                    if (media > 100) {
-                        nivelExposicion = "Peligrosa";
-                    } else if (media > 50) {
-                        nivelExposicion = "Moderada";
+                    int videoResId;
+
+                    if (media < 50) {
+                        iconoExposicion.setImageResource(R.drawable.salud_excelente);
+                        nivelExposicion = "Excelente";
+                        videoResId = R.raw.excelente;
+                    } else if (media < 100) {
+                        iconoExposicion.setImageResource(R.drawable.salud_buena);
+                        nivelExposicion = "Bien";
+                        videoResId = R.raw.bien;
+                    } else if (media < 150) {
+                        iconoExposicion.setImageResource(R.drawable.salud_media);
+                        nivelExposicion = "Medio";
+                        videoResId = R.raw.medio;
+                    } else if (media < 200) {
+                        iconoExposicion.setImageResource(R.drawable.salud_mala);
+                        nivelExposicion = "Malo";
+                        videoResId = R.raw.malo;
                     } else {
-                        nivelExposicion = "Ninguna";
+                        iconoExposicion.setImageResource(R.drawable.salud_peligrosa);
+                        nivelExposicion = "Peligroso";
+                        videoResId = R.raw.peligroso;
                     }
 
-                    // Actualizar la interfaz de usuario
-                    if (ultimaMedicion != null) {
-                        tvLastMeasurement.setText(getString(R.string.last_measurement, String.format("%.2f", ultimaMedicion.getValor())));
-                    }
-                    tvAverage.setText(getString(R.string.average_value, media));
-                    tvExposure.setText(getString(R.string.total_exposure, exposicionTotal));
-                    tvDailyExposure.setText(getString(R.string.daily_exposure, nivelExposicion));
+                    videoView.setVideoPath("android.resource://" + requireContext().getPackageName() + "/" + videoResId);
+                    videoView.start();
+                    videoView.setOnCompletionListener(mp -> videoView.start());
+
+                    tvDailyExposure.setText(nivelExposicion);
                 } else {
                     Log.e("HomeFragment", "Fragment no asociado o no se recibieron datos de mediciones.");
                 }
@@ -182,8 +177,32 @@ public class HomeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        // Desregistrar el sensor de pasos
+        if (isSensorRegistered) {
+            sensorManager.unregisterListener(this);
+            isSensorRegistered = false;
+            Log.d("HomeFragment", "Sensor de pasos desregistrado.");
+        }
+
         LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(distanceReceiver);
-        stopClockUpdate();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+            if (stepsAtReset == 0) {
+                stepsAtReset = (int) event.values[0];
+            }
+
+            totalSteps = (int) event.values[0] - stepsAtReset;
+
+            actualizarPasos(totalSteps);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        // No es necesario manejar esto
     }
 
     private final BroadcastReceiver distanceReceiver = new BroadcastReceiver() {
@@ -191,25 +210,20 @@ public class HomeFragment extends Fragment {
         public void onReceive(Context context, Intent intent) {
             if (intent != null && intent.hasExtra("totalDistance")) {
                 double totalDistance = intent.getDoubleExtra("totalDistance", 0);
-
-                // Log para depuración
-                Log.d("HomeFragment", "Broadcast recibido. Distancia total: " + totalDistance);
-
                 actualizarDistancia(totalDistance);
-            } else {
-                Log.e("HomeFragment", "Broadcast recibido sin datos.");
             }
         }
     };
 
     private void actualizarDistancia(double distance) {
         if (tvDistanceCovered != null) {
-            tvDistanceCovered.setText(String.format("Distancia recorrida: %.2f m", distance));
+            tvDistanceCovered.setText(String.format("%.2f", distance));
+        }
+    }
 
-            // Log para depuración
-            Log.d("HomeFragment", "Interfaz actualizada con distancia: " + distance);
-        } else {
-            Log.e("HomeFragment", "El TextView tvDistanceCovered no está inicializado.");
+    private void actualizarPasos(int steps) {
+        if (tvDistancePasos != null) {
+            tvDistancePasos.setText(String.valueOf(steps));
         }
     }
 }
